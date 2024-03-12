@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class UserTooYoungException extends RuntimeException {
+public class UserTooYoungException extends Exception {
 
     public UserTooYoungException() {
         super("The user's account must be at least 16 years old.");
