@@ -1,0 +1,38 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <property name="LOGS_DIR" value="./logs" />
+
+
+    <appender name="USER_LOGIN_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/user-login.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="UPDATE_USER_DATA_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/user-update-data.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="UserLogin" level="INFO">
+        <appender-ref ref="USER_LOGIN_LOGGER" />
+    </logger>
+
+    <logger name="UserDataUpdate" level="INFO">
+        <appender-ref ref="UPDATE_USER_DATA_LOGGER" />
+    </logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+
+    <logger name="org.springframework.web" level="INFO"/>
+</configuration>
