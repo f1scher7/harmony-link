@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.models;
+package com.harmonylink.harmonylink.models.user;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -6,9 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document("user_accounts")
-public class User {
+public class UserAccount {
 
     @Id
     private String id;
@@ -17,7 +19,7 @@ public class User {
     @Field
     private String password;
     @Field
-    private String nickname;
+    private List<String> ipAddresses;
     @Indexed(unique = true)
     private String email;
     @Field
@@ -26,15 +28,20 @@ public class User {
     private Character sex;
 
 
-    public User() {}
+    public UserAccount() {}
 
-    public User(String login, String password, String nickname, String email, LocalDate birthdate, Character sex) {
+    public UserAccount(String login, String password, String email, LocalDate birthdate, Character sex) {
         this.login = login;
         this.password = password;
-        this.nickname = nickname;
+        this.ipAddresses = new ArrayList<>();
         this.email = email;
         this.birthdate = birthdate;
         this.sex = sex;
+    }
+
+
+    public void addIpAddress(String ipAddress) {
+        this.ipAddresses.add(ipAddress);
     }
 
 
@@ -50,8 +57,8 @@ public class User {
         return this.password;
     }
 
-    public String getNickname() {
-        return this.nickname;
+    public List<String> getIpAddresses() {
+        return this.ipAddresses;
     }
 
     public String getEmail() {
@@ -79,10 +86,6 @@ public class User {
         this.email = email;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
@@ -94,13 +97,13 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserAccount{" +
                 "id='" + id + '\'' +
                 ", login='" + login + '\'' +
-                ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
                 ", birthdate=" + birthdate +
                 ", sex=" + sex +
                 '}';
     }
+
 }
