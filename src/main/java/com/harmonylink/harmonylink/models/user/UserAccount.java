@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 
-@Document("user")
+@Document("user_accounts")
 public class User {
 
     @Id
