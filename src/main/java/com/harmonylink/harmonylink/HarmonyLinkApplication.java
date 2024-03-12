@@ -1,8 +1,8 @@
 package com.harmonylink.harmonylink;
 
-import com.harmonylink.harmonylink.models.User;
-import com.harmonylink.harmonylink.repositories.UserRepository;
-import com.harmonylink.harmonylink.services.UserService;
+import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import com.harmonylink.harmonylink.services.user.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,15 +14,15 @@ import java.util.Random;
 @SpringBootApplication
 public class HarmonyLinkApplication implements CommandLineRunner {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
-    private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserAccountRepository userAccountRepository;
+    private final UserAccountService userAccountService;
 
     @Autowired
-    public HarmonyLinkApplication(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
+    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, UserAccountService userAccountService) {
+        this.userAccountRepository = userAccountRepository;
+        this.userAccountService = userAccountService;
     }
 
     public static void main(String[] args) {
@@ -32,17 +32,26 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        this.userService.saveUser(new User("kaziofiqwescher", "Kazio4564", "Maks Fischer", "maks.f1scher@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
-
         /*
+        Registration of test users
         for (int i = 1; i < 4; i++) {
             Character sex = random.nextBoolean() ? 'M' : 'K';
-            this.userService.saveUser(new User("testuser" + i, "testuser" + i, "Test User " + i, "testuser" + i + "@gmail.com", LocalDate.of(2000, 7, 7), sex));
+            this.userAccountService.registerUserAccount(new UserAccount("testuser" + i, "testUser" + i, "testuser" + i + "@gmail.com", LocalDate.of(2000, 7, 7), sex));
         }
         */
 
-        for (User user: this.userRepository.findAll()) {
-            System.out.println(user);
+        //Test registerUser func
+        //this.userAccountService.registerUserAccount(new UserAccount("kaziof1scher", "Kazio1234", "maks.f1scher@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
+
+        // Test loginUser func
+        //this.userAccountService.loginUserAccount("maks.f1scher@gmail.com", "Kazio1234");
+
+        //Test updateData func
+        //this.userAccountService.updateUserData("testuser1", "4Qwe4q4w6e46q4w6e4", "qweqweji");
+
+        System.out.println();
+        for (UserAccount userAccount : this.userAccountRepository.findAll()) {
+            System.out.println(userAccount);
         }
 
     }
