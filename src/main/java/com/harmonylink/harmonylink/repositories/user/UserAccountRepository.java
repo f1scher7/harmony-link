@@ -1,12 +1,12 @@
-package com.harmonylink.harmonylink.repositories;
+package com.harmonylink.harmonylink.repositories.user;
 
-import com.harmonylink.harmonylink.models.User;
+import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    User findByLogin (String login);
+public interface UserAccountRepository extends MongoRepository<UserAccount, String> {
+    UserAccount findByLogin (String login);
 
-    User findByEmail (String email);
+    UserAccount findByEmail (String email);
 }
