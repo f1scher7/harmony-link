@@ -9,4 +9,9 @@ public interface UserAccountRepository extends MongoRepository<UserAccount, Stri
     UserAccount findByLogin (String login);
 
     UserAccount findByEmail (String email);
+
+    UserAccount findByPasswordResetToken(String token);
+
+    void deleteUserAccountByLogin(String login);
+
 }
