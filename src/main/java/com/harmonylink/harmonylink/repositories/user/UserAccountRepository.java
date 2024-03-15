@@ -6,11 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserAccountRepository extends MongoRepository<UserAccount, String> {
+
     UserAccount findByLogin (String login);
 
     UserAccount findByEmail (String email);
-
-    UserAccount findByPasswordResetToken(String token);
 
     void deleteUserAccountByLogin(String login);
 
