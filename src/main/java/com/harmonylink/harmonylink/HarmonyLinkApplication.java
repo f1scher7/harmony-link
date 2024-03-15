@@ -1,7 +1,9 @@
 package com.harmonylink.harmonylink;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.models.user.token.ResetPasswordToken;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import com.harmonylink.harmonylink.repositories.user.token.ResetPasswordTokenRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +19,13 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     private final Random random = new Random();
 
     private final UserAccountRepository userAccountRepository;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
     private final UserAccountService userAccountService;
 
     @Autowired
-    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, UserAccountService userAccountService) {
+    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, UserAccountService userAccountService) {
         this.userAccountRepository = userAccountRepository;
+        this.resetPasswordTokenRepository = resetPasswordTokenRepository;
         this.userAccountService = userAccountService;
     }
 
@@ -33,7 +37,7 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //Test registerUser func
-        //this.userAccountService.registerUserAccount(new UserAccount("kaziof1scher", "Kazio1234", "maksymilian.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
+        //this.userAccountService.registerUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
 
         /*
         //Registration of test users
@@ -44,17 +48,18 @@ public class HarmonyLinkApplication implements CommandLineRunner {
         */
 
         //Test loginUser func
-        //this.userAccountService.loginUserAccount("kaziof1scher", "Kazio7710");
+        //this.userAccountService.loginUserAccount("kaziof1scher", "Kazio1234");
 
         //Test updateUserAccountData func
-        //this.userAccountService.updateUserData("testuser1", "4Qwe4q4w6e46q4w6e4", "qweqweji");
+        //this.userAccountService.updateUserData("kaziof1scher", "Kazio1234", "Kazio7710", null);
 
         //Test resetUserAccountPassword
         //this.userAccountService.resetUserAccountPassword("maksymilian.fischer7@gmail.com");
 
-        //Test changeUserAccountPassword
+        //Test setNewPasswordAfterReset;
         //UserAccount testUser = this.userAccountRepository.findByLogin("kaziof1scher");
-        //this.userAccountService.changeUserAccountPassword(testUser.getPasswordResetToken(), "Kazio7710");
+        //ResetPasswordToken resetPasswordToken = this.resetPasswordTokenRepository.findByUserAccount(testUser);
+        //this.userAccountService.setNewPasswordAfterReset(resetPasswordToken.getToken(), "Kazio1234");
 
         System.out.println();
         for (UserAccount userAccount : this.userAccountRepository.findAll()) {
