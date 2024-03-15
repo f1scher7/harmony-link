@@ -28,11 +28,6 @@ public class UserAccount {
     private LocalDate birthdate;
     @Field
     private Character sex;
-    @Field
-    private String passwordResetToken;
-    @Field
-    @Indexed(expireAfterSeconds = 3600)
-    private LocalDateTime passwordResetTokenCreationDate;
 
 
     public UserAccount() {}
@@ -44,18 +39,11 @@ public class UserAccount {
         this.email = email;
         this.birthdate = birthdate;
         this.sex = sex;
-        this.passwordResetToken = null;
-        this.passwordResetTokenCreationDate = null;
     }
 
 
     public void addIpAddress(String ipAddress) {
         this.ipAddresses.add(ipAddress);
-    }
-
-    public void createPasswordResetToken() {
-        this.passwordResetToken = UserAccountUtils.generatePasswordResetToken();
-        this.passwordResetTokenCreationDate = LocalDateTime.now();
     }
 
     public String getId() {
@@ -86,14 +74,6 @@ public class UserAccount {
         return this.sex;
     }
 
-    public String getPasswordResetToken() {
-        return this.passwordResetToken;
-    }
-
-    public LocalDateTime getPasswordResetTokenCreationDate() {
-        return passwordResetTokenCreationDate;
-    }
-
 
     public void setLogin(String login) {
         this.login = login;
@@ -115,13 +95,6 @@ public class UserAccount {
         this.sex = sex;
     }
 
-    public void setPasswordResetToken(String passwordResetToken) {
-        this.passwordResetToken = passwordResetToken;
-    }
-
-    public void setPasswordResetTokenCreationDate(LocalDateTime passwordResetTokenCreationDate) {
-        this.passwordResetTokenCreationDate = passwordResetTokenCreationDate;
-    }
 
     @Override
     public String toString() {
