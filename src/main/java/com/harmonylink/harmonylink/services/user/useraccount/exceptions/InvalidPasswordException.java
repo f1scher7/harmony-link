@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class InvalidPasswordException extends Exception {
 
     public InvalidPasswordException() {
-        super("The password must contain at least one lowercase and one uppercase letter, one number, and must be at least 8 characters long.");
+        super("Hasło musi zawierać co najmniej jedną małą i jedną dużą literę, jedną cyfrę i musi mieć co najmniej 8 znaków długości");
     }
 
 }

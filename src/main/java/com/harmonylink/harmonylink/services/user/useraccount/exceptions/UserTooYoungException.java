@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UserTooYoungException extends Exception {
 
     public UserTooYoungException() {
-        super("The user's account must be at least 16 years old.");
+        super("Użytkownik musi mieć co najmniej 16 lat");
     }
 
 }
