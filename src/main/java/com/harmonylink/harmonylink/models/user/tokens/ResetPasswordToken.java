@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.models.user.token;
+package com.harmonylink.harmonylink.models.user.tokens;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.annotation.Id;
@@ -9,20 +9,20 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
-@Document("verification_tokens")
-public class VerificationToken {
+@Document("reset_password_tokens")
+public class ResetPasswordToken {
 
     @Id
     private String id;
     @Indexed(unique = true)
     private String token;
-    @Indexed(unique = true)
+    @DBRef
     private UserAccount userAccount;
     @Field
-    @Indexed(expireAfterSeconds = 600)
-    private LocalDateTime localDateTime;
+    @Indexed(expireAfterSeconds = 3600)
+    private final LocalDateTime localDateTime;
 
-    public VerificationToken(String token, UserAccount userAccount) {
+    public ResetPasswordToken(String token, UserAccount userAccount) {
         this.token = token;
         this.userAccount = userAccount;
         this.localDateTime = LocalDateTime.now();
