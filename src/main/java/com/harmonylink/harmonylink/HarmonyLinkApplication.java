@@ -1,16 +1,14 @@
 package com.harmonylink.harmonylink;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
-import com.harmonylink.harmonylink.models.user.token.ResetPasswordToken;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
-import com.harmonylink.harmonylink.repositories.user.token.ResetPasswordTokenRepository;
+import com.harmonylink.harmonylink.repositories.user.tokens.ResetPasswordTokenRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.time.LocalDate;
 import java.util.Random;
 
 @SpringBootApplication
@@ -37,7 +35,7 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //Test registerUser func
-        //this.userAccountService.registerUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
+        //this.userAccountService.registerNewUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
 
         /*
         //Registration of test users
@@ -65,6 +63,7 @@ public class HarmonyLinkApplication implements CommandLineRunner {
         for (UserAccount userAccount : this.userAccountRepository.findAll()) {
             System.out.println(userAccount);
         }
+        System.out.println();
 
     }
 }
