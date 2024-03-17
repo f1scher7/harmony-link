@@ -1,24 +1,26 @@
 package com.harmonylink.harmonylink.services.user.useraccount;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
-import com.harmonylink.harmonylink.models.user.token.ResetPasswordToken;
-import com.harmonylink.harmonylink.models.user.token.VerificationToken;
+import com.harmonylink.harmonylink.models.user.tokens.ResetPasswordToken;
+import com.harmonylink.harmonylink.models.user.tokens.VerificationToken;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
-import com.harmonylink.harmonylink.repositories.user.token.ResetPasswordTokenRepository;
-import com.harmonylink.harmonylink.repositories.user.token.VerificationTokenRepository;
+import com.harmonylink.harmonylink.repositories.user.tokens.ResetPasswordTokenRepository;
+import com.harmonylink.harmonylink.repositories.user.tokens.VerificationTokenRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static com.harmonylink.harmonylink.services.user.useraccount.UserAccountUtils.generateToken;
+import static com.harmonylink.harmonylink.services.user.useraccount.UserAccountUtils.*;
 import static com.harmonylink.harmonylink.services.user.useraccount.UserAccountValidator.isPasswordValid;
 import static com.harmonylink.harmonylink.services.user.useraccount.UserAccountValidator.isUserAtLeastSixteenYO;
-import static com.harmonylink.harmonylink.services.user.useraccount.UserAccountUtils.mailGenerator;
 
 @Service
 public class UserAccountService {
@@ -42,12 +44,12 @@ public class UserAccountService {
     }
 
 
-    public void registerUserAccount(UserAccount userAccount) throws UserAlreadyExistsException, InvalidPasswordException, EmailAlreadyExistsException, InvalidGenderException, UserTooYoungException {
+    public void registerNewUserAccount(UserAccount userAccount) throws UserAlreadyExistsException, InvalidPasswordException, EmailAlreadyExistsException, EmailNotFoundException, UserTooYoungException {
         if (userAccount == null) {
             throw new IllegalArgumentException("UserAccount can't be null");
         }
 
-        if (this.userAccountRepository.findByLogin(userAccount.getLogin()) != null) {
+        if (this.userAccountRepository.findByLogin(userAccount.getLogin()) != null || userAccount.getLogin().isEmpty()) {
             throw new UserAlreadyExistsException(userAccount.getLogin());
         }
 
@@ -55,12 +57,8 @@ public class UserAccountService {
             throw new InvalidPasswordException();
         }
 
-        if (userAccount.getEmail() == null || this.userAccountRepository.findByEmail(userAccount.getEmail()) != null) {
+        if (userAccount.getEmail() == null || this.userAccountRepository.findByEmail(userAccount.getEmail()) != null || userAccount.getEmail().isEmpty()) {
             throw new EmailAlreadyExistsException(userAccount.getEmail());
-        }
-
-        if (userAccount.getSex() == null || !userAccount.getSex().equals('M') && !userAccount.getSex().equals('K')) {
-            throw new InvalidGenderException();
         }
 
         if (userAccount.getBirthdate() == null || !isUserAtLeastSixteenYO(userAccount.getBirthdate())) {
@@ -71,11 +69,10 @@ public class UserAccountService {
 
         String token = generateToken();
         VerificationToken verificationToken = new VerificationToken(token, userAccount);
-        this.verificationTokenRepository.save(verificationToken);
 
-        String verificationLink = "http://todo.com/verify-email?token=" + token;
+        String verificationLink = "http://3.70.228.63/api/users/verify-account?token=" + token;
         String subject = "Weryfikacja maila";
-        String tekst = "Cześć,\n\n"
+        String text = "Cześć,\n\n"
                 + "Dziękujemy za utworzenie konta! Jesteśmy podekscytowani, że do nas dołączyłeś.\n\n"
                 + "Aby aktywować swoje konto, musisz potwierdzić swój adres e-mail. Kliknij poniższy link, aby to zrobić:\n\n"
                 + verificationLink + "\n\n"
@@ -83,10 +80,35 @@ public class UserAccountService {
                 + "Dziękujemy,\n"
                 + "Twój HarmonyLink";
 
-        this.javaMailSender.send(mailGenerator(userAccount.getEmail(), subject, tekst));
+        try {
+            this.javaMailSender.send(mailGenerator(userAccount.getEmail(), subject, text));
+            this.verificationTokenRepository.save(verificationToken);
+        } catch (MailSendException e) {
+            throw new EmailNotFoundException();
+        }
     }
 
-    public void loginUserAccount(String loginOrEmail, String password) throws InvalidCredentialsException {
+    public void verifyNewUserAccount(String token, HttpServletRequest request) throws InvalidTokenException {
+        VerificationToken verificationToken = this.verificationTokenRepository.findByToken(token);
+
+        if (verificationToken == null) {
+            throw new InvalidTokenException();
+        }
+
+        UserAccount userAccount = verificationToken.getUserAccount();
+
+        if (userAccount == null) {
+            throw new InvalidTokenException();
+        }
+
+        userAccount.addIpAddress(updateUserIpAddress(request));
+
+        this.userAccountRepository.save(userAccount);
+        this.verificationTokenRepository.delete(verificationToken);
+    }
+
+
+    public void loginUserAccount(String loginOrEmail, String password, HttpSession session) throws InvalidCredentialsException {
         USER_LOGIN_LOGGER.info("Attempting to log in user with loginOrEmail: {}", loginOrEmail);
 
         UserAccount userAccount = this.userAccountRepository.findByLogin(loginOrEmail);
@@ -98,7 +120,7 @@ public class UserAccountService {
 
         if (userAccount != null && this.bCryptPasswordEncoder.matches(password, userAccount.getPassword())) {
             USER_LOGIN_LOGGER.info("User {} successfully logged in", userAccount.getLogin());
-            //session.setAttribute("user", userAccount);
+            session.setAttribute("user", userAccount);
         } else  {
             USER_LOGIN_LOGGER.warn("Login failed for user: {}", loginOrEmail);
             throw new InvalidCredentialsException();
@@ -113,6 +135,7 @@ public class UserAccountService {
 
     public void updateUserData(String login, String oldPassword, String newPassword, String newEmail) throws UserNotFoundException, InvalidPasswordException, WrongPasswordException, EmailAlreadyExistsException {
         UserAccount existingAccount = this.userAccountRepository.findByLogin(login);
+
         if (existingAccount == null) {
             throw new UserNotFoundException();
         }
@@ -147,28 +170,35 @@ public class UserAccountService {
     }
 
 
-    public void resetUserAccountPassword(String email) {
+    public void resetUserAccountPassword(String email) throws EmailNotFoundException {
         UserAccount userAccount = this.userAccountRepository.findByEmail(email);
+
         if (userAccount == null) {
-            throw new IllegalArgumentException("Email can't be null.");
+            throw new EmailNotFoundException();
         }
 
         String token = generateToken();
         ResetPasswordToken resetPasswordToken = new ResetPasswordToken(token, userAccount);
-        this.resetPasswordTokenRepository.save(resetPasswordToken);
 
+        String setPasswordLink = "http://3.70.228.63/api/users/set-password?token=" + token;
         String subject = "Resetowanie hasła";
         String text = "Cześć,\n\n"
                 +"Aby zresetować swoje hasło, kliknij w link:\n\n"
-                + "https://todo.com/reset-password?token=" + resetPasswordToken.getToken()
+                + setPasswordLink
                 + "\n\n" + "Jeśli nie prosiłeś o resetowanie hasła, zignoruj ten email lub skontaktuj się z pomocą techniczną, jeśli masz jakiekolwiek pytania.\n\n"
                 + "Z poważaniem,\n" + "Twój HarmonyLink\n";
 
-        javaMailSender.send(mailGenerator(email, subject, text));
+        try {
+            this.javaMailSender.send(mailGenerator(userAccount.getEmail(), subject, text));
+            this.resetPasswordTokenRepository.save(resetPasswordToken);
+        } catch (MailSendException e) {
+            throw new EmailNotFoundException();
+        }
     }
 
-    public void setNewPasswordAfterReset(String token, String newPassword) throws InvalidTokenException, InvalidPasswordException {
+    public void setNewPasswordAfterReset(String token, String newPassword, String confirmPassword) throws InvalidTokenException, InvalidPasswordException, PasswordsMatchingException {
         ResetPasswordToken resetPasswordToken = this.resetPasswordTokenRepository.findByToken(token);
+
         if (resetPasswordToken == null) {
             throw new InvalidTokenException();
         }
@@ -179,8 +209,13 @@ public class UserAccountService {
             throw new InvalidPasswordException();
         }
 
+        if (!newPassword.equals(confirmPassword)) {
+            throw new PasswordsMatchingException();
+        }
+
         userAccount.setPassword(bCryptPasswordEncoder.encode(newPassword));
         this.userAccountRepository.save(userAccount);
+        this.resetPasswordTokenRepository.delete(resetPasswordToken);
     }
 
 
