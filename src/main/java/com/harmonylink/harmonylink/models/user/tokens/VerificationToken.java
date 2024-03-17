@@ -19,7 +19,7 @@ public class VerificationToken {
     private UserAccount userAccount;
     @Field
     @Indexed(expireAfterSeconds = 600)
-    private final LocalDateTime localDateTime;
+    private LocalDateTime localDateTime;
 
     public VerificationToken(String token, UserAccount userAccount) {
         this.token = token;

@@ -20,7 +20,7 @@ public class ResetPasswordToken {
     private UserAccount userAccount;
     @Field
     @Indexed(expireAfterSeconds = 3600)
-    private final LocalDateTime localDateTime;
+    private LocalDateTime localDateTime;
 
     public ResetPasswordToken(String token, UserAccount userAccount) {
         this.token = token;
@@ -53,4 +53,7 @@ public class ResetPasswordToken {
         this.userAccount = userAccount;
     }
 
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
 }

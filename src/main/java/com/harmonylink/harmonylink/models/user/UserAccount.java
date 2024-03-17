@@ -30,7 +30,9 @@ public class UserAccount {
     private Character sex;
 
 
-    public UserAccount() {}
+    public UserAccount()  {
+        this.ipAddresses = new ArrayList<>();
+    }
 
     public UserAccount(String login, String password, String email, LocalDate birthdate, Character sex) {
         this.login = login;
