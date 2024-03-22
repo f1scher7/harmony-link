@@ -3,12 +3,14 @@ package com.harmonylink.harmonylink;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.user.tokens.ResetPasswordTokenRepository;
-import com.harmonylink.harmonylink.services.user.useraccount.UserAccountService;
+import com.harmonylink.harmonylink.services.user.useraccount.LoginService;
+import com.harmonylink.harmonylink.services.user.useraccount.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 @SpringBootApplication
@@ -18,13 +20,15 @@ public class HarmonyLinkApplication implements CommandLineRunner {
 
     private final UserAccountRepository userAccountRepository;
     private final ResetPasswordTokenRepository resetPasswordTokenRepository;
-    private final UserAccountService userAccountService;
+    private final RegistrationService registrationService;
+    private final LoginService loginService;
 
     @Autowired
-    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, UserAccountService userAccountService) {
+    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, RegistrationService registrationService, LoginService loginService) {
         this.userAccountRepository = userAccountRepository;
         this.resetPasswordTokenRepository = resetPasswordTokenRepository;
-        this.userAccountService = userAccountService;
+        this.registrationService = registrationService;
+        this.loginService = loginService;
     }
 
     public static void main(String[] args) {
@@ -35,18 +39,18 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //Test registerUser func
-        //this.userAccountService.registerNewUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
+        //this.registrationService.registerNewUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
 
         /*
         //Registration of test users
         for (int i = 1; i < 4; i++) {
             Character sex = random.nextBoolean() ? 'M' : 'K';
-            this.userAccountService.registerUserAccount(new UserAccount("testuser" + i, "testUser" + i, "testuser" + i + "@gmail.com", LocalDate.of(2000, 7, 7), sex));
+            this.registrationService.registerUserAccount(new UserAccount("testuser" + i, "testUser" + i, "testuser" + i + "@gmail.com", LocalDate.of(2000, 7, 7), sex));
         }
         */
 
         //Test loginUser func
-        //this.userAccountService.loginUserAccount("kaziof1scher", "Kazio1234");
+        //this.loginService.loginUserAccount("kaziof1scher", "159753Fischer");
 
         //Test updateUserAccountData func
         //this.userAccountService.updateUserData("kaziof1scher", "Kazio1234", "Kazio7710", null);
