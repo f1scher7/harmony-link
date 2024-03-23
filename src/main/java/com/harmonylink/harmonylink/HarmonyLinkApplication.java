@@ -50,7 +50,7 @@ public class HarmonyLinkApplication implements CommandLineRunner {
         */
 
         //Test loginUser func
-        //this.loginService.loginUserAccount("kaziof1scher", "159753Fischer");
+        //this.loginService.loginUserAccount("kaziof1scher", "Kazio1234");
 
         //Test updateUserAccountData func
         //this.userAccountService.updateUserData("kaziof1scher", "Kazio1234", "Kazio7710", null);
