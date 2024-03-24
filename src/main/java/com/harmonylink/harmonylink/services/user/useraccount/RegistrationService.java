@@ -1,15 +1,13 @@
 package com.harmonylink.harmonylink.services.user.useraccount;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
-import com.harmonylink.harmonylink.models.user.tokens.VerificationToken;
+import com.harmonylink.harmonylink.models.token.VerificationToken;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
-import com.harmonylink.harmonylink.repositories.user.tokens.VerificationTokenRepository;
+import com.harmonylink.harmonylink.repositories.token.VerificationTokenRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +16,18 @@ import static com.harmonylink.harmonylink.utils.UserAccountUtil.*;
 @Service
 public class RegistrationService {
 
-    private final Logger UPDATE_USER_DATA_LOGGER = LoggerFactory.getLogger("UserDataUpdate");
-
     private final UserAccountRepository userAccountRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailService emailService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public RegistrationService(UserAccountRepository userAccountRepository, VerificationTokenRepository verificationTokenRepository, EmailService emailService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public RegistrationService(UserAccountRepository userAccountRepository, VerificationTokenRepository verificationTokenRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userAccountRepository = userAccountRepository;
-        this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -57,7 +53,7 @@ public class RegistrationService {
             throw new UserTooYoungException();
         }
 
-        userAccount.setPassword(this.bCryptPasswordEncoder.encode(userAccount.getPassword()));
+        userAccount.setPassword(this.passwordEncoder.encode(userAccount.getPassword()));
 
         String token = generateToken();
         VerificationToken verificationToken = new VerificationToken(token, userAccount);
@@ -67,7 +63,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void verifyNewUserAccount(String token, HttpServletRequest request) throws InvalidTokenException {
+    public void verifyNewUserAccount(String token) throws InvalidTokenException {
         VerificationToken verificationToken = this.verificationTokenRepository.findByToken(token);
 
         if (verificationToken == null) {
@@ -80,15 +76,8 @@ public class RegistrationService {
             throw new InvalidTokenException();
         }
 
-        userAccount.addIpAddress(updateUserIpAddress(request));
-
         this.userAccountRepository.save(userAccount);
         this.verificationTokenRepository.delete(verificationToken);
-    }
-
-    public void deleteUserAccountByLogin(String login) {
-        this.userAccountRepository.deleteUserAccountByLogin(login);
-        UPDATE_USER_DATA_LOGGER.info("User with login: {} was deleted.", login);
     }
 
 }
