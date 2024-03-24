@@ -1,9 +1,10 @@
 package com.harmonylink.harmonylink;
 
+import com.harmonylink.harmonylink.enums.Role;
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.repositories.token.VerificationTokenRepository;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
-import com.harmonylink.harmonylink.repositories.user.tokens.ResetPasswordTokenRepository;
-import com.harmonylink.harmonylink.services.user.useraccount.LoginService;
+import com.harmonylink.harmonylink.repositories.token.ResetPasswordTokenRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,15 +21,15 @@ public class HarmonyLinkApplication implements CommandLineRunner {
 
     private final UserAccountRepository userAccountRepository;
     private final ResetPasswordTokenRepository resetPasswordTokenRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
     private final RegistrationService registrationService;
-    private final LoginService loginService;
 
     @Autowired
-    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, RegistrationService registrationService, LoginService loginService) {
+    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, VerificationTokenRepository verificationTokenRepository, RegistrationService registrationService) {
         this.userAccountRepository = userAccountRepository;
         this.resetPasswordTokenRepository = resetPasswordTokenRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
         this.registrationService = registrationService;
-        this.loginService = loginService;
     }
 
     public static void main(String[] args) {
@@ -39,15 +40,8 @@ public class HarmonyLinkApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         //Test registerUser func
-        //this.registrationService.registerNewUserAccount(new UserAccount("kaziof1scher7", "Kazio1234", "maks.fischer7@gmail.com", LocalDate.of(2000, 7, 7), 'M'));
-
-        /*
-        //Registration of test users
-        for (int i = 1; i < 4; i++) {
-            Character sex = random.nextBoolean() ? 'M' : 'K';
-            this.registrationService.registerUserAccount(new UserAccount("testuser" + i, "testUser" + i, "testuser" + i + "@gmail.com", LocalDate.of(2000, 7, 7), sex));
-        }
-        */
+        //this.registrationService.registerNewUserAccount(new UserAccount(Role.USER, "testuser1", "testUser1", "temp.email7722@gmail.com", LocalDate.of(2001, 7, 7), 'M'));
+        //this.registrationService.verifyNewUserAccount("");
 
         //Test loginUser func
         //this.loginService.loginUserAccount("kaziof1scher", "Kazio1234");
