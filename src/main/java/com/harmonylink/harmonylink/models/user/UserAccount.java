@@ -1,19 +1,27 @@
 package com.harmonylink.harmonylink.models.user;
 
+import com.harmonylink.harmonylink.enums.Role;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Document("user_accounts")
-public class UserAccount {
+public class UserAccount implements UserDetails {
 
     @Id
     private String id;
+    @Field
+    private Role role;
     @Indexed(unique = true)
     private String login;
     @Field
@@ -26,13 +34,16 @@ public class UserAccount {
     private LocalDate birthdate;
     @Field
     private Character sex;
+    @Field
+    private boolean userAccountNonLocked = true;
 
 
     public UserAccount()  {
         this.ipAddresses = new ArrayList<>();
     }
 
-    public UserAccount(String login, String password, String email, LocalDate birthdate, Character sex) {
+    public UserAccount(Role role, String login, String password, String email, LocalDate birthdate, Character sex) {
+        this.role = role;
         this.login = login;
         this.password = password;
         this.ipAddresses = new ArrayList<>();
@@ -42,12 +53,57 @@ public class UserAccount {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.userAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
     public void addIpAddress(String ipAddress) {
         this.ipAddresses.add(ipAddress);
     }
 
+
+    public void lockAccount() {
+        this.userAccountNonLocked = false;
+    }
+
+    public void unlockAccount() {
+        this.userAccountNonLocked = true;
+    }
+
+
     public String getId() {
         return this.id;
+    }
+
+    public Role getRole() {
+        return this.role;
     }
 
     public String getLogin() {
@@ -74,6 +130,14 @@ public class UserAccount {
         return this.sex;
     }
 
+    public boolean isUserAccountNonLocked() {
+        return this.userAccountNonLocked;
+    }
+
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public void setLogin(String login) {
         this.login = login;
@@ -95,15 +159,20 @@ public class UserAccount {
         this.sex = sex;
     }
 
+    public void setUserAccountNonLocked(boolean userAccountNonLocked) {
+        this.userAccountNonLocked = userAccountNonLocked;
+    }
+
 
     @Override
     public String toString() {
         return "UserAccount{" +
-                "id='" + id + '\'' +
-                ", login='" + login + '\'' +
-                ", email='" + email + '\'' +
-                ", birthdate=" + birthdate +
-                ", sex=" + sex +
+                "role='" + this.role.name() +'\'' +
+                ", id='" + this.id + '\'' +
+                ", login='" + this.login + '\'' +
+                ", email='" + this.email + '\'' +
+                ", birthdate=" + this.birthdate +
+                ", sex=" + this.sex +
                 '}';
     }
 
