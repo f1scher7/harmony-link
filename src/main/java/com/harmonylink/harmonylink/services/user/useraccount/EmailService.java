@@ -7,7 +7,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -51,17 +50,17 @@ public class EmailService {
     public void sendVerificationEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
         Context context = new Context();
         context.setVariable("login", userAccount.getLogin());
-        context.setVariable("verificationLink", "http://3.70.228.63/api/users/verify-account?token=" + token);
+        context.setVariable("verificationLink", "http://3.70.228.63/activate-account?token=" + token);
 
-        sendEmail(userAccount.getEmail(), this.emailConfig.getVerificationSubject(), "emailTexts/verificationEmailTemplate", context);
+        sendEmail(userAccount.getEmail(), this.emailConfig.getVerificationSubject(), "emailTemplates/verificationEmailTemplate", context);
     }
 
     public void sendResetPasswordEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
         Context context = new Context();
         context.setVariable("login", userAccount.getLogin());
-        context.setVariable("resetPasswordLink", "http://3.70.228.63/api/users/set-password?token=" + token);
+        context.setVariable("resetPasswordLink", "http://3.70.228.63/reset-password?token=" + token);
 
-        sendEmail(userAccount.getEmail(), this.emailConfig.getResetPasswordSubject(), "emailTexts/resetPasswordTemplate", context);
+        sendEmail(userAccount.getEmail(), this.emailConfig.getResetPasswordSubject(), "emailTemplates/resetPasswordTemplate", context);
     }
 
 }

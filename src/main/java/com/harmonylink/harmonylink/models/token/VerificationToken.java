@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.models.user.tokens;
+package com.harmonylink.harmonylink.models.token;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.annotation.Id;

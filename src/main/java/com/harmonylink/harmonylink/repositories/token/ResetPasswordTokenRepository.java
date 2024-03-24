@@ -1,7 +1,7 @@
-package com.harmonylink.harmonylink.repositories.user.tokens;
+package com.harmonylink.harmonylink.repositories.token;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
-import com.harmonylink.harmonylink.models.user.tokens.ResetPasswordToken;
+import com.harmonylink.harmonylink.models.token.ResetPasswordToken;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ResetPasswordTokenRepository extends MongoRepository<ResetPasswordToken, String> {
