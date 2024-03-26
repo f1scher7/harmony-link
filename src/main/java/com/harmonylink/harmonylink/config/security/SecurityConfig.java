@@ -29,19 +29,20 @@ public class SecurityConfig {
         auth.userDetailsService(userAccountDetailsService).passwordEncoder(passwordEncoder);
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/","/registration","/login", "/forgot-password").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/auth", "/auth/login", "/auth/registration", "/auth/confirm-email", "/auth/activate-account", "auth/forgot-password", "/auth/reset-password").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .loginPage("/auth")
+                        .loginProcessingUrl("/auth/login")
+                        .failureUrl("/auth/login?error=true")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 );
         return http.build();
