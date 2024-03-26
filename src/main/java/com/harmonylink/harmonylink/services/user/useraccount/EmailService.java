@@ -50,7 +50,7 @@ public class EmailService {
     public void sendVerificationEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
         Context context = new Context();
         context.setVariable("login", userAccount.getLogin());
-        context.setVariable("verificationLink", "http://3.70.228.63/activate-account?token=" + token);
+        context.setVariable("verificationLink", "http://3.70.228.63/auth/activate-account?token=" + token);
 
         sendEmail(userAccount.getEmail(), this.emailConfig.getVerificationSubject(), "emailTemplates/verificationEmailTemplate", context);
     }
@@ -58,7 +58,7 @@ public class EmailService {
     public void sendResetPasswordEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
         Context context = new Context();
         context.setVariable("login", userAccount.getLogin());
-        context.setVariable("resetPasswordLink", "http://3.70.228.63/reset-password?token=" + token);
+        context.setVariable("resetPasswordLink", "http://3.70.228.63/auth/reset-password?token=" + token);
 
         sendEmail(userAccount.getEmail(), this.emailConfig.getResetPasswordSubject(), "emailTemplates/resetPasswordTemplate", context);
     }
