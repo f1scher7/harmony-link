@@ -1,0 +1,14 @@
+#carouselAuth {
+    margin-top: 5%;
+}
+
+.carousel-item img {
+    max-height: 550px;
+    object-fit: cover;
+}
+
+.rightPanel {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
