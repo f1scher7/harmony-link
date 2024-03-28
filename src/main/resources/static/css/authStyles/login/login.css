@@ -1,0 +1,34 @@
+.bg-light-blue {
+    background-color: #f0f2f5;
+}
+
+.rightPanel {
+    margin-bottom: 7%;
+}
+
+.form-control {
+    border-width: 2px !important;
+}
+
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.login-form {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.alert {
+    padding: 0.25rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert p {
+    margin: 0;
+}
