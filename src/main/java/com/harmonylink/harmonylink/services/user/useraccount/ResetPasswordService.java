@@ -40,7 +40,7 @@ public class ResetPasswordService {
         UserAccount userAccount = this.userAccountRepository.findByEmail(email);
 
         if (userAccount == null) {
-            throw new EmailNotFoundException();
+            throw new EmailNotFoundException(email);
         }
 
         String token = generateToken();
