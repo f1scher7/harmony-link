@@ -43,7 +43,7 @@ public class EmailService {
 
             this.javaMailSender.send(mimeMessage);
         } catch (MailSendException | MessagingException e) {
-            throw new EmailNotFoundException();
+            throw new EmailNotFoundException(userMail);
         }
     }
 
