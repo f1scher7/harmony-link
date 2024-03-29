@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Weryfikacja Email</title>
+</head>
+<body>
+    <p>Cześć, <span th:text="${login}">Imię</span>!</p>
+    <p>Dziękujemy za rejestrację. Aby aktywować swoje konto, kliknij w link poniżej:</p>
+    <a th:href="${verificationLink}">Aktywuj konto</a>
+    <p>Jeśli nie rejestrowałeś się na naszej stronie, zignoruj tę wiadomość.</p>
+    <p>Z poważaniem,<br>Twój HarmonyLink</p>
+</body>
+</html>
