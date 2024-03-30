@@ -3,22 +3,31 @@ package com.harmonylink.harmonylink.controllers;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.services.user.useraccount.RegistrationService;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/auth")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final AuthenticationSuccessHandler successHandler;
 
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService) {
+    public RegistrationController(RegistrationService registrationService, AuthenticationSuccessHandler successHandler) {
         this.registrationService = registrationService;
+        this.successHandler = successHandler;
     }
 
 
@@ -28,17 +37,25 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public ModelAndView initiateNewUserRegistration(@ModelAttribute UserAccount userAccount, RedirectAttributes redirectAttributes) {
+    public ModelAndView initiateNewUserRegistration(@ModelAttribute UserAccount userAccount, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         ModelAndView modelAndView = new ModelAndView();
+
+        String email = "";
+        String login = "";
+        String password = "";
 
         if (userAccount != null) {
             modelAndView.addObject("userData", userAccount);
+            login = userAccount.getLogin();
+            email = userAccount.getEmail();
+            password = userAccount.getPassword();
         }
 
         try {
             this.registrationService.registerNewUserAccount(userAccount);
-            assert userAccount != null;
-            redirectAttributes.addFlashAttribute("email", userAccount.getEmail());
+            this.registrationService.autoLogin(login, password);
+
+            redirectAttributes.addFlashAttribute("email", "Sprawdź maila (" + email + ") w celu weryfikacji konta.");
             modelAndView.setViewName("redirect:/auth/confirm-email");
         } catch (UserAlreadyExistsException e) {
             modelAndView.setViewName("authPages/registration/registration");
