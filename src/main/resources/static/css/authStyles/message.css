@@ -8,9 +8,20 @@
     border-radius: 10px;
 }
 
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 .bot-part {
-    margin-top: 70%;
+    margin-top: 30%;
     border-radius: 0 0 10px 10px;
     background-color: #458ddc;
     box-shadow: 0 4px 8px 0 rgba(176, 180, 255, 0.5);
+}
+
+.invalid-password {
+    color: #dc3545;
 }
