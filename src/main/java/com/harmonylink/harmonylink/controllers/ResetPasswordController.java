@@ -42,6 +42,7 @@ public class ResetPasswordController {
         try {
             this.resetPasswordService.forgotPassword(email);
             modelAndView.addObject("message", "Link do resetowania hasła został wysłany na Twój adres email.");
+            modelAndView.addObject("email", email);
             modelAndView.setViewName("authPages/login/forgotPassword");
         } catch (EmailNotFoundException e) {
             modelAndView.addObject("errorEmail", e.getMessage());
@@ -83,8 +84,8 @@ public class ResetPasswordController {
             modelAndView.addObject("errorInvalidPassword", e.getMessage());
             modelAndView.setViewName("authPages/login/resetPassword");
         } catch (PasswordsMatchingException e) {
-            modelAndView.addObject("errorPasswordsMatching", e.getMessage());
             modelAndView.addObject("token", token);
+            modelAndView.addObject("errorPasswordsMatching", e.getMessage());
             modelAndView.setViewName("authPages/login/resetPassword");
         } catch (Exception e) {
             System.out.println(e.getMessage());
