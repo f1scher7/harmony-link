@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
@@ -30,25 +31,28 @@ public class LoginSuccessListener {
 
     @EventListener
     public void onLoginSuccess(InteractiveAuthenticationSuccessEvent event) {
-        UserDetails userDetails = (UserDetails) event.getAuthentication().getPrincipal();
+        if (!(event.getAuthentication() instanceof OAuth2AuthenticationToken)) {
 
-        String login = userDetails.getUsername();
-        String ip = ((WebAuthenticationDetails) event.getAuthentication().getDetails()).getRemoteAddress();
+            UserDetails userDetails = (UserDetails) event.getAuthentication().getPrincipal();
 
-        UserAccount userAccount = this.userAccountRepository.findByLogin(login);
+            String login = userDetails.getUsername();
+            String ip = ((WebAuthenticationDetails) event.getAuthentication().getDetails()).getRemoteAddress();
 
-        if (userAccount == null) {
-            userAccount = this.userAccountRepository.findByEmail(login);
+            UserAccount userAccount = this.userAccountRepository.findByLogin(login);
+
+            if (userAccount == null) {
+                userAccount = this.userAccountRepository.findByEmail(login);
+            }
+
+            List<String> ips = userAccount.getIpAddresses();
+
+            if (!ips.contains(ip)) {
+                userAccount.addIpAddress(ip);
+                this.userAccountRepository.save(userAccount);
+            }
+
+            USER_LOGIN_LOGGER.info("User " + login + " logged in at " + LocalDateTime.now());
         }
-
-        List<String> ips = userAccount.getIpAddresses();
-
-        if (!ips.contains(ip)) {
-            userAccount.addIpAddress(ip);
-            this.userAccountRepository.save(userAccount);
-        }
-
-        USER_LOGIN_LOGGER.info("User " + login + " logged in at " + LocalDateTime.now());
     }
 
 }
