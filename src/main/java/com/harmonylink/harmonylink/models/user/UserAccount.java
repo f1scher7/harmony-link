@@ -21,9 +21,13 @@ public class UserAccount implements UserDetails {
     @Id
     private String id;
     @Field
+    private String googleId;
+    @Field
     private Role role;
     @Indexed(unique = true)
     private String login;
+    @Field
+    private String displayName;
     @Field
     private String password;
     @Field
@@ -35,11 +39,20 @@ public class UserAccount implements UserDetails {
     @Field
     private Character sex;
     @Field
+    private String profilePictureUrl;
+    @Field
     private boolean userAccountNonLocked = true;
 
 
     public UserAccount()  {
         this.ipAddresses = new ArrayList<>();
+    }
+
+    public UserAccount(String googleId, String displayName, String email, String profilePictureUrl) {
+        this.googleId = googleId;
+        this.displayName = displayName;
+        this.email = email;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public UserAccount(Role role, String login, String password, String email, LocalDate birthdate, Character sex) {
@@ -102,12 +115,20 @@ public class UserAccount implements UserDetails {
         return this.id;
     }
 
+    public String getGoogleId() {
+        return googleId;
+    }
+
     public Role getRole() {
         return this.role;
     }
 
     public String getLogin() {
         return this.login;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getPassword() {
@@ -130,10 +151,18 @@ public class UserAccount implements UserDetails {
         return this.sex;
     }
 
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
     public boolean isUserAccountNonLocked() {
         return this.userAccountNonLocked;
     }
 
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
 
     public void setRole(Role role) {
         this.role = role;
@@ -141,6 +170,10 @@ public class UserAccount implements UserDetails {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setPassword(String password) {
@@ -163,12 +196,16 @@ public class UserAccount implements UserDetails {
         this.userAccountNonLocked = userAccountNonLocked;
     }
 
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
 
     @Override
     public String toString() {
         return "UserAccount{" +
                 "role='" + this.role.name() +'\'' +
                 ", id='" + this.id + '\'' +
+                ", googleId='" + this.googleId + '\'' +
                 ", login='" + this.login + '\'' +
                 ", email='" + this.email + '\'' +
                 ", birthdate=" + this.birthdate +
