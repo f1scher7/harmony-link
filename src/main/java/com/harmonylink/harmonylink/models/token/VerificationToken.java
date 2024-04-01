@@ -18,7 +18,7 @@ public class VerificationToken {
     @Indexed(unique = true)
     private UserAccount userAccount;
     @Field
-    @Indexed(expireAfterSeconds = 600)
+    @Indexed(expireAfterSeconds = 900)
     private LocalDateTime localDateTime;
 
     public VerificationToken(String token, UserAccount userAccount) {
