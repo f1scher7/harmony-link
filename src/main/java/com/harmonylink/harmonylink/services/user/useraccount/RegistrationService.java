@@ -5,7 +5,7 @@ import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.token.VerificationToken;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.token.VerificationTokenRepository;
-import com.harmonylink.harmonylink.services.user.CustomUserAccountDetailsService;
+import com.harmonylink.harmonylink.services.user.custom.CustomUserAccountDetailsService;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -77,9 +77,9 @@ public class RegistrationService {
         String token = generateToken();
         VerificationToken verificationToken = new VerificationToken(token, userAccount);
 
+        this.emailService.sendVerificationEmail(userAccount, verificationToken.getToken());
         this.userAccountRepository.save(userAccount);
         this.verificationTokenRepository.save(verificationToken);
-        this.emailService.sendVerificationEmail(userAccount, verificationToken.getToken());
     }
 
     public void autoLogin(String login, String password) {

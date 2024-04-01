@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.listeners.login;
+package com.harmonylink.harmonylink.listeners.commonlogin;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;

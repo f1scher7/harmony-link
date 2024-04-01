@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.services.user;
+package com.harmonylink.harmonylink.services.user.custom;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
@@ -28,4 +28,5 @@ public class CustomUserAccountDetailsService implements UserDetailsService {
 
         return userAccount;
     }
+
 }

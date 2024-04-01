@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.listeners.login;
+package com.harmonylink.harmonylink.listeners.commonlogin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
