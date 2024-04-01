@@ -13,6 +13,10 @@ public class UserAccountUtil {
         return UUID.randomUUID().toString();
     }
 
+    public static String uniqueLoginGenerator(String email) {
+        return email.replaceAll("@.*", "") + generateToken();
+    }
+
     public static boolean isPasswordValid(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*") && password.matches(".*[0-9].*");
     }
