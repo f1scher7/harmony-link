@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HarmonyLink</title>
+</head>
+<body>
+    Jesteś zalogowany
+    <div th:if="${googleId != null}">
+        <p>Google ID: <span th:text="${googleId}"></span></p>
+        <p>Email: <span th:text="${username}"></span></p>
+    </div>
+
+    <div th:if="${googleId == null}">
+        <p>Login: <span th:text="${username}"></span></p>
+        <p>Email: <span th:text="${email}"></span></p>
+        <p>Hasło: <span th:text="${password}"></span></p>
+        <p>Płeć: <span th:text="${sex}"></span></p>
+        <p>IP: <span th:text="${ip}"></span></p>
+    </div>
+</body>
+</html>
