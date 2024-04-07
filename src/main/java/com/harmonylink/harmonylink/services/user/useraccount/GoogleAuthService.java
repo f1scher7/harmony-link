@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.harmonylink.harmonylink.utils.UserAccountUtil.uniqueLoginGenerator;
+import static com.harmonylink.harmonylink.utils.UserUtil.uniqueLoginGenerator;
 
 @Service
 public class GoogleAuthService {

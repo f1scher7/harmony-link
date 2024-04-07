@@ -25,7 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
-import static com.harmonylink.harmonylink.utils.UserAccountUtil.*;
+import static com.harmonylink.harmonylink.utils.UserUtil.*;
+
 
 @Service
 public class RegistrationService {

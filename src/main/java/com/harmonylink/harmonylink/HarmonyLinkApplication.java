@@ -3,9 +3,13 @@ package com.harmonylink.harmonylink;
 import com.harmonylink.harmonylink.enums.Role;
 import com.harmonylink.harmonylink.models.token.VerificationToken;
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.models.user.userprofile.City;
+import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.repositories.token.VerificationTokenRepository;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.token.ResetPasswordTokenRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,6 +19,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
@@ -25,13 +31,17 @@ public class HarmonyLinkApplication implements CommandLineRunner {
 
     private final UserAccountRepository userAccountRepository;
     private final ResetPasswordTokenRepository resetPasswordTokenRepository;
+    private final HobbyRepository hobbyRepository;
+    private final CityRepository cityRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final RegistrationService registrationService;
 
     @Autowired
-    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, VerificationTokenRepository verificationTokenRepository, RegistrationService registrationService) {
+    public HarmonyLinkApplication(UserAccountRepository userAccountRepository, ResetPasswordTokenRepository resetPasswordTokenRepository, HobbyRepository hobbyRepository, CityRepository cityRepository, VerificationTokenRepository verificationTokenRepository, RegistrationService registrationService) {
         this.userAccountRepository = userAccountRepository;
         this.resetPasswordTokenRepository = resetPasswordTokenRepository;
+        this.hobbyRepository = hobbyRepository;
+        this.cityRepository = cityRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.registrationService = registrationService;
     }
@@ -65,6 +75,7 @@ public class HarmonyLinkApplication implements CommandLineRunner {
             System.out.println(userAccount);
         }
         System.out.println();
-
+        
     }
+
 }

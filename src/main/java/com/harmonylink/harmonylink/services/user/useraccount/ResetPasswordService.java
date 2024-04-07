@@ -13,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.harmonylink.harmonylink.utils.UserAccountUtil.generateToken;
-import static com.harmonylink.harmonylink.utils.UserAccountUtil.isPasswordValid;
+import static com.harmonylink.harmonylink.utils.UserUtil.generateToken;
+import static com.harmonylink.harmonylink.utils.UserUtil.isPasswordValid;
 
 
 @Service
