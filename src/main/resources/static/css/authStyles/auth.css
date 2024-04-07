@@ -12,3 +12,25 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+@media (min-height: 700px) {
+    #carouselAuth {
+        margin-top: 6%;
+    }
+
+    .carousel-item img {
+        max-height: 550px;
+        object-fit: cover;
+    }
+}
+
+@media (min-height: 800px) {
+    #carouselAuth {
+        margin-top: 10%;
+    }
+
+    .carousel-item img {
+        max-height: 650px;
+        object-fit: cover;
+    }
+}
