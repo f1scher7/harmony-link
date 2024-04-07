@@ -51,7 +51,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-floating">
-                            <input type="date" class="form-control" id="birthdate" name="birthdate" th:value="${userData?.getBirthdate() ?: ''}" th:classappend="${errorUserAge} ? 'is-invalid'" required>
+                            <input type="date" class="form-control" id="birthdate" name="birthdate" th:value="${userData?.getBirthdate() ?: ''}" th:classappend="${errorUserAge} ? 'is-invalid'" min="1918-11-11" required>
                             <label for="birthdate">Data urodzenia</label>
                             <div class="invalid-feedback">
                                 <p class="ms-3 fw-bold" th:if="${errorUserAge}" th:text="${errorUserAge}"></p>
