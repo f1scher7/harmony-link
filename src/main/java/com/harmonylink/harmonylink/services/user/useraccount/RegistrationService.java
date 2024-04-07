@@ -50,13 +50,17 @@ public class RegistrationService {
 
 
     @Transactional
-    public void registerNewUserAccount(UserAccount userAccount) throws UserAlreadyExistsException, InvalidPasswordException, EmailAlreadyExistsException, EmailNotFoundException, UserTooYoungException {
+    public void registerNewUserAccount(UserAccount userAccount) throws UserAlreadyExistsException, InvalidPasswordException, EmailAlreadyExistsException, EmailNotFoundException, UserTooYoungException, InvalidLoginException {
         if (userAccount == null) {
             throw new IllegalArgumentException("UserAccount can't be null");
         }
 
-        if (this.userAccountRepository.findByLogin(userAccount.getLogin()) != null || userAccount.getLogin().isEmpty()) {
+        if (this.userAccountRepository.findByLogin(userAccount.getLogin()) != null) {
             throw new UserAlreadyExistsException(userAccount.getLogin());
+        }
+
+        if (!isLoginValid(userAccount.getLogin())) {
+            throw new InvalidLoginException();
         }
 
         if (userAccount.getPassword() == null || !isPasswordValid(userAccount.getPassword())) {

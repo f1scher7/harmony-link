@@ -1,16 +1,30 @@
 package com.harmonylink.harmonylink.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
 
+import static java.lang.Character.isLetterOrDigit;
 
 public class UserAccountUtil {
 
     public static String generateToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public static boolean isLoginValid(String login) {
+        if (login == null || login.length() < 4 || login.length() > 12) {
+            return false;
+        }
+
+        for (int i = 0; i < login.length(); i++) {
+            char c = login.charAt(i);
+            if (!isLetterOrDigit(c)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static String uniqueLoginGenerator(String email) {

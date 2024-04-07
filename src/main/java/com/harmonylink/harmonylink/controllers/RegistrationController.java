@@ -57,7 +57,7 @@ public class RegistrationController {
 
             redirectAttributes.addFlashAttribute("email", "Sprawdź maila (" + email + ") w celu weryfikacji konta.");
             modelAndView.setViewName("redirect:/auth/confirm-email");
-        } catch (UserAlreadyExistsException e) {
+        } catch (UserAlreadyExistsException | InvalidLoginException e) {
             modelAndView.setViewName("authPages/registration/registration");
             modelAndView.addObject("errorLogin", e.getMessage());
         } catch (InvalidPasswordException e) {
