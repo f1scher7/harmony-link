@@ -23,6 +23,10 @@ public class CustomUserAccountDetailsService implements UserDetailsService {
         UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
         if (userAccount == null) {
+            userAccount = this.userAccountRepository.findByEmail(login);
+        }
+
+        if (userAccount == null) {
             throw new UsernameNotFoundException("Użytkownik o loginie '" + login + "' nie istnieje");
         }
 
