@@ -6,11 +6,12 @@ import java.util.UUID;
 
 import static java.lang.Character.isLetterOrDigit;
 
-public class UserAccountUtil {
+public class UserUtil {
 
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }
+
 
     public static boolean isLoginValid(String login) {
         if (login == null || login.length() < 4 || login.length() > 12) {
@@ -31,9 +32,11 @@ public class UserAccountUtil {
         return email.replaceAll("@.*", "") + generateToken();
     }
 
+
     public static boolean isPasswordValid(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*") && password.matches(".*[0-9].*");
     }
+
 
     public static boolean isUserAtLeastSixteenYO(LocalDate birthdate) {
         LocalDate currentDate = LocalDate.now();
@@ -41,6 +44,13 @@ public class UserAccountUtil {
         int age = period.getYears();
 
         return age >= 16;
+    }
+
+    public static int getUserAge(LocalDate birthdate) {
+        LocalDate currentDate = LocalDate.now();
+        Period period = Period.between(birthdate, currentDate);
+
+        return period.getYears();
     }
 
 }
