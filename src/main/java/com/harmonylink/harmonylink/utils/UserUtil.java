@@ -1,5 +1,8 @@
 package com.harmonylink.harmonylink.utils;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
@@ -7,6 +10,10 @@ import java.util.UUID;
 import static java.lang.Character.isLetterOrDigit;
 
 public class UserUtil {
+
+    public static Pageable createPageableWithLimit(int limit) {
+        return PageRequest.of(0, limit);
+    }
 
     public static String generateToken() {
         return UUID.randomUUID().toString();
