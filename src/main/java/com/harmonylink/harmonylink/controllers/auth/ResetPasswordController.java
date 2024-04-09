@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.controllers;
+package com.harmonylink.harmonylink.controllers.auth;
 
 import com.harmonylink.harmonylink.models.token.ResetPasswordToken;
 import com.harmonylink.harmonylink.repositories.token.ResetPasswordTokenRepository;

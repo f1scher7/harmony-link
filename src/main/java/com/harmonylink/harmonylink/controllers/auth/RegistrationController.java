@@ -1,33 +1,23 @@
-package com.harmonylink.harmonylink.controllers;
+package com.harmonylink.harmonylink.controllers.auth;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.services.user.useraccount.RegistrationService;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/auth")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
-    private final AuthenticationSuccessHandler successHandler;
-
 
     @Autowired
-    public RegistrationController(RegistrationService registrationService, AuthenticationSuccessHandler successHandler) {
+    public RegistrationController(RegistrationService registrationService) {
         this.registrationService = registrationService;
-        this.successHandler = successHandler;
     }
 
 
@@ -37,7 +27,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public ModelAndView initiateNewUserRegistration(@ModelAttribute UserAccount userAccount, RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+    public ModelAndView initiateNewUserRegistration(@ModelAttribute UserAccount userAccount, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
 
         String email = "";
