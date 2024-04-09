@@ -6,10 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import static com.harmonylink.harmonylink.utils.UserUtil.getUserAge;
 
 @Document("user_profiles")
 public class UserProfile {
@@ -18,6 +15,8 @@ public class UserProfile {
     private String id;
     @DBRef
     private UserAccount userAccount;
+    @Field
+    private String nickname;
     @Field
     private boolean isOnline;
     @Field
@@ -38,11 +37,13 @@ public class UserProfile {
 
     public UserProfile() {}
 
-    public UserProfile(UserAccount userAccount, String city, int height, String relationshipStatus, List<String> hobbyIds, String fieldOfStudy) {
+    public UserProfile(UserAccount userAccount, String nickname, boolean isOnline, String city, Character sex, int age, int height, String relationshipStatus, List<String> hobbyIds, String fieldOfStudy) {
         this.userAccount = userAccount;
+        this.nickname = nickname;
+        this.isOnline = isOnline;
         this.city = city;
-        this.sex = userAccount.getSex();
-        this.age = getUserAge(userAccount.getBirthdate());
+        this.sex = sex;
+        this.age = age;
         this.height = height;
         this.relationshipStatus = relationshipStatus;
         this.hobbyIds = hobbyIds;
@@ -63,6 +64,10 @@ public class UserProfile {
 
     public UserAccount getUserAccount() {
         return this.userAccount;
+    }
+
+    public String getNickname() {
+        return this.nickname;
     }
 
     public String getCity() {
@@ -102,6 +107,10 @@ public class UserProfile {
         this.userAccount = userAccount;
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -110,12 +119,12 @@ public class UserProfile {
         this.isOnline = online;
     }
 
-    public void setSex() {
-        this.sex = this.userAccount.getSex();
+    public void setSex(Character sex) {
+        this.sex = sex;
     }
 
-    public void setAge(LocalDate birthdate) {
-        this.age = getUserAge(birthdate);
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public void setHeight(int height) {
