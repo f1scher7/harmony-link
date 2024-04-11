@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import static java.lang.Character.isLetterOrDigit;
 
-public class UserUtil {
+public final class UserUtil {
 
     public static Pageable createPageableWithLimit(int limit) {
         return PageRequest.of(0, limit);

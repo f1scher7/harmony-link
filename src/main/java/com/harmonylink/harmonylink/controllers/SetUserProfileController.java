@@ -32,7 +32,7 @@ public class SetUserProfileController {
     }
 
 
-    @GetMapping("/set-userprofile")
+    @GetMapping("/set-profile")
     public String showSetUserProfile(Model model, Authentication authentication) {
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
             String email = oauthToken.getPrincipal().getAttribute("email");
@@ -45,7 +45,7 @@ public class SetUserProfileController {
         return "setUserProfileData";
     }
 
-    @PostMapping("/set-userprofile")
+    @PostMapping("/set-profile")
     public ModelAndView setUserProfile(@ModelAttribute UserProfile userProfile, Authentication authentication) {
         ModelAndView modelAndView = new ModelAndView();
 

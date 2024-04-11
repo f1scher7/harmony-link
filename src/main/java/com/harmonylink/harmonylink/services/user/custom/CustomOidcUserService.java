@@ -46,9 +46,6 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
         String email = (String) oidcIdToken.getClaims().get("email");
         String profilePictureUrl = (String) oidcIdToken.getClaims().get("picture");
 
-        System.out.println("name: " + displayName);
-        System.out.println("picture: " + profilePictureUrl);
-
         String tokenId = oidcIdToken.getTokenValue();
         String issuer = (String) oidcIdToken.getClaims().get("iss");
         Date issuedAt = oidcIdToken.getIssuedAt() != null ? Date.from(oidcIdToken.getIssuedAt()) : null;
@@ -64,7 +61,6 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
         }
 
         this.googleAuthService.saveOrUpdateUserAccount(new UserAccount(googleId, displayName, email, profilePictureUrl), ip);
-
         UserAccount userAccount = this.userAccountRepository.findByGoogleId(googleId);
 
         if (this.oidcIdTokenRepository.findByUserAccount(userAccount) == null) {
