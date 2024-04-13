@@ -1,0 +1,41 @@
+.bg-color {
+    background-color: #f6f9ff;
+}
+
+.profile-form {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: 0 4px 8px 0 rgb(191, 193, 253);
+}
+
+.small-text {
+    font-size: 0.90rem !important;
+}
+
+.selected-hobby {
+    background-color: #3a8dee;
+    color: white;
+    border-radius: 3px;
+}
+
+.form-control {
+    border-width: 2px !important;
+}
+
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+select {
+    border-width: 2px !important;
+}
+
+select:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
