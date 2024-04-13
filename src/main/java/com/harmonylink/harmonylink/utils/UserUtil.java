@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
 
+import static java.lang.Character.isLetter;
 import static java.lang.Character.isLetterOrDigit;
 
 public final class UserUtil {
@@ -19,6 +20,18 @@ public final class UserUtil {
         return UUID.randomUUID().toString();
     }
 
+    public static boolean isStringContainsOnlyLetters(String string) {
+        String stringWithoutSpaces = string.replaceAll(" ", "");
+
+        for (int i = 0; i < stringWithoutSpaces.length(); i++) {
+            char c = stringWithoutSpaces.charAt(i);
+            if (!isLetter(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public static boolean isLoginValid(String login) {
         if (login == null || login.length() < 4 || login.length() > 12) {
