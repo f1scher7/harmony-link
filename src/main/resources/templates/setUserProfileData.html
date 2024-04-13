@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/setUserProfileData.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Twój profil</title>
+</head>
+<body class="bg-color">
+    <div class="container vh-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-8 d-flex justify-content-center profile-form">
+                <form id="set-profile-form" action="/set-profile" method="post">
+                    <div class="col-12 d-flex justify-content-center">
+                        <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="img-fluid w-50 mt-3" alt="">
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <h5 class="w-50 text-center">Wypełnij nasz formularz filtrów, abyśmy mogli odnaleźć dla Ciebie idealnego współrozmówce</h5>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <select class="form-select" id="sex" name="sex" required>
+                                        <option value="M">Mężczyzna</option>
+                                        <option value="K">Kobieta</option>
+                                    </select>
+                                    <label for="sex">Płeć</label>
+                                </div>
+                            </div>
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <input type="number" class="form-control" id="age" th:value="${userProfile?.getAge() ?: ''}" th:classappend="${errorAge != null ? 'is-invalid' : ''}" placeholder="Wiek" name="age" max="87" required>
+                                    <label for="age" class="form-label">Wiek</label>
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold" th:if="${errorAge}" th:text="${errorAge}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <select class="form-select small-text" id="relationshipStatus" th:classappend="${errorRelationship != null ? 'is-invalid' : ''}" name="relationshipStatus">
+                                        <option value="single" selected>Singiel/Singielka</option>
+                                        <option value="relationship">W związku</option>
+                                        <option value="married">Żonaty/Zamężna</option>
+                                        <option value="divorced">Wszystko skomplikowane</option>
+                                    </select>
+                                    <label for="relationshipStatus" class="form-label">Status związku</label>
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold" th:if="${errorRelationship}" th:text="${errorRelationship}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <input type="number" class="form-control" id="height" th:value="${userProfile?.getHeight() ?: ''}" th:classappend="${errorHeight != null ? 'is-invalid' : ''}" placeholder="Wzrost" name="height" required>
+                                    <label for="height" class="form-label">Wzrost</label>
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold" th:if="${errorHeight}" th:text="${errorHeight}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column align-items-center">
+                                    <input type="text" class="form-control" id="city" th:value="${userProfile?.getCity() ?: ''}" th:classappend="${errorCity != null ? 'is-invalid' : ''}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
+                                    <label for="city" class="form-label">Miasto</label>
+
+                                    <datalist id="cityList">
+                                    </datalist>
+
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold" th:if="${errorCity}" th:text="${errorCity}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column align-items-center">
+                                    <input type="text" class="form-control" id="studyField" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" autocomplete="off" required>
+                                    <label for="studyField" class="form-label">Kierunek studiów/edukacji</label>
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold" th:if="${errorStudy}" th:text="${errorStudy}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 mb-5">
+                        <div class="col-12 d-flex form-floating d-flex flex-column align-items-center">
+                            <div class="form-floating w-50">
+                                <input type="text" class="form-control" id="hobbies" th:classappend="${errorHobbies != null ? 'is-invalid' : ''}" placeholder="Hobby (wybierz spośród podanych)" list="hobbyList" autocomplete="off">
+                                <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
+
+                                <div id="selectedHobbies">
+                                </div>
+
+                                <datalist id="hobbyList">
+                                </datalist>
+
+                                <div class="invalid-feedback">
+                                    <p class="ms-3 fw-bold" th:if="${errorHobbies}" th:text="${errorHobbies}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="hobbyValues" id="hobbyValuesField" value="">
+
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mb-4">
+                        <button type="submit" class="btn btn-primary w-50 py-2">Zapisz swój profil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <script src="/js/setProfile.js">
+    </script>
+</body>
+</html>
