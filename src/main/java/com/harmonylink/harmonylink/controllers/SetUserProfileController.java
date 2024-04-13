@@ -1,34 +1,65 @@
 package com.harmonylink.harmonylink.controllers;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.models.user.userprofile.City;
+import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.harmonylink.harmonylink.utils.UserUtil.createPageableWithLimit;
 
 @Controller
 public class SetUserProfileController {
 
     private final UserProfileService userProfileService;
     private final UserAccountRepository userAccountRepository;
+    private final CityRepository cityRepository;
+    private final HobbyRepository hobbyRepository;
 
 
     @Autowired
-    public SetUserProfileController(UserProfileService userProfileService, UserAccountRepository userAccountRepository) {
+    public SetUserProfileController(UserProfileService userProfileService, UserAccountRepository userAccountRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
         this.userProfileService = userProfileService;
         this.userAccountRepository = userAccountRepository;
+        this.cityRepository = cityRepository;
+        this.hobbyRepository = hobbyRepository;
+    }
+
+
+    @GetMapping("/cities")
+    @ResponseBody
+    public List<String> getCities(@RequestParam("prefix") String prefix) {
+        Pageable pageable = createPageableWithLimit(5);
+        List<City> cities = this.cityRepository.findCitiesStartingWith(prefix, pageable);
+
+        return cities.stream().map(City::getName).collect(Collectors.toList());
+    }
+
+    @GetMapping("/hobbies")
+    @ResponseBody
+    public List<String> getHobbies(@RequestParam("prefix") String prefix) {
+        Pageable pageable = createPageableWithLimit(5);
+        List<Hobby> hobbies = this.hobbyRepository.findHobbiesStartingWith(prefix, pageable);
+
+        return hobbies.stream().map(Hobby::getName).collect(Collectors.toList());
     }
 
 
@@ -46,18 +77,28 @@ public class SetUserProfileController {
     }
 
     @PostMapping("/set-profile")
-    public ModelAndView setUserProfile(@ModelAttribute UserProfile userProfile, Authentication authentication) {
+    public ModelAndView setUserProfile(@ModelAttribute UserProfile userProfile, @RequestParam("hobbyValues") String hobbyValues, Authentication authentication) {
         ModelAndView modelAndView = new ModelAndView();
+
+        try {
+            List<String> hobbyValuesList = List.of(hobbyValues.split(","));
+            userProfile.setHobbyIds(this.userProfileService.getHobbyIds(hobbyValuesList));
+        } catch (NullPointerException e) {
+            modelAndView.setViewName("setUserProfileData");
+            modelAndView.addObject("errorHobbies", new InvalidUserHobbiesExceptions().getMessage());
+        }
 
         if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
             String googleId = oAuth2AuthenticationToken.getPrincipal().getAttribute("sub");
             UserAccount userAccount = this.userAccountRepository.findByGoogleId(googleId);
 
+            modelAndView.addObject("userProfile", userProfile);
             processUserProfile(modelAndView, userProfile, userAccount);
-
         } else if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
             String login = usernamePasswordAuthenticationToken.getName();
             UserAccount userAccount = this.userAccountRepository.findByLogin(login);
+
+            modelAndView.addObject("userProfile", userProfile);
 
             processUserProfile(modelAndView, userProfile, userAccount);
         }
@@ -71,21 +112,21 @@ public class SetUserProfileController {
             modelAndView.setViewName("redirect:/");
         } catch (UserNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (InvalidUserCityException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorCity", e.getMessage());
         } catch (InvalidRelationshipStatusException e) {
             modelAndView.setViewName("setUserProfileData");
             modelAndView.addObject("errorRelationship", e.getMessage());
-        } catch (InvalidUserHobbiesExceptions e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorHobbies", e.getMessage());
         } catch (InvalidUserHeightException e) {
             modelAndView.setViewName("setUserProfileData");
             modelAndView.addObject("errorHeight", e.getMessage());
+        } catch (InvalidUserCityException e) {
+            modelAndView.setViewName("setUserProfileData");
+            modelAndView.addObject("errorCity", e.getMessage());
         } catch (InvalidUserFieldOfStudyException e) {
             modelAndView.setViewName("setUserProfileData");
             modelAndView.addObject("errorStudy", e.getMessage());
+        } catch (InvalidUserHobbiesExceptions e) {
+            modelAndView.setViewName("setUserProfileData");
+            modelAndView.addObject("errorHobbies", e.getMessage());
         } catch (UserTooYoungException e) {
             modelAndView.setViewName("setUserProfileData");
             modelAndView.addObject("errorAge", e.getMessage());
