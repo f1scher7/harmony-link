@@ -1,1 +1,33 @@
+.body-bg-color {
+    background-color: #f6f9ff;
+}
 
+.nav-bg-color {
+    background-color: #59a5fc;
+}
+
+.navbar-nav .nav-item {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border: 1px solid transparent;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-nav .nav-link {
+    height: auto !important;
+    font-size: 1.15rem !important;
+    color: white !important;
+}
+
+.navbar-nav .nav-item:hover,
+.navbar-nav .nav-item:focus {
+    border-radius: 7px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+}
+
+.user-camera {
+    transform: scaleX(-1);
+    border-radius: 20px;
+}
