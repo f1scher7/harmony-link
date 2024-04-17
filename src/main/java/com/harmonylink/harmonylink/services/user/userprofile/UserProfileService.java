@@ -1,5 +1,6 @@
 package com.harmonylink.harmonylink.services.user.userprofile;
 
+import com.harmonylink.harmonylink.enums.UserActivityStatus;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
@@ -37,12 +38,14 @@ public class UserProfileService {
         this.hobbyRepository = hobbyRepository;
     }
 
+
     @Transactional
     public void setOrUpdateUserProfileData(UserProfile userProfile, String userAccountId) throws UserNotFoundException, InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         UserAccount userAccount = this.userAccountRepository.findById(userAccountId).orElseThrow(UserNotFoundException::new);
 
         validateUserProfileData(userProfile, userAccount);
 
+        userProfile.setActivityStatus(UserActivityStatus.OFFLINE);
         userProfile.setUserAccount(userAccount);
         this.userProfileRepository.save(userProfile);
     }

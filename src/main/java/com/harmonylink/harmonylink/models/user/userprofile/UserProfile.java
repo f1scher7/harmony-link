@@ -1,5 +1,6 @@
 package com.harmonylink.harmonylink.models.user.userprofile;
 
+import com.harmonylink.harmonylink.enums.UserActivityStatus;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -18,7 +19,7 @@ public class UserProfile {
     @Field
     private String nickname;
     @Field
-    private boolean isOnline;
+    private UserActivityStatus activityStatus;
     @Field
     private String city;
     @Field
@@ -37,10 +38,10 @@ public class UserProfile {
 
     public UserProfile() {}
 
-    public UserProfile(UserAccount userAccount, String nickname, boolean isOnline, String city, Character sex, int age, int height, String relationshipStatus, List<String> hobbyIds, String fieldOfStudy) {
+    public UserProfile(UserAccount userAccount, String nickname, String city, Character sex, int age, int height, String relationshipStatus, List<String> hobbyIds, String fieldOfStudy) {
         this.userAccount = userAccount;
         this.nickname = nickname;
-        this.isOnline = isOnline;
+        this.activityStatus = UserActivityStatus.OFFLINE;
         this.city = city;
         this.sex = sex;
         this.age = age;
@@ -70,12 +71,12 @@ public class UserProfile {
         return this.nickname;
     }
 
-    public String getCity() {
-        return this.city;
+    public UserActivityStatus getActivityStatus() {
+        return this.activityStatus;
     }
 
-    public boolean isOnline() {
-        return this.isOnline;
+    public String getCity() {
+        return this.city;
     }
 
     public Character getSex() {
@@ -111,12 +112,12 @@ public class UserProfile {
         this.nickname = nickname;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setActivityStatus(UserActivityStatus activityStatus) {
+        this.activityStatus = activityStatus;
     }
 
-    public void setOnline(boolean online) {
-        this.isOnline = online;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public void setSex(Character sex) {
@@ -149,7 +150,7 @@ public class UserProfile {
         return "UserProfile{" +
                 "id='" + this.id + '\'' +
                 ", userAccount=" + this.userAccount +
-                ", isOnline=" + this.isOnline +
+                ", activityStatus=" + this.activityStatus +
                 ", city=" + this.city +
                 ", sex=" + this.sex +
                 ", age=" + this.age +
