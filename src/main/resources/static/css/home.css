@@ -3,24 +3,21 @@
 }
 
 .nav-bg-color {
-    background-color: #59a5fc;
+    background-color: #439dfd;
 }
 
-.navbar-nav .nav-item {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
+.nav-item {
     border: 1px solid transparent;
     transition: all 0.3s ease !important;
 }
 
-.navbar-nav .nav-link {
-    height: auto !important;
+.nav-link {
     font-size: 1.15rem !important;
     color: white !important;
 }
 
-.navbar-nav .nav-item:hover,
-.navbar-nav .nav-item:focus {
+.nav-item:hover,
+.nav-item:focus {
     border-radius: 7px;
     border-width: 1px;
     border-style: solid;
@@ -29,5 +26,12 @@
 
 .user-camera {
     transform: scaleX(-1);
+    box-shadow: 0 2px 8px 0 rgb(173, 173, 199);
+    border-radius: 20px;
+}
+
+.info-div {
+    background-color: aliceblue;
+    box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
     border-radius: 20px;
 }
