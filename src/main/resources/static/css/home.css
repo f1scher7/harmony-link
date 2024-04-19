@@ -2,6 +2,7 @@
     background-color: #f6f9ff;
 }
 
+
 .nav-bg-color {
     background-color: #439dfd;
 }
@@ -24,14 +25,36 @@
     border-color: white;
 }
 
+
 .user-camera {
     transform: scaleX(-1);
     box-shadow: 0 2px 8px 0 rgb(173, 173, 199);
     border-radius: 20px;
 }
 
+
 .info-div {
     background-color: aliceblue;
     box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
     border-radius: 20px;
+}
+
+
+.btn.btn-start {
+    color: #ffffff;
+    background-color: #4fef85;
+    border-color: #4fef85;
+}
+
+.btn.btn-start:hover {
+    color: #ffffff;
+    background-color: #50C878;
+    border-color: #50C878;
+}
+
+.btn.btn-start:focus,
+.btn.btn-start:active {
+    color: #ffffff !important;
+    background-color: #4fef85 !important;
+    border-color: #4fef85 !important;
 }
