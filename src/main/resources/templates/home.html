@@ -17,7 +17,7 @@
     <nav class="navbar navbar-expand-lg nav-bg-color">
         <div class="container-fluid d-flex align-items-center">
             <a class="navbar-brand w-25 ps-3" href="/">
-                <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-75" th:alt="asd" oncontextmenu="return false;">
+                <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -54,14 +54,11 @@
                     </div>
                     <div class="col-12 d-flex justify-content-center mt-5 mb-5">
                         <div class="d-inline-block">
-                            <h5 class="font-weight-bold">
-                                <i class="fas fa-users"></i> Liczba użytkowników online: 123
+                            <h5 class="font-weight-bold" id="users-online">
                             </h5>
-                            <h5 class="font-weight-bold">
-                                <i class="fas fa-search"></i> Liczba użytkowników szukających: 123
+                            <h5 class="font-weight-bold" id="users-in-search">
                             </h5>
-                            <h5 class="font-weight-bold">
-                                <i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: 123
+                            <h5 class="font-weight-bold" id="users-in-call">
                             </h5>
                         </div>
                     </div>
@@ -104,6 +101,8 @@
         </div>
 
     </div>
+
+    <span id="user-profile-id" th:text="${userProfile?.getId()}" style="display: none;"></span>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>

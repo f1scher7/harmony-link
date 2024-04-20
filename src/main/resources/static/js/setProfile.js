@@ -13,6 +13,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/cities',
             data: {prefix: prefix},
+            type: 'GET',
             success: function (data) {
                 let dataList = $("#cityList");
                 dataList.empty();
@@ -37,6 +38,7 @@ $(document).ready(function () {
             $.ajax({
                 url: '/hobbies',
                 data: {prefix: prefix},
+                type: 'GET',
                 success: function (data) {
                     dataList.empty();
                     $.each(data, function (index, hobby) {
