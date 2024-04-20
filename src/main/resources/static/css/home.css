@@ -38,23 +38,3 @@
     box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
     border-radius: 20px;
 }
-
-
-.btn.btn-start {
-    color: #ffffff;
-    background-color: #4fef85;
-    border-color: #4fef85;
-}
-
-.btn.btn-start:hover {
-    color: #ffffff;
-    background-color: #50C878;
-    border-color: #50C878;
-}
-
-.btn.btn-start:focus,
-.btn.btn-start:active {
-    color: #ffffff !important;
-    background-color: #4fef85 !important;
-    border-color: #4fef85 !important;
-}
