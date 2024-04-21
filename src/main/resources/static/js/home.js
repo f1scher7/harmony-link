@@ -21,11 +21,31 @@ $(document).ready(function (url, data) {
     navigator.mediaDevices.getUserMedia( {video: true, audio: true})
         .then(stream => {
             videoElement.srcObject = stream;
-            audioElement.srcObject = stream
+            audioElement.srcObject = stream;
+            $('#camera-error').addClass('d-none');
         })
         .catch(error => {
             console.error("Error accessing camera and microphone", error);
+            $('#user-camera-div').addClass('info-div');
+            $('#user-camera').remove();
+            $('#camera-error').removeClass('d-none');
+            $('#start-btn').addClass('disabled');
+            $('#filters-btn').addClass('disabled')
         });
+
+    function checkCameraStatus () {
+        if (videoElement && videoElement.srcObject) {
+            let tracks = videoElement.srcObject.getTracks();
+            if (tracks.length > 0) {
+                $('#user-camera-div').removeClass('h-100');
+            }
+        } else {
+            $('#user-camera-div').addClass('h-100')
+        }
+    }
+
+    checkCameraStatus();
+    videoElement.onplaying = checkCameraStatus;
 
 
     function fetchUsersActivityStatus() {
