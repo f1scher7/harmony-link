@@ -49,7 +49,7 @@
             <div class="col-md-6 col-lg-6 d-flex justify-content-center align-items-center">
                 <div class="info-div h-100 d-flex justify-content-center align-items-center">
                 <div class="row">
-                    <div class="w-100 d-flex justify-content-center mt-2 mb-4">
+                    <div class="w-100 d-flex justify-content-center mt-2 mb-5">
                         <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="img-fluid w-50" alt="" oncontextmenu="return false;">
                     </div>
                     <div class="col-12 d-flex justify-content-center mt-5 mb-5">
@@ -62,7 +62,9 @@
                             </h5>
                         </div>
                     </div>
-                    <div class="col-md-12 mb-4 mt-4">
+                    <div class="col-md-12 mb-5 mt-4">
+                    </div>
+                    <div class="col-md-12 mt-1">
                     </div>
                     <div class="w-100 d-flex justify-content-center mt-5">
                         <div class="text-center w-25">
@@ -74,22 +76,27 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-6">
-                <div class="embed-responsive embed-responsive-21by9">
+                <div id="user-camera-div" class="embed-responsive embed-responsive-21by9 d-flex justify-content-center align-items-center">
                     <video id="user-camera" class="w-100 h-100 embed-responsive-item user-camera" autoplay></video>
                     <audio id="user-audio" autoplay></audio>
+
+                    <div id="camera-error" class="alert alert-danger d-none w-75" role="alert" style="margin-bottom: 90px;">
+                        Błąd podczas uzyskiwania dostępu do kamery i mikrofonu.
+                        Prosimy zezwolić na dostęp do kamery i mikrofonu w przeglądarce.
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row mt-3 w-100">
             <div class="col-md-6 d-flex flex-row align-items-center justify-content-center ps-0">
-                <button type="button" class="btn btn-success w-100 h-100">
+                <button type="button" id="start-btn" class="btn btn-success w-100 h-100">
                     <i class="fas fa-play"></i> Start
                 </button>
-                <button type="button" class="btn btn-danger w-100 h-100 mx-3">
+                <button type="button" id="stop-btn" class="btn btn-danger w-100 h-100 mx-3 disabled">
                     <i class="fas fa-stop"></i> Stop
                 </button>
-                <button type="button" class="btn btn-primary w-100 h-100">
+                <button type="button" id="filters-btn" class="btn btn-primary w-100 h-100">
                     <i class="fas fa-sliders-h"></i> Filtry
                 </button>
             </div>
@@ -99,7 +106,6 @@
                 <button type="button" class="btn btn-primary w-100">Start</button>
             </div>
         </div>
-
     </div>
 
     <span id="user-profile-id" th:text="${userProfile?.getId()}" style="display: none;"></span>
