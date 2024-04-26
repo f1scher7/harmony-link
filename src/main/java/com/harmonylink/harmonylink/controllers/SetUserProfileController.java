@@ -2,10 +2,12 @@ package com.harmonylink.harmonylink.controllers;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.user.userprofile.City;
+import com.harmonylink.harmonylink.models.user.userprofile.Education;
 import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.EducationRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
@@ -31,18 +33,29 @@ public class SetUserProfileController {
 
     private final UserProfileService userProfileService;
     private final UserAccountRepository userAccountRepository;
+    private final EducationRepository educationRepository;
     private final CityRepository cityRepository;
     private final HobbyRepository hobbyRepository;
 
 
     @Autowired
-    public SetUserProfileController(UserProfileService userProfileService, UserAccountRepository userAccountRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
+    public SetUserProfileController(UserProfileService userProfileService, UserAccountRepository userAccountRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
         this.userProfileService = userProfileService;
         this.userAccountRepository = userAccountRepository;
+        this.educationRepository = educationRepository;
         this.cityRepository = cityRepository;
         this.hobbyRepository = hobbyRepository;
     }
 
+
+    @GetMapping("/educations")
+    @ResponseBody
+    public List<String> getEducations(@RequestParam("prefix") String prefix) {
+        Pageable pageable = createPageableWithLimit(5);
+        List<Education> educations = this.educationRepository.findEducationStartWith(prefix, pageable);
+
+        return educations.stream().map(Education::getName).collect(Collectors.toList());
+    }
 
     @GetMapping("/cities")
     @ResponseBody
