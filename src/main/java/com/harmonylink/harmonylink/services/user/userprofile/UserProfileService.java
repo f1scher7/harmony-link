@@ -6,6 +6,7 @@ import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.EducationRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
@@ -26,14 +27,16 @@ public class UserProfileService {
 
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
+    private final EducationRepository educationRepository;
     public final CityRepository cityRepository;
     public final HobbyRepository hobbyRepository;
 
 
     @Autowired
-    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
+    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
         this.userAccountRepository = userAccountRepository;
         this.userProfileRepository = userProfileRepository;
+        this.educationRepository = educationRepository;
         this.cityRepository = cityRepository;
         this.hobbyRepository = hobbyRepository;
     }
@@ -63,7 +66,7 @@ public class UserProfileService {
             throw new InvalidUserCityException();
         }
 
-        if (userProfile.getFieldOfStudy() == null || userProfile.getFieldOfStudy().length() < 5 || !isStringContainsOnlyLetters(userProfile.getFieldOfStudy())) {
+        if (userProfile.getFieldOfStudy() == null || this.educationRepository.findByName(userProfile.getFieldOfStudy()) == null) {
             throw new InvalidUserFieldOfStudyException();
         }
 
