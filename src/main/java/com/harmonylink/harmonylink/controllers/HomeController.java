@@ -53,7 +53,6 @@ public class HomeController {
 
         if (userProfileOptional.isPresent()) {
             userProfile = userProfileOptional.get();
-            System.out.println(userProfile);
             userProfile.setActivityStatus(UserActivityStatus.OFFLINE);
             this.userProfileRepository.save(userProfile);
         }
