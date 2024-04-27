@@ -93,8 +93,12 @@
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
-                                    <input type="text" class="form-control" id="studyField" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" autocomplete="off" required>
-                                    <label for="studyField" class="form-label">Kierunek studiów/edukacji</label>
+                                    <input type="text" class="form-control" id="study" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
+                                    <label for="study" class="form-label">Kierunek studiów/edukacji</label>
+
+                                    <datalist id="educationList">
+                                    </datalist>
+
                                     <div class="invalid-feedback">
                                         <p class="ms-3 fw-bold" th:if="${errorStudy}" th:text="${errorStudy}"></p>
                                     </div>
