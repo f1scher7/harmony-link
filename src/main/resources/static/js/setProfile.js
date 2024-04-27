@@ -8,6 +8,23 @@ $(document).ready(function () {
         updateHobbyIdsField();
     })
 
+    $('#study').on('input', function () {
+        let prefix = $(this).val();
+        $.ajax({
+            url: '/educations',
+            data: {prefix: prefix},
+            type: 'GET',
+            success: function (data) {
+                let dataList = $('#educationList');
+                dataList.empty();
+
+                $.each(data, function (index, education) {
+                    dataList.append($("<option>").val(education));
+                })
+            }
+        })
+    })
+
     $('#city').on('input', function () {
         let prefix = $(this).val();
         $.ajax({
@@ -19,7 +36,7 @@ $(document).ready(function () {
                 dataList.empty();
 
                 $.each(data, function (index, city) {
-                    dataList.append($("<option>").val(city))
+                    dataList.append($("<option>").val(city));
                 })
             }
         })
