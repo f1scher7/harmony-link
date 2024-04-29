@@ -6,9 +6,6 @@ import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepo
 import com.harmonylink.harmonylink.services.user.custom.CustomOidcUserService;
 import com.harmonylink.harmonylink.services.user.custom.CustomUserAccountDetailsService;
 import com.harmonylink.harmonylink.utils.SecurityUtil;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +30,8 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.authorization.AuthorizationDecision;
 
-import java.io.IOException;
 import java.util.Set;
 
 @Configuration
@@ -82,39 +77,7 @@ public class SecurityConfig  {
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
-        return new SimpleUrlAuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                if (response.isCommitted()) {
-                    return;
-                }
-                if (isAutoLogin(authentication)) {
-                    response.sendRedirect(request.getContextPath() + "/auth/confirm-email");
-                } else {
-                    UserAccount userAccount = null;
-
-                    if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
-                        userAccount = SecurityConfig.this.userAccountRepository.findByGoogleId(oAuth2AuthenticationToken.getPrincipal().getAttribute("sub"));
-                    } else if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
-                        userAccount = SecurityConfig.this.userAccountRepository.findByLogin(usernamePasswordAuthenticationToken.getName());
-                    }
-                    
-                    if (SecurityConfig.this.userProfileRepository.findByUserAccount(userAccount) == null) {
-                        response.sendRedirect(request.getContextPath() + "/set-profile");
-                    } else if (SecurityConfig.this.userProfileRepository.findByUserAccount(userAccount) != null) {
-                        super.setDefaultTargetUrl("/");
-                        super.onAuthenticationSuccess(request, response, authentication);
-                    } else {
-                        response.sendRedirect(request.getContextPath() + "/auth/login?error=true");
-                    }
-                }
-            }
-
-            private boolean isAutoLogin(Authentication authentication) {
-                return authentication.getAuthorities().stream()
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TEMP_USER"));
-            }
-        };
+        return new com.harmonylink.harmonylink.handlers.security.AuthenticationSuccessHandler(this.userAccountRepository, this.userProfileRepository);
     }
 
     @Bean
