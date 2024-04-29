@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class HomeController {
@@ -43,21 +41,6 @@ public class HomeController {
         return usersActivityStatus;
     }
 
-    @PostMapping("/report-user-offline")
-    @ResponseBody
-    public void reportUserStatusOffline(@RequestBody Map<String, String> jsonBody) {
-        String userProfileId = jsonBody.get("userProfileId");
-
-        Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
-        UserProfile userProfile = null;
-
-        if (userProfileOptional.isPresent()) {
-            userProfile = userProfileOptional.get();
-            userProfile.setActivityStatus(UserActivityStatus.OFFLINE);
-            this.userProfileRepository.save(userProfile);
-        }
-    }
-
 
     @GetMapping
     public String showHomePage(Model model, Authentication authentication) {
@@ -72,8 +55,6 @@ public class HomeController {
         }
 
         UserProfile userProfile = this.userProfileRepository.findByUserAccount(userAccount);
-        userProfile.setActivityStatus(UserActivityStatus.ONLINE);
-        this.userProfileRepository.save(userProfile);
 
         model.addAttribute("userProfile", userProfile);
 

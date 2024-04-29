@@ -68,16 +68,4 @@ $(document).ready(function (url, data) {
     fetchUsersActivityStatus()
     setInterval(fetchUsersActivityStatus, 3000);
 
-
-    function reportUserStatusOffline (userProfileId) {
-        const data = JSON.stringify({userProfileId: userProfileId});
-        navigator.sendBeacon('/report-user-offline', new Blob([data], { type: 'application/json' }));
-
-    }
-
-    window.addEventListener('beforeunload', function (event) {
-        let userProfileId = $('#user-profile-id').text();
-        reportUserStatusOffline(userProfileId);
-    });
-
 })
