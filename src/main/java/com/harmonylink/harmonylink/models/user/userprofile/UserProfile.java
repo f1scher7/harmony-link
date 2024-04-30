@@ -1,6 +1,6 @@
 package com.harmonylink.harmonylink.models.user.userprofile;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatus;
+import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,13 +13,11 @@ import java.util.List;
 public class UserProfile {
 
     @Id
-    private String id;
+    private String userProfileId;
     @DBRef
     private UserAccount userAccount;
     @Field
     private String nickname;
-    @Field
-    private UserActivityStatus activityStatus;
     @Field
     private String city;
     @Field
@@ -41,7 +39,6 @@ public class UserProfile {
     public UserProfile(UserAccount userAccount, String nickname, String city, Character sex, int age, int height, String relationshipStatus, List<String> hobbyIds, String fieldOfStudy) {
         this.userAccount = userAccount;
         this.nickname = nickname;
-        this.activityStatus = UserActivityStatus.OFFLINE;
         this.city = city;
         this.sex = sex;
         this.age = age;
@@ -60,7 +57,7 @@ public class UserProfile {
 
 
     public String getId() {
-        return this.id;
+        return this.userProfileId;
     }
 
     public UserAccount getUserAccount() {
@@ -69,10 +66,6 @@ public class UserProfile {
 
     public String getNickname() {
         return this.nickname;
-    }
-
-    public UserActivityStatus getActivityStatus() {
-        return this.activityStatus;
     }
 
     public String getCity() {
@@ -112,10 +105,6 @@ public class UserProfile {
         this.nickname = nickname;
     }
 
-    public void setActivityStatus(UserActivityStatus activityStatus) {
-        this.activityStatus = activityStatus;
-    }
-
     public void setCity(String city) {
         this.city = city;
     }
@@ -148,9 +137,8 @@ public class UserProfile {
     @Override
     public String toString() {
         return "UserProfile{" +
-                "id='" + this.id + '\'' +
+                "id='" + this.userProfileId + '\'' +
                 ", userAccount=" + this.userAccount +
-                ", activityStatus=" + this.activityStatus +
                 ", city=" + this.city +
                 ", sex=" + this.sex +
                 ", age=" + this.age +

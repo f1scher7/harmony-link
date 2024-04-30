@@ -1,6 +1,6 @@
 package com.harmonylink.harmonylink.enums;
 
-public enum UserActivityStatus {
+public enum UserActivityStatusEnum {
 
     ONLINE,
     OFFLINE,

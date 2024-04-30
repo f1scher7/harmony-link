@@ -1,6 +1,5 @@
 package com.harmonylink.harmonylink.services.user.userprofile;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatus;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.user.userprofile.Hobby;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.harmonylink.harmonylink.utils.UserUtil.getUserAge;
-import static com.harmonylink.harmonylink.utils.UserUtil.isStringContainsOnlyLetters;
 
 @Service
 public class UserProfileService {
@@ -48,7 +46,6 @@ public class UserProfileService {
 
         validateUserProfileData(userProfile, userAccount);
 
-        userProfile.setActivityStatus(UserActivityStatus.OFFLINE);
         userProfile.setUserAccount(userAccount);
         this.userProfileRepository.save(userProfile);
     }
