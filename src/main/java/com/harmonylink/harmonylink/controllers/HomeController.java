@@ -1,9 +1,10 @@
 package com.harmonylink.harmonylink.controllers;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatus;
+import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import com.harmonylink.harmonylink.repositories.user.UserActivityStatusRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,24 +22,30 @@ public class HomeController {
 
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserActivityStatusRepository userActivityStatusRepository;
 
 
     @Autowired
-    public HomeController(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository) {
+    public HomeController(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, UserActivityStatusRepository userActivityStatusRepository) {
         this.userAccountRepository = userAccountRepository;
         this.userProfileRepository = userProfileRepository;
+        this.userActivityStatusRepository = userActivityStatusRepository;
     }
 
 
     @GetMapping("/users-activity-status")
     @ResponseBody
     public List<Long> getUsersActivityStatus() {
-        List<Long> usersActivityStatus = new ArrayList<>();
-        usersActivityStatus.add(this.userProfileRepository.countOnline());
-        usersActivityStatus.add(this.userProfileRepository.countByInSearchStatus());
-        usersActivityStatus.add(this.userProfileRepository.countByInCallStatus());
+        List<Long> usersActivityStatistic = new ArrayList<>();
+        long in_search = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_SEARCH);
+        long in_call = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_CALL);
+        long online = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.ONLINE) + in_search + in_call;
 
-        return usersActivityStatus;
+        usersActivityStatistic.add(online);
+        usersActivityStatistic.add(in_search);
+        usersActivityStatistic.add(in_call);
+
+        return usersActivityStatistic;
     }
 
 
