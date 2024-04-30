@@ -9,13 +9,4 @@ public interface UserProfileRepository extends MongoRepository<UserProfile, Stri
 
     UserProfile findByUserAccount(UserAccount userAccount);
 
-    @Query(value = "{ 'activityStatus': {$in: ['ONLINE', 'IN_CALL', 'IN_SEARCH'] } }", count = true)
-    long countOnline();
-
-    @Query(value = "{ 'activityStatus': 'IN_CALL' }", count = true)
-    long countByInCallStatus();
-
-    @Query(value = "{ 'activityStatus': 'IN_SEARCH' }", count = true)
-    long countByInSearchStatus();
-
 }
