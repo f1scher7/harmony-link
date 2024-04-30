@@ -11,7 +11,7 @@ public interface EducationRepository extends MongoRepository<Education, String> 
 
     Education findByName(String name);
 
-    @Query("{ 'name': { '$regex': '^?0', '$options': 'i'} }")
+    @Query("{ 'name': { '$regex': '?0', '$options': 'i' } }")
     List<Education> findEducationStartWith(String prefix, Pageable pageable);
 
 }
