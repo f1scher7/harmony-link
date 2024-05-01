@@ -38,3 +38,14 @@
     box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
     border-radius: 20px;
 }
+
+.form-control {
+    border-width: 2px !important;
+}
+
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
