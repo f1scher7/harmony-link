@@ -1,18 +1,74 @@
+function adjustMainContainer() {
+    if (window.innerWidth > 1600) {
+        document.querySelector(".main-container").classList.add('container-fluid');
+        document.querySelector(".main-container").classList.add('mt-5');
+        document.querySelector('.main-container').classList.remove('container')
+    } else {
+        document.querySelector('.main-container').classList.remove('container-fluid');
+        document.querySelector('.main-container').classList.remove('mt-5');
+        document.querySelector('.main-container').classList.add('container')
+    }
+}
+
+function fetchUsersActivityStatus() {
+    $.ajax({
+        url: '/users-activity-status',
+        type: 'GET',
+        success: function (data) {
+            $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: ${data[0]}`);
+            $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: ${data[1]}`);
+            $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: ${data[2]}`);
+        },
+        error: function (error) {
+            $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: null`);
+            $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: null`);
+            $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: null`);
+        }
+    })
+}
+
+
 $(document).ready(function (url, data) {
 
-    function adjustMainContainer() {
-        if (window.innerWidth > 1600) {
-            document.querySelector(".main-container").classList.add('container-fluid');
-            document.querySelector(".main-container").classList.add('mt-5');
-            document.querySelector('.main-container').classList.remove('container')
+    $(window).on('load resize', adjustMainContainer);
+
+
+    const wsUri = "ws://localhost:8080/harmony-websocket";
+    const websocket = new WebSocket(wsUri);
+
+    websocket.onopen = function (event) {
+        console.log("Connected to Websocket server");
+
+        sendUserId($('#user-profile-id').text());
+    }
+
+    websocket.onmessage = function (event) {
+        console.log("Received message: " + event.data);
+    }
+
+    websocket.onclose = function (event) {
+        console.log("Disconnected from WebSocket server");
+    }
+
+    websocket.onerror = function(event) {
+        console.error("WebSocket error: " + event);
+    };
+
+    function sendUserId(userProfileId) {
+        if (websocket.readyState === WebSocket.OPEN) {
+            websocket.send(JSON.stringify({ type: 'USER_PROFILE_ID', userProfileId: userProfileId }));
         } else {
-            document.querySelector('.main-container').classList.remove('container-fluid');
-            document.querySelector('.main-container').classList.remove('mt-5');
-            document.querySelector('.main-container').classList.add('container')
+            console.error("WebSocket is not connected");
         }
     }
 
-    $(window).on('load resize', adjustMainContainer);
+    function sendHearBeat() {
+        if (websocket.readyState === WebSocket.OPEN) {
+            websocket.send(JSON.stringify( { type: 'HEARTBEAT_REQUEST'} ));
+        }
+    }
+
+    setInterval(sendHearBeat, 30000);
 
 
     const videoElement = $('#user-camera').get(0);
@@ -47,23 +103,6 @@ $(document).ready(function (url, data) {
     checkCameraStatus();
     videoElement.onplaying = checkCameraStatus;
 
-
-    function fetchUsersActivityStatus() {
-        $.ajax({
-            url: '/users-activity-status',
-            type: 'GET',
-            success: function (data) {
-                $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: ${data[0]}`);
-                $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: ${data[1]}`);
-                $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: ${data[2]}`);
-            },
-            error: function (error) {
-                $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: null`);
-                $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: null`);
-                $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: null`);
-            }
-        })
-    }
 
     fetchUsersActivityStatus()
     setInterval(fetchUsersActivityStatus, 3000);
