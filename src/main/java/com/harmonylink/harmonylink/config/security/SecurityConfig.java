@@ -111,7 +111,7 @@ public class SecurityConfig  {
                         .requestMatchers("/auth","/auth/login", "/auth/registration", "/login/oauth2/code/google","/auth/activate-account", "/auth/forgot-password", "/auth/reset-password").permitAll()
                         .requestMatchers("/auth/confirm-email").hasAuthority("ROLE_TEMP_USER")
                         .requestMatchers("/set-profile").access(accessToSetProfile)
-                        .requestMatchers("/").access(accessToHome)
+                        .requestMatchers("/", "/terms-of-service").access(accessToHome)
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
