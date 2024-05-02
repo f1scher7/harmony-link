@@ -39,3 +39,10 @@ select:focus {
     box-shadow: none !important;
     outline: none !important;
 }
+
+.bot-part {
+    margin-top: 5%;
+    border-radius: 0 0 7px 7px;
+    background-color: #458ddc;
+    box-shadow: 0 4px 8px 0 rgba(176, 180, 255, 0.5);
+}
