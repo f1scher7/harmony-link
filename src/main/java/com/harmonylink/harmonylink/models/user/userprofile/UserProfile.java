@@ -1,6 +1,5 @@
 package com.harmonylink.harmonylink.models.user.userprofile;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
