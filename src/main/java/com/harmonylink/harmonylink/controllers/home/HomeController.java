@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.controllers;
+package com.harmonylink.harmonylink.controllers.home;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserAccount;
