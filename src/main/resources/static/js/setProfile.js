@@ -11,7 +11,7 @@ $(document).ready(function () {
     $('#study').on('input', function () {
         let prefix = $(this).val();
         $.ajax({
-            url: '/educations',
+            url: '/studies',
             data: {prefix: prefix},
             type: 'GET',
             success: function (data) {
@@ -45,9 +45,8 @@ $(document).ready(function () {
     var addedHobbies = [];
     $('#hobbies').on('input', function () {
         let prefix = $(this).val();
-        let dataList = $("#hobbyList");
-        let selectedHobby = $(this).val();
-        let options = dataList.find('option').map(function() {
+        let hobbiesList = $("#hobbyList");
+        let hobbiesOptions = hobbiesList.find('option').map(function() {
             return $(this).val();
         }).get();
 
@@ -57,17 +56,17 @@ $(document).ready(function () {
                 data: {prefix: prefix},
                 type: 'GET',
                 success: function (data) {
-                    dataList.empty();
+                    hobbiesList.empty();
                     $.each(data, function (index, hobby) {
-                        dataList.append($("<option>").val(hobby));
+                        hobbiesList.append($("<option>").val(hobby));
                     });
                 }
             });
         }
 
-        if (options.includes(selectedHobby) && !addedHobbies.includes(prefix)) {
+        if (hobbiesOptions.includes(prefix) && !addedHobbies.includes(prefix)) {
             addedHobbies.push(prefix);
-            let hobbyDiv = $('<div>').addClass('selected-hobby badge mx-1 d-inline-flex align-items-center').text(selectedHobby);
+            let hobbiesDiv = $('<div>').addClass('selected-hobby badge mx-1 d-inline-flex align-items-center').text(prefix);
             let removeBtn = $('<span>').addClass('remove-hobby ms-1 bi bi-x').css({
                 'cursor': 'pointer',
                 'font-size': '1rem'
@@ -75,13 +74,13 @@ $(document).ready(function () {
 
             removeBtn.on('click', function () {
                 addedHobbies = addedHobbies.filter(function(hobby) {
-                    return hobby !== selectedHobby;
+                    return hobby !== prefix;
                 });
-                hobbyDiv.remove();
+                hobbiesDiv.remove();
             });
 
-            hobbyDiv.append(removeBtn);
-            $('#selectedHobbies').append(hobbyDiv);
+            hobbiesDiv.append(removeBtn);
+            $('#selectedHobbies').append(hobbiesDiv);
             $(this).val('');
         }
     });

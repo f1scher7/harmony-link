@@ -48,7 +48,7 @@ public class SetUserProfileController {
     }
 
 
-    @GetMapping("/educations")
+    @GetMapping("/studies")
     @ResponseBody
     public List<String> getEducations(@RequestParam("prefix") String prefix) {
         Pageable pageable = createPageableWithLimit(5);
