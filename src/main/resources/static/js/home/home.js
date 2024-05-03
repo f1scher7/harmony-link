@@ -86,7 +86,7 @@ $(document).ready(function (url, data) {
             $('#user-camera').remove();
             $('#camera-error').removeClass('d-none');
             $('#start-btn').addClass('disabled');
-            $('#filters-btn').addClass('disabled')
+            //$('#filters-btn').addClass('disabled')
         });
 
     function checkCameraStatus () {
