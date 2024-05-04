@@ -71,3 +71,10 @@ select:focus {
     color: white;
     border-radius: 3px;
 }
+
+.btn-close {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
