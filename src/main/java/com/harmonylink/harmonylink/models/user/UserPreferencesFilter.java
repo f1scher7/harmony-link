@@ -13,7 +13,7 @@ import java.util.List;
 public class UserPreferencesFilter {
 
     @Id
-    private String UserPreferenceFiltersId;
+    private String userPreferenceFilterId;
     @DBRef
     private UserProfile userProfile;
     @Field
@@ -25,7 +25,7 @@ public class UserPreferencesFilter {
     @Field
     private List<Integer> heights;
     @Field
-    private List<String> relationshipStatuses;
+    private String relationshipStatus;
     @Field
     private List<String> hobbyIds;
     @Field
@@ -34,26 +34,27 @@ public class UserPreferencesFilter {
 
     public UserPreferencesFilter() {
         this.cities = new ArrayList<>();
+        this.sex = "";
         this.ages = new ArrayList<>();
         this.heights = new ArrayList<>();
-        this.relationshipStatuses = new ArrayList<>();
+        this.relationshipStatus = "";
         this.hobbyIds = new ArrayList<>();
         this.fieldsOfStudy = new ArrayList<>();
     }
 
-    public UserPreferencesFilter(UserProfile userProfile, List<String> cities, List<Integer> ages, List<Integer> heights, List<String> relationshipStatuses, List<String> hobbyIds, List<String> fieldsOfStudy) {
+    public UserPreferencesFilter(UserProfile userProfile, List<String> cities, List<Integer> ages, List<Integer> heights, String relationshipStatus, List<String> hobbyIds, List<String> fieldsOfStudy) {
         this.userProfile = userProfile;
         this.cities = cities;
         this.ages = ages;
         this.heights = heights;
-        this.relationshipStatuses = relationshipStatuses;
+        this.relationshipStatus = relationshipStatus;
         this.hobbyIds = hobbyIds;
         this.fieldsOfStudy = fieldsOfStudy;
     }
 
 
-    public String getUserPreferenceFiltersId() {
-        return this.UserPreferenceFiltersId;
+    public String getUserPreferenceFilterId() {
+        return this.userPreferenceFilterId;
     }
 
     public UserProfile getUserProfile() {
@@ -64,7 +65,7 @@ public class UserPreferencesFilter {
         return this.cities;
     }
 
-    public String getSexes() {
+    public String getSex() {
         return this.sex;
     }
 
@@ -76,8 +77,8 @@ public class UserPreferencesFilter {
         return this.heights;
     }
 
-    public List<String> getRelationshipStatuses() {
-        return this.relationshipStatuses;
+    public String getRelationshipStatus() {
+        return this.relationshipStatus;
     }
 
     public List<String> getHobbyIds() {
@@ -97,7 +98,7 @@ public class UserPreferencesFilter {
         this.cities = cities;
     }
 
-    public void setSexes(String sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -109,8 +110,8 @@ public class UserPreferencesFilter {
         this.heights = heights;
     }
 
-    public void setRelationshipStatuses(List<String> relationshipStatuses) {
-        this.relationshipStatuses = relationshipStatuses;
+    public void setRelationshipStatus(String relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
     }
 
     public void setHobbyIds(List<String> hobbyIds) {
@@ -125,15 +126,15 @@ public class UserPreferencesFilter {
     @Override
     public String toString() {
         return "UserPreferencesFilter{" +
-                "UserPreferenceFiltersId='" + UserPreferenceFiltersId + '\'' +
-                ", userProfile=" + userProfile +
-                ", cities=" + cities +
-                ", sex=" + sex +
-                ", ages=" + ages +
-                ", heights=" + heights +
-                ", relationshipStatuses=" + relationshipStatuses +
-                ", hobbyIds=" + hobbyIds +
-                ", fieldsOfStudy=" + fieldsOfStudy +
+                "UserPreferenceFilterId='" + this.userPreferenceFilterId + '\'' +
+                ", userProfile=" + this.userProfile +
+                ", cities=" + this.cities +
+                ", sex=" + this.sex +
+                ", ages=" + this.ages +
+                ", heights=" + this.heights +
+                ", relationshipStatus=" + this.relationshipStatus +
+                ", hobbyIds=" + this.hobbyIds +
+                ", fieldsOfStudy=" + this.fieldsOfStudy +
                 '}';
     }
 
