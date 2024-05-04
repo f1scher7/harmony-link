@@ -8,6 +8,7 @@ import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.EducationRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
+import com.harmonylink.harmonylink.services.user.UserPreferencesFilterService;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.*;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.harmonylink.harmonylink.utils.UserUtil.getUserAge;
 
@@ -26,17 +28,19 @@ public class UserProfileService {
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
     private final EducationRepository educationRepository;
-    public final CityRepository cityRepository;
-    public final HobbyRepository hobbyRepository;
+    private final CityRepository cityRepository;
+    private final HobbyRepository hobbyRepository;
+    private final UserPreferencesFilterService userPreferencesFilterService;
 
 
     @Autowired
-    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository) {
+    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository, UserPreferencesFilterService userPreferencesFilterService) {
         this.userAccountRepository = userAccountRepository;
         this.userProfileRepository = userProfileRepository;
         this.educationRepository = educationRepository;
         this.cityRepository = cityRepository;
         this.hobbyRepository = hobbyRepository;
+        this.userPreferencesFilterService = userPreferencesFilterService;
     }
 
 
@@ -48,6 +52,7 @@ public class UserProfileService {
 
         userProfile.setUserAccount(userAccount);
         this.userProfileRepository.save(userProfile);
+        this.userPreferencesFilterService.saveDefaultUserPreferencesFilters(userProfile);
     }
 
     private void validateUserProfileData(UserProfile userProfile, UserAccount userAccount) throws InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
@@ -83,6 +88,7 @@ public class UserProfileService {
         }
     }
 
+
     public List<String> getHobbyIds(List<String> hobbyValue) {
         List<String> hobbyIds = new ArrayList<>();
 
@@ -92,6 +98,17 @@ public class UserProfileService {
         }
 
         return hobbyIds;
+    }
+
+    public List<String> getHobbies(List<String> hobbyIds) {
+        List<String> hobbies = new ArrayList<>();
+
+        for (String string : hobbyIds) {
+            Optional<Hobby> hobbyOptional = this.hobbyRepository.findById(string);
+            hobbyOptional.ifPresent(hobby -> hobbies.add(hobby.getName()));
+        }
+
+        return hobbies;
     }
 
 }
