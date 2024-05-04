@@ -2,10 +2,13 @@ package com.harmonylink.harmonylink.controllers.home;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.user.UserActivityStatusRepository;
+import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
+import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,16 +23,20 @@ import java.util.List;
 @Controller
 public class HomeController {
 
+    private final UserProfileService userProfileService;
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserActivityStatusRepository userActivityStatusRepository;
+    private final UserPreferencesFilterRepository userPreferencesFilterRepository;
 
 
     @Autowired
-    public HomeController(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, UserActivityStatusRepository userActivityStatusRepository) {
+    public HomeController(UserProfileService userProfileService, UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+        this.userProfileService = userProfileService;
         this.userAccountRepository = userAccountRepository;
         this.userProfileRepository = userProfileRepository;
         this.userActivityStatusRepository = userActivityStatusRepository;
+        this.userPreferencesFilterRepository = userPreferencesFilterRepository;
     }
 
 
@@ -63,7 +70,17 @@ public class HomeController {
 
         UserProfile userProfile = this.userProfileRepository.findByUserAccount(userAccount);
 
+        UserPreferencesFilter userPreferencesFilter = this.userPreferencesFilterRepository.findByUserProfile(userProfile);
+        List<String> hobbies = this.userProfileService.getHobbies(userPreferencesFilter.getHobbyIds());
+
         model.addAttribute("userProfile", userProfile);
+        model.addAttribute("sex", userPreferencesFilter.getSex());
+        model.addAttribute("relationshipStatus", userPreferencesFilter.getRelationshipStatus());
+        model.addAttribute("ages", userPreferencesFilter.getAges());
+        model.addAttribute("heights", userPreferencesFilter.getHeights());
+        model.addAttribute("cities", userPreferencesFilter.getCities());
+        model.addAttribute("hobbies", hobbies);
+        model.addAttribute("studies", userPreferencesFilter.getFieldsOfStudy());
 
         return "home";
     }
