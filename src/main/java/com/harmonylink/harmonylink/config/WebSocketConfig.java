@@ -1,6 +1,6 @@
 package com.harmonylink.harmonylink.config;
 
-import com.harmonylink.harmonylink.handlers.websocket.handler.HarmonyWebSocketHandler;
+import com.harmonylink.harmonylink.handlers.websocket.HarmonyWebSocketHandler;
 import com.harmonylink.harmonylink.services.user.UserActivityStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

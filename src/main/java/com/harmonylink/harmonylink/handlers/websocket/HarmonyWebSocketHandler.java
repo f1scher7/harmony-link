@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.handlers.websocket.handler;
+package com.harmonylink.harmonylink.handlers.websocket;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.services.user.UserActivityStatusService;
@@ -97,7 +97,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
     public void checkResponses() {
         long currentTime = System.currentTimeMillis();
         this.userRequestTimes.forEach((userProfileId, requestTime) -> {
-            System.out.println(currentTime - requestTime);
 
             if (currentTime - requestTime > 35000) {
                 WebSocketSession session = this.webSocketSessionMap.get(userProfileId);

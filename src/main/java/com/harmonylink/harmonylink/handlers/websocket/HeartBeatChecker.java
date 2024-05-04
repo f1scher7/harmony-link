@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.handlers.websocket.handler;
+package com.harmonylink.harmonylink.handlers.websocket;
 
 import org.springframework.web.socket.WebSocketSession;
 
