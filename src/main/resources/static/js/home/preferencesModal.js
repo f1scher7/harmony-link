@@ -1,9 +1,80 @@
 $(document).ready(function () {
 
+    var addedCities = [...cities];
+    var addedHobbies = [...hobbies];
+    var addedStudies = [...studies];
+
+    var selectedCities = $('#selectedCities');
+    var selectedHobbies = $('#selectedHobbies');
+    var selectedStudies = $('#selectedStudies');
+
     const ageFromInput = $('#ageFrom');
     const ageToInput = $('#ageTo');
     const heightFromInput = $('#heightFrom');
     const heightToInput = $('#heightTo');
+
+
+    $('#sex').val(sex);
+    $('#relationshipStatus').val(relationshipStatus);
+    ageFromInput.val(ages[0]);
+    ageToInput.val(ages[1]);
+    heightFromInput.val(heights[0]);
+    heightToInput.val(heights[1]);
+
+    addedCities.forEach(function (city) {
+        let citiesDiv = $('<div>').addClass('selected-badge badge mx-1 d-inline-flex align-items-center').text(city);
+        let removeBtn = $('<span>').addClass('remove-hobby ms-1 bi bi-x').css({
+            'cursor': 'pointer',
+            'font-size': '1rem'
+        });
+
+        removeBtn.on('click', function () {
+            addedCities = addedCities.filter(function(cityForDelete) {
+                return cityForDelete !== city;
+            });
+            citiesDiv.remove();
+        });
+
+        citiesDiv.append(removeBtn);
+        selectedCities.append(citiesDiv);
+    })
+
+    addedHobbies.forEach(function (hobby) {
+        let hobbiesDiv = $('<div>').addClass('selected-badge badge mx-1 d-inline-flex align-items-center').text(hobby);
+        let removeBtn = $('<span>').addClass('remove-hobby ms-1 bi bi-x').css({
+            'cursor': 'pointer',
+            'font-size': '1rem'
+        });
+
+        removeBtn.on('click', function () {
+            addedHobbies = addedHobbies.filter(function(hobbyForDelete) {
+                return hobbyForDelete !== hobby;
+            });
+            hobbiesDiv.remove();
+        });
+
+        hobbiesDiv.append(removeBtn);
+        selectedHobbies.append(hobbiesDiv);
+    })
+
+    addedStudies.forEach(function (study) {
+        let studiesDiv = $('<div>').addClass('selected-badge badge mx-1 d-inline-flex align-items-center').text(study);
+        let removeBtn = $('<span>').addClass('remove-hobby ms-1 bi bi-x').css({
+            'cursor': 'pointer',
+            'font-size': '1rem'
+        });
+
+        removeBtn.on('click', function () {
+            addedStudies = addedStudies.filter(function(studyForDelete) {
+                return studyForDelete !== study;
+            });
+            studiesDiv.remove();
+        });
+
+        studiesDiv.append(removeBtn);
+        selectedStudies.append(studiesDiv);
+    })
+
 
     ageFromInput.on('change', function () {
         if (parseInt($(this).val(), 10) < 16) {
@@ -64,10 +135,6 @@ $(document).ready(function () {
 
 
 
-    var addedCities = [];
-    var addedHobbies = [];
-    var addedStudies = [];
-
     $('#cities').on('input', function() {
         let prefix = $(this).val();
         let citiesList = $('#citiesList');
@@ -106,7 +173,7 @@ $(document).ready(function () {
             });
 
             citiesDiv.append(removeBtn);
-            $('#selectedCities').append(citiesDiv);
+            selectedCities.append(citiesDiv);
             $(this).val('');
         }
     });
@@ -148,7 +215,7 @@ $(document).ready(function () {
             });
 
             hobbiesDiv.append(removeBtn);
-            $('#selectedHobbies').append(hobbiesDiv);
+            selectedHobbies.append(hobbiesDiv);
             $(this).val('');
         }
     });
@@ -191,9 +258,51 @@ $(document).ready(function () {
             });
 
             studiesDiv.append(removeBtn);
-            $('#selectedStudies').append(studiesDiv);
+            selectedStudies.append(studiesDiv);
             $(this).val('');
         }
     });
+
+
+    $('.send-preferences').on('click', function () {
+        let userProfileId = $('#user-profile-id').text();
+
+        let selectedRelationshipStatus = $('#relationshipStatus').val();
+        let selectedSex = $('#sex').val();
+
+        let ageFrom = $('#ageFrom').val() || 16;
+        let ageTo = $('#ageTo').val() || 87;
+        let heightFrom = $('#heightFrom').val() || 150;
+        let heightTo = $('#heightTo').val() || 230;
+
+        let dataToSend = {
+            userProfileId: userProfileId,
+            relationshipStatus: selectedRelationshipStatus,
+            sex: selectedSex,
+            ages: [parseInt(ageFrom, 10), parseInt(ageTo, 10)],
+            heights: [parseInt(heightFrom, 10), parseInt(heightTo, 10)],
+            cities: addedCities,
+            hobbies: addedHobbies,
+            studies: addedStudies
+        }
+
+        $.ajax({
+            url: '/user-preferences-data',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSend),
+
+            success: function (data) {
+                $('#save-preferences-success').removeClass('d-none');
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+
+            },
+            error: function (data) {
+                console.log("Error while sending user preferences data");
+            }
+        })
+    })
 
 })
