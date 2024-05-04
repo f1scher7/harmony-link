@@ -104,7 +104,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="preferencesModalLabel">Dopasuj rozmówcę idealnie dla siebie</h5>
+                                <h5 class="modal-title" id="preferencesModalLabel">Dopasuj filtry, aby znaleźć idealnego rozmówcę</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -113,12 +113,14 @@
                                         <div class="col-12 d-flex justify-content-center">
                                             <div class="col-6 me-2">
                                                 <div class="form-floating d-flex flex-column">
-                                                    <select class="form-select small-text" id="sexes" name="sexes" required>
+                                                    <select class="form-select small-text" id="sex" name="sex" required>
                                                         <option value="" selected>Bez preferencji</option>
                                                         <option value="M">Mężczyzna</option>
                                                         <option value="K">Kobieta</option>
                                                     </select>
-                                                    <label for="sexes">Płeć</label>
+                                                    <label for="sex">
+                                                        Płeć <i class="fa fa-venus-mars"></i>
+                                                    </label>
                                                 </div>
                                             </div>
 
@@ -137,14 +139,16 @@
                                         <div class="col-12 d-flex justify-content-center mt-3">
                                             <div class="col-6 me-2">
                                                 <div class="form-floating d-flex flex-column">
-                                                    <select class="form-select small-text" id="relationshipStatuses" name="relationshipStatuses">
+                                                    <select class="form-select small-text" id="relationshipStatus" name="relationshipStatus">
                                                         <option value="" selected>Bez preferencji</option>
                                                         <option value="single">Singiel/Singielka</option>
                                                         <option value="relationship">W związku</option>
                                                         <option value="married">Żonaty/Zamężna</option>
                                                         <option value="divorced">Wszystko skomplikowane</option>
                                                     </select>
-                                                    <label for="relationshipStatuses" class="form-label">Status związku</label>
+                                                    <label for="relationshipStatus" class="form-label">
+                                                        Status związku <i class="fa fa-user-friends"></i>
+                                                    </label>
                                                 </div>
                                             </div>
 
@@ -163,7 +167,9 @@
                                         <div class="col-12 d-flex justify-content-center mt-3 px-0">
                                             <div class="form-floating w-100 mx-1">
                                                 <input type="text" class="form-control" id="hobbies" placeholder="Hobby (wybierz spośród podanych)" list="hobbiesList" autocomplete="off">
-                                                <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
+                                                <label for="hobbies" class="form-label">
+                                                    Hobby (wybierz spośród podanych) <i class="fa fa-chess-knight"></i>
+                                                </label>
 
                                                 <div id="selectedHobbies">
                                                 </div>
@@ -176,7 +182,9 @@
                                         <div class="col-12 d-flex justify-content-center mt-3 px-0">
                                              <div class="form-floating w-100 mx-1">
                                                  <input type="text" class="form-control" id="studies" placeholder="Kierunki studiów/edukacji (wybierz spośród podanych)" list="studiesList" autocomplete="off">
-                                                 <label for="studies" class="form-label">Kierunki studiów/edukacji (wybierz spośród podanych)</label>
+                                                 <label for="studies" class="form-label">
+                                                     Kierunki studiów/edukacji (wybierz spośród podanych) <i class="fa fa-graduation-cap"></i>
+                                                 </label>
 
                                                  <div id="selectedStudies">
                                                  </div>
@@ -189,7 +197,9 @@
                                         <div class="col-12 d-flex justify-content-center mt-3 px-0">
                                             <div class="form-floating w-100 mx-1">
                                                 <input type="text" class="form-control" id="cities" placeholder="Miasta (wybierz spośród podanych)" list="citiesList" autocomplete="off">
-                                                <label for="cities" class="form-label">Miasta (wybierz spośród podanych)</label>
+                                                <label for="cities" class="form-label">
+                                                    Miasta (wybierz spośród podanych) <i class="fa fa-city"></i>
+                                                </label>
 
                                                 <div id="selectedCities">
                                                 </div>
@@ -198,17 +208,20 @@
                                                 </datalist>
                                             </div>
                                         </div>
+                                        <div class="col-12 d-flex justify-content-center mt-3 px-0">
+                                            <div id="save-preferences-success" class="alert alert-success d-none mb-1" role="alert">
+                                                Twoje preferencje zostały pomyślnie zapisane!
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                            <div class="modal-footer w-100 d-flex justify-content-center">
+                                <button type="button" class="btn btn-primary send-preferences w-50">Zapisz preferencje</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-6 pe-0">
                 <div class="w-100">
@@ -234,5 +247,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/home/home.js"></script>
     <script src="/js/home/preferencesModal.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var sex = [[${sex}]];
+        var relationshipStatus = [[${relationshipStatus}]];
+        var ages = [[${ages}]];
+        var heights = [[${heights}]];
+        var cities = [[${cities}]];
+        var hobbies = [[${hobbies}]];
+        var studies = [[${studies}]];
+        /*]]>*/
+    </script>
 </body>
 </html>
