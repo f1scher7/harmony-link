@@ -15,14 +15,14 @@ function fetchUsersActivityStatus() {
         url: '/users-activity-status',
         type: 'GET',
         success: function (data) {
-            $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: ${data[0]}`);
-            $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: ${data[1]}`);
-            $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: ${data[2]}`);
+            $('#users-online').html(`<i class="fas fa-users"></i> Aktualna liczba użytkowników online: ${data[0]}`);
+            $('#users-in-search').html(`<i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: ${data[1]}`);
+            $('#users-in-call').html(`<i class="fa fa-filter"></i> Ilość użytkowników szukających Ciebie: ${data[2]}`);
         },
         error: function (error) {
-            $('#users-online').html(`<i class="fas fa-users"></i> Liczba użytkowników online: null`);
-            $('#users-in-search').html(`<i class="fas fa-search"></i> Liczba użytkowników szukających: null`);
-            $('#users-in-call').html(`<i class="fas fa-comments"></i> Liczba użytkowników w rozmowie: null`);
+            $('#users-online').html(`<i class="fas fa-users"></i> Aktualna liczba użytkowników online: error`);
+            $('#users-in-search').html(`<i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: error`);
+            $('#users-in-call').html(`<i class="fa fa-filter"></i> Ilość użytkowników szukających Ciebie: error`);
         }
     })
 }
