@@ -37,7 +37,7 @@
                         <a class="nav-link" href="#"><i class="fa fa-cog"></i> Ustawienia konta</a>
                     </li>
                     <li class="nav-item px-3">
-                        <a class="nav-link" href="#"><i class="fa fa-sign-out-alt"></i> Wyloguj się</a>
+                        <a class="nav-link" href="/auth/logout"><i class="fa fa-sign-out-alt"></i> Wyloguj się</a>
                     </li>
                 </ul>
             </div>
@@ -49,7 +49,7 @@
             <div class="col-md-6 col-lg-6 d-flex justify-content-center align-items-center">
                 <div class="info-div h-100 d-flex justify-content-center align-items-center">
                 <div class="row">
-                    <div class="w-100 d-flex justify-content-center mt-2 mb-5">
+                    <div class="w-100 d-flex justify-content-center mt-3 mb-5">
                         <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="img-fluid w-50" alt="" oncontextmenu="return false;">
                     </div>
                     <div class="col-12 d-flex justify-content-center mt-5 mb-5">
@@ -166,6 +166,21 @@
 
                                         <div class="col-12 d-flex justify-content-center mt-3 px-0">
                                             <div class="form-floating w-100 mx-1">
+                                                <input type="text" class="form-control" id="cities" placeholder="Miasta (wybierz spośród podanych)" list="citiesList" autocomplete="off">
+                                                <label for="cities" class="form-label">
+                                                    Miasta (wybierz spośród podanych) <i class="fa fa-city"></i>
+                                                </label>
+
+                                                <div id="selectedCities">
+                                                </div>
+
+                                                <datalist id="citiesList">
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-center mt-3 px-0">
+                                            <div class="form-floating w-100 mx-1">
                                                 <input type="text" class="form-control" id="hobbies" placeholder="Hobby (wybierz spośród podanych)" list="hobbiesList" autocomplete="off">
                                                 <label for="hobbies" class="form-label">
                                                     Hobby (wybierz spośród podanych) <i class="fa fa-chess-knight"></i>
@@ -192,21 +207,6 @@
                                                  <datalist id="studiesList">
                                                  </datalist>
                                              </div>
-                                        </div>
-
-                                        <div class="col-12 d-flex justify-content-center mt-3 px-0">
-                                            <div class="form-floating w-100 mx-1">
-                                                <input type="text" class="form-control" id="cities" placeholder="Miasta (wybierz spośród podanych)" list="citiesList" autocomplete="off">
-                                                <label for="cities" class="form-label">
-                                                    Miasta (wybierz spośród podanych) <i class="fa fa-city"></i>
-                                                </label>
-
-                                                <div id="selectedCities">
-                                                </div>
-
-                                                <datalist id="citiesList">
-                                                </datalist>
-                                            </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-center mt-3 px-0">
                                             <div id="save-preferences-success" class="alert alert-success d-none mb-1" role="alert">

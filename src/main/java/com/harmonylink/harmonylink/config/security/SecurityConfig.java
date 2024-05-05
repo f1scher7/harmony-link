@@ -150,6 +150,13 @@ public class SecurityConfig  {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(this.customOidcUserService)
                         )
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                 );
 
         return http.build();
