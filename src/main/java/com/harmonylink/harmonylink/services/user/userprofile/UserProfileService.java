@@ -13,6 +13,9 @@ import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotF
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +89,21 @@ public class UserProfileService {
             }
             userProfile.setNickname(userAccount.getEmail().substring(0, userAccount.getEmail().indexOf('@')));
         }
+    }
+
+
+    public UserProfile getUserProfileByAuthentication(Authentication authentication) {
+        UserAccount userAccount = null;
+
+        if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
+            String email = oauthToken.getPrincipal().getAttribute("email");
+            userAccount = this.userAccountRepository.findByEmail(email);
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            String username = authentication.getName();
+            userAccount = this.userAccountRepository.findByLogin(username);
+        }
+
+        return this.userProfileRepository.findByUserAccount(userAccount);
     }
 
 
