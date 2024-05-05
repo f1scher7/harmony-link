@@ -53,7 +53,7 @@ public class HomeController {
         long online = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.ONLINE) + inSearch + inCall;
 
         long matchesUserProfilesInSearch = this.customMatchesRepository.countUserProfilesMatchesInSearch(userProfile.getId(), userPreferencesFilter.getSex(), ages.get(0), ages.get(1), heights.get(0), heights.get(1), userPreferencesFilter.getRelationshipStatus(), cities, hobbyIds, studies);
-        long matchesUserPreferencesFiltersInSearch = this.customMatchesRepository.countUserPreferencesFiltersMatchesInSearch(userPreferencesFilter.getUserPreferenceFilterId(), Character.toString(userProfile.getSex()), userProfile.getAge(), userProfile.getHeight(), userProfile.getRelationshipStatus(), userProfile.getCity(), userProfile.getHobbyIds(), userProfile.getFieldOfStudy());
+        long matchesUserPreferencesFiltersInSearch = this.customMatchesRepository.countUserPreferencesFiltersMatchesInSearch(userPreferencesFilter.getUserPreferenceFilterId(), Character.toString(userProfile.getSex()), userProfile.getRelationshipStatus(), userProfile.getCity());
         usersActivityStatistic.add(online);
         usersActivityStatistic.add(matchesUserProfilesInSearch);
         usersActivityStatistic.add(matchesUserPreferencesFiltersInSearch);

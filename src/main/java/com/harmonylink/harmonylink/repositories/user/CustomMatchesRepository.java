@@ -69,7 +69,7 @@ public class CustomMatchesRepository {
         return results.getMappedResults().size();
     }
 
-    public long countUserPreferencesFiltersMatchesInSearch(String userPreferencesFilterId, String sex, int age, int height, String relationshipStatus, String city, List<String> hobbyIds, String study) {
+    public long countUserPreferencesFiltersMatchesInSearch(String userPreferencesFilterId, String sex, String relationshipStatus, String city) {
         Criteria criteria = new Criteria();
 
         criteria.and("_id").ne(userPreferencesFilterId);
