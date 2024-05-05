@@ -1,18 +1,14 @@
 package com.harmonylink.harmonylink.controllers.home;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
-import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
-import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import com.harmonylink.harmonylink.repositories.user.CustomMatchesRepository;
 import com.harmonylink.harmonylink.repositories.user.UserActivityStatusRepository;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
-import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,33 +20,43 @@ import java.util.List;
 public class HomeController {
 
     private final UserProfileService userProfileService;
-    private final UserAccountRepository userAccountRepository;
-    private final UserProfileRepository userProfileRepository;
     private final UserActivityStatusRepository userActivityStatusRepository;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
+    private final CustomMatchesRepository customMatchesRepository;
 
 
     @Autowired
-    public HomeController(UserProfileService userProfileService, UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public HomeController(UserProfileService userProfileService, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository, CustomMatchesRepository customMatchesRepository) {
         this.userProfileService = userProfileService;
-        this.userAccountRepository = userAccountRepository;
-        this.userProfileRepository = userProfileRepository;
         this.userActivityStatusRepository = userActivityStatusRepository;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
+        this.customMatchesRepository = customMatchesRepository;
     }
 
 
     @GetMapping("/users-activity-status")
     @ResponseBody
-    public List<Long> getUsersActivityStatus() {
-        List<Long> usersActivityStatistic = new ArrayList<>();
-        long in_search = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_SEARCH);
-        long in_call = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_CALL);
-        long online = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.ONLINE) + in_search + in_call;
+    public List<Long> getUsersActivityStatus(Authentication authentication) {
+        UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
+        UserPreferencesFilter userPreferencesFilter = this.userPreferencesFilterRepository.findByUserProfile(userProfile);
 
+        List<Integer> ages = userPreferencesFilter.getAges();
+        List<Integer> heights = userPreferencesFilter.getHeights();
+        List<String> cities = userPreferencesFilter.getCities();
+        List<String> hobbyIds = userPreferencesFilter.getHobbyIds();
+        List<String> studies = userPreferencesFilter.getFieldsOfStudy();
+
+        List<Long> usersActivityStatistic = new ArrayList<>();
+
+        long inSearch = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_SEARCH);
+        long inCall = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_CALL);
+        long online = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.ONLINE) + inSearch + inCall;
+
+        long matchesUserProfilesInSearch = this.customMatchesRepository.countUserProfilesMatchesInSearch(userProfile.getId(), userPreferencesFilter.getSex(), ages.get(0), ages.get(1), heights.get(0), heights.get(1), userPreferencesFilter.getRelationshipStatus(), cities, hobbyIds, studies);
+        long matchesUserPreferencesFiltersInSearch = this.customMatchesRepository.countUserPreferencesFiltersMatchesInSearch(userPreferencesFilter.getUserPreferenceFilterId(), Character.toString(userProfile.getSex()), userProfile.getAge(), userProfile.getHeight(), userProfile.getRelationshipStatus(), userProfile.getCity(), userProfile.getHobbyIds(), userProfile.getFieldOfStudy());
         usersActivityStatistic.add(online);
-        usersActivityStatistic.add(in_search);
-        usersActivityStatistic.add(in_call);
+        usersActivityStatistic.add(matchesUserProfilesInSearch);
+        usersActivityStatistic.add(matchesUserPreferencesFiltersInSearch);
 
         return usersActivityStatistic;
     }
@@ -58,17 +64,8 @@ public class HomeController {
 
     @GetMapping
     public String showHomePage(Model model, Authentication authentication) {
-        UserAccount userAccount = null;
 
-        if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
-            String email = oauthToken.getPrincipal().getAttribute("email");
-            userAccount = this.userAccountRepository.findByEmail(email);
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            String username = authentication.getName();
-            userAccount = this.userAccountRepository.findByLogin(username);
-        }
-
-        UserProfile userProfile = this.userProfileRepository.findByUserAccount(userAccount);
+        UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
 
         UserPreferencesFilter userPreferencesFilter = this.userPreferencesFilterRepository.findByUserProfile(userProfile);
         List<String> hobbies = this.userProfileService.getHobbies(userPreferencesFilter.getHobbyIds());
