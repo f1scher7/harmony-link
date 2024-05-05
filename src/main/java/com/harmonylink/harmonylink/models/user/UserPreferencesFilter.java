@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document("users_preferences_filters")
+@Document("user_preferences_filters")
 public class UserPreferencesFilter {
 
     @Id
