@@ -1,3 +1,19 @@
+function sendUserProfileIdToController(endpoint, userProfileId) {
+    $.ajax({
+        url: endpoint,
+        type: 'POST',
+        data: {
+            userProfileId: userProfileId
+        },
+        success: function () {
+
+        },
+        error: function (error) {
+            console.error("Error while sending userProfileId: ", error);
+        }
+    })
+}
+
 function adjustMainContainer() {
     if (window.innerWidth > 1600) {
         document.querySelector(".main-container").classList.add('container-fluid');
@@ -32,6 +48,7 @@ $(document).ready(function (url, data) {
 
     $(window).on('load resize', adjustMainContainer);
 
+    window.userProfileId = $('#user-profile-id').text();
 
     const wsUri = "ws://localhost:8080/harmony-websocket";
     const websocket = new WebSocket(wsUri);
@@ -39,7 +56,7 @@ $(document).ready(function (url, data) {
     websocket.onopen = function (event) {
         console.log("Connected to Websocket server");
 
-        sendUserId($('#user-profile-id').text());
+        sendUserId(userProfileId);
     }
 
     websocket.onmessage = function (event) {
@@ -54,9 +71,9 @@ $(document).ready(function (url, data) {
         console.error("WebSocket error: " + event);
     };
 
-    function sendUserId(userProfileId) {
+    function sendUserId() {
         if (websocket.readyState === WebSocket.OPEN) {
-            websocket.send(JSON.stringify({ type: 'USER_PROFILE_ID', userProfileId: userProfileId }));
+            websocket.send(JSON.stringify({ type: 'USER_PROFILE_ID', userProfileId: window.userProfileId }));
         } else {
             console.error("WebSocket is not connected");
         }
@@ -86,7 +103,7 @@ $(document).ready(function (url, data) {
             $('#user-camera').remove();
             $('#camera-error').removeClass('d-none');
             $('#start-btn').addClass('disabled');
-            //$('#filters-btn').addClass('disabled')
+            $('#filters-btn').addClass('disabled')
         });
 
     function checkCameraStatus () {
@@ -105,6 +122,6 @@ $(document).ready(function (url, data) {
 
 
     fetchUsersActivityStatus()
-    setInterval(fetchUsersActivityStatus, 3000);
+    window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
 
 })
