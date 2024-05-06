@@ -30,6 +30,18 @@ public class UserActivityStatusService {
         return webSocketSession.getAttributes().get("userProfileId").toString();
     }
 
+    public UserActivityStatus getUserActivityStatusByUserProfileId(String userProfileId) {
+        Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
+
+        if (userProfileOptional.isPresent()) {
+           UserProfile userProfile = userProfileOptional.get();
+
+           return this.userActivityStatusRepository.findByUserProfile(userProfile);
+        }
+
+        return null;
+    }
+
     public void updateUserActivityStatus(String userProfileId, UserActivityStatusEnum userActivityStatusEnum) throws UserProfileDoesntExistException {
         Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
 
