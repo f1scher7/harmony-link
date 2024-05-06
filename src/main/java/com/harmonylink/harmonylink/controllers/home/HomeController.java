@@ -1,11 +1,13 @@
 package com.harmonylink.harmonylink.controllers.home;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
+import com.harmonylink.harmonylink.models.user.UserActivityStatus;
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.CustomMatchesRepository;
 import com.harmonylink.harmonylink.repositories.user.UserActivityStatusRepository;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
+import com.harmonylink.harmonylink.services.user.UserActivityStatusService;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,17 +22,44 @@ import java.util.List;
 public class HomeController {
 
     private final UserProfileService userProfileService;
+    private final UserActivityStatusService userActivityStatusService;
     private final UserActivityStatusRepository userActivityStatusRepository;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
     private final CustomMatchesRepository customMatchesRepository;
 
 
     @Autowired
-    public HomeController(UserProfileService userProfileService, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository, CustomMatchesRepository customMatchesRepository) {
+    public HomeController(UserProfileService userProfileService, UserActivityStatusService userActivityStatusService, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository, CustomMatchesRepository customMatchesRepository) {
         this.userProfileService = userProfileService;
+        this.userActivityStatusService = userActivityStatusService;
         this.userActivityStatusRepository = userActivityStatusRepository;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
         this.customMatchesRepository = customMatchesRepository;
+    }
+
+
+    @PostMapping("/set-in-search-status")
+    @ResponseBody
+    public void setUserInSearchStatus(@RequestParam("userProfileId") String userProfileId) {
+        if (this.userActivityStatusService.getUserActivityStatusByUserProfileId(userProfileId) != null) {
+            UserActivityStatus userActivityStatus = this.userActivityStatusService.getUserActivityStatusByUserProfileId(userProfileId);
+
+            userActivityStatus.setUserActivityStatus(UserActivityStatusEnum.IN_SEARCH);
+
+            this.userActivityStatusRepository.save(userActivityStatus);
+        }
+    }
+
+    @PostMapping("/set-online-status")
+    @ResponseBody
+    public void setUserOnlineStatus(@RequestParam("userProfileId") String userProfileId) {
+        if (this.userActivityStatusService.getUserActivityStatusByUserProfileId(userProfileId) != null) {
+            UserActivityStatus userActivityStatus = this.userActivityStatusService.getUserActivityStatusByUserProfileId(userProfileId);
+
+            userActivityStatus.setUserActivityStatus(UserActivityStatusEnum.ONLINE);
+
+            this.userActivityStatusRepository.save(userActivityStatus);
+        }
     }
 
 
