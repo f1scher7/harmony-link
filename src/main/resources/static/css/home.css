@@ -78,3 +78,13 @@ select:focus {
     box-shadow: none !important;
     outline: none !important;
 }
+
+@keyframes searchingAnimation {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); animation-timing-function: ease-out; }
+    100% { transform: rotate(360deg); }
+}
+
+.searching-animation {
+    animation: searchingAnimation 2s infinite;
+}

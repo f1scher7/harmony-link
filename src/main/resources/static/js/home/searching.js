@@ -30,7 +30,7 @@ $(document).ready(function () {
                 <h5 class="font-weight-bold mt-4 text-center">Wyszukujemy idealnego rozmówcy dla Ciebie...</h5>
             </div>
             <div class="w-50 text-center mx-auto mt-2 mb-3">
-                <img src="/img/logo/blueLinkLogoWithoutBg.png" class="w-25" alt="" oncontextmenu="return false;">
+                <img src="/img/logo/blueLinkLogoWithoutBg.png" class="w-25 searching-animation" alt="" oncontextmenu="return false;">
             </div>
         </div>
         `);
