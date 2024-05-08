@@ -1,13 +1,17 @@
+import { fetchUsersActivityStatus, sendUserProfileIdToController } from "./functions/utils.js";
+import { sendInSearchStatusByWebsocket } from "./functions/websocketFuncs";
+
 $(document).ready(function () {
 
     let startBtn = $('#start-btn');
     let stopBtn = $('#stop-btn');
     let filtersBtn = $('#filters-btn');
-    window.hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
     let statisticDataDiv = $('.statistics-data');
+    let hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
 
     startBtn.on('click', function () {
-        sendUserProfileIdToController("/set-in-search-status", window.userProfileId);
+        sendUserProfileIdToController("/set-in-search-status");
+        sendInSearchStatusByWebsocket(window.websocket);
 
         clearInterval(window.userActivityInterval);
 
@@ -15,12 +19,12 @@ $(document).ready(function () {
         stopBtn.removeClass('disabled');
         filtersBtn.addClass('disabled');
 
-        if (window.innerHeight > 1600) {
-            window.hlLogoInInfoDiv.removeClass('mb-2');
-            window.hlLogoInInfoDiv.addClass('mb-5');
+        if (window.innerHeight > 1550) {
+            hlLogoInInfoDiv.removeClass('mb-2');
+            hlLogoInInfoDiv.addClass('mb-5');
         } else {
-            window.hlLogoInInfoDiv.removeClass('mb-5');
-            window.hlLogoInInfoDiv.addClass('mb-2');
+            hlLogoInInfoDiv.removeClass('mb-5');
+            hlLogoInInfoDiv.addClass('mb-2');
         }
 
         statisticDataDiv.empty();
@@ -38,11 +42,11 @@ $(document).ready(function () {
 
     stopBtn.on('click', function () {
         if (window.innerHeight > 1600) {
-            window.hlLogoInInfoDiv.removeClass('mb-5');
-            window.hlLogoInInfoDiv.addClass('mb-2');
+            hlLogoInInfoDiv.removeClass('mb-5');
+            hlLogoInInfoDiv.addClass('mb-2');
         } else {
-            window.hlLogoInInfoDiv.removeClass('mb-2');
-            window.hlLogoInInfoDiv.addClass('mb-5');
+            hlLogoInInfoDiv.removeClass('mb-2');
+            hlLogoInInfoDiv.addClass('mb-5');
         }
 
         statisticDataDiv.empty();
