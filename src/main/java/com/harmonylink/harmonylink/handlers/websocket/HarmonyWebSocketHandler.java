@@ -1,7 +1,12 @@
 package com.harmonylink.harmonylink.handlers.websocket;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
-import com.harmonylink.harmonylink.services.user.UserActivityStatusService;
+import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
+import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
+import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
+import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
+import com.harmonylink.harmonylink.services.user.useractivitystatus.UserActivityStatusService;
+import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInSearchService;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.UserProfileDoesntExistException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +17,27 @@ import org.springframework.web.socket.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatChecker {
 
     private final UserActivityStatusService userActivityStatusService;
-    private final Map<String, WebSocketSession> webSocketSessionMap;
+    private final UserInSearchService userInSearchService;
+    private final UserProfileRepository userProfileRepository;
+    private final UserPreferencesFilterRepository userPreferencesFilterRepository;
+    private final Map<String, WebSocketSession> onlineStatusSessionMap;
     private final Map<String, Long> userRequestTimes;
 
+
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService) {
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserInSearchService userInSearchService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+        this.userInSearchService = userInSearchService;
         this.userActivityStatusService = userActivityStatusService;
-        this.webSocketSessionMap = new ConcurrentHashMap<>();
+        this.userProfileRepository = userProfileRepository;
+        this.userPreferencesFilterRepository = userPreferencesFilterRepository;
+        this.onlineStatusSessionMap = new ConcurrentHashMap<>();
         this.userRequestTimes = new ConcurrentHashMap<>();
     }
 
@@ -43,12 +56,35 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
             String userProfileId = jsonMessage.getString("userProfileId");
             session.getAttributes().put("userProfileId", userProfileId);
 
-            this.webSocketSessionMap.put(userProfileId, session);
-            this.userActivityStatusService.updateUserActivityStatus(userProfileId, UserActivityStatusEnum.ONLINE);
+            this.onlineStatusSessionMap.put(userProfileId, session);
+            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
         }
-        if ("HEART_BEAT_REQUEST".equals(jsonMessage.getString("type"))) {
+
+        if ("HEARTBEAT_REQUEST".equals(jsonMessage.getString("type"))) {
             session.sendMessage(new TextMessage("HEARTBEAT_RESPONSE"));
-            System.out.println("git");
+        }
+
+        if ("IN_SEARCH".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.IN_SEARCH);
+
+            Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
+            UserProfile userProfile = null;
+            if (userProfileOptional.isPresent()) {
+                userProfile = userProfileOptional.get();
+            }
+
+            UserPreferencesFilter userPreferencesFilter = this.userPreferencesFilterRepository.findByUserProfile(userProfile);
+            this.userInSearchService.addUserSearchData(userProfile, userPreferencesFilter);
+        }
+
+        if ("STOP_ACTIVITY".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
+
+            this.userInSearchService.removeUserSearchData(userProfileId);
         }
     }
 
@@ -61,14 +97,17 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         String userProfileId = this.userActivityStatusService.retrieveUserIdFromWebSocketSession(session);
 
-        this.webSocketSessionMap.remove(userProfileId);
-        this.userActivityStatusService.updateUserActivityStatus(userProfileId, UserActivityStatusEnum.OFFLINE);
+        this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
+
+        this.userInSearchService.removeUserSearchData(userProfileId);
+        this.onlineStatusSessionMap.remove(userProfileId);
     }
 
     @Override
     public boolean supportsPartialMessages() {
         return false;
     }
+
 
     @Override
     @Async
@@ -87,7 +126,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
     @Override
     @Scheduled(fixedRate = 30000)
     public void sendHeartBeatRequest() {
-        for (WebSocketSession webSocketSession: webSocketSessionMap.values()) {
+        for (WebSocketSession webSocketSession: onlineStatusSessionMap.values()) {
             sendAsyncHeartRequest(webSocketSession);
         }
     }
@@ -99,12 +138,13 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
         this.userRequestTimes.forEach((userProfileId, requestTime) -> {
 
             if (currentTime - requestTime > 35000) {
-                WebSocketSession session = this.webSocketSessionMap.get(userProfileId);
+                WebSocketSession session = this.onlineStatusSessionMap.get(userProfileId);
 
                 if (session != null) {
                     try {
                         session.close();
-                        this.webSocketSessionMap.remove(userProfileId);
+                        this.userInSearchService.removeUserSearchData(userProfileId);
+                        this.onlineStatusSessionMap.remove(userProfileId);
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -114,7 +154,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
                 this.userRequestTimes.remove(userProfileId);
 
                 try {
-                    this.userActivityStatusService.updateUserActivityStatus(userProfileId, UserActivityStatusEnum.OFFLINE);
+                    this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
                 } catch (UserProfileDoesntExistException e) {
                     throw new RuntimeException(e);
                 }
