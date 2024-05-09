@@ -37,19 +37,3 @@ export function fetchUsersActivityStatus() {
         }
     })
 }
-
-export function sendUserProfileIdToController(endpoint) {
-    $.ajax({
-        url: endpoint,
-        type: 'POST',
-        data: {
-            userProfileId: window.userProfileId
-        },
-        success: function () {
-
-        },
-        error: function (error) {
-            console.error("Error while sending userProfileId: ", error);
-        }
-    })
-}
