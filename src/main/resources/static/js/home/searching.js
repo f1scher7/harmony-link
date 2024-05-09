@@ -1,5 +1,5 @@
-import { fetchUsersActivityStatus, sendUserProfileIdToController } from "./functions/utils.js";
-import { sendInSearchStatusByWebsocket } from "./functions/websocketFuncs";
+import { fetchUsersActivityStatus } from "./functions/utils.js";
+import { sendInSearchStatusByWebsocket, sendStopActivityByWebsocket } from "./functions/websocketFuncs.js";
 
 $(document).ready(function () {
 
@@ -10,7 +10,6 @@ $(document).ready(function () {
     let hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
 
     startBtn.on('click', function () {
-        sendUserProfileIdToController("/set-in-search-status");
         sendInSearchStatusByWebsocket(window.websocket);
 
         clearInterval(window.userActivityInterval);
@@ -41,6 +40,8 @@ $(document).ready(function () {
     })
 
     stopBtn.on('click', function () {
+        sendStopActivityByWebsocket(window.websocket)
+
         if (window.innerHeight > 1600) {
             hlLogoInInfoDiv.removeClass('mb-5');
             hlLogoInInfoDiv.addClass('mb-2');
@@ -59,8 +60,6 @@ $(document).ready(function () {
         `);
 
         fetchUsersActivityStatus();
-
-        sendUserProfileIdToController("/set-online-status", userProfileId);
 
         window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
 

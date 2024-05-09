@@ -9,17 +9,23 @@ export function sendUserIdByWebsocket(websocket) {
 export function sendHearBeatByWebsocket(websocket) {
     if (websocket.readyState === WebSocket.OPEN) {
         websocket.send(JSON.stringify({ type: 'HEARTBEAT_REQUEST' }));
+    } else {
+        console.error("WebSocket is not connected");
     }
 }
 
 export function sendInSearchStatusByWebsocket(websocket) {
     if (websocket.readyState === WebSocket.OPEN) {
         websocket.send(JSON.stringify({ type: 'IN_SEARCH', userProfileId: window.userProfileId }));
+    } else {
+        console.error("WebSocket is not connected");
     }
 }
 
-export function sendStopSearchingStatusByWebsocket(websocket) {
+export function sendStopActivityByWebsocket(websocket) {
     if (websocket.readyState === WebSocket.OPEN) {
-        websocket.send(JSON.stringify({ type: 'STOP_SEARCHING', userProfileId: window.userProfileId }));
+        websocket.send(JSON.stringify({ type: 'STOP_ACTIVITY', userProfileId: window.userProfileId }));
+    } else {
+        console.error("WebSocket is not connected");
     }
 }
