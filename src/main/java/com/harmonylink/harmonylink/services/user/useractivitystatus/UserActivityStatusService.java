@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.services.user;
+package com.harmonylink.harmonylink.services.user.useractivitystatus;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserActivityStatus;
@@ -42,7 +42,7 @@ public class UserActivityStatusService {
         return null;
     }
 
-    public void updateUserActivityStatus(String userProfileId, UserActivityStatusEnum userActivityStatusEnum) throws UserProfileDoesntExistException {
+    public void updateUserActivityStatusInDB(String userProfileId, UserActivityStatusEnum userActivityStatusEnum) throws UserProfileDoesntExistException {
         Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
 
         if (userProfileOptional.isPresent()) {
