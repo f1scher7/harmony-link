@@ -1,7 +1,7 @@
 package com.harmonylink.harmonylink.services.user.useractivitystatus;
 
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
-import com.harmonylink.harmonylink.models.user.UserSearchData;
+import com.harmonylink.harmonylink.models.user.userdata.UserSearchData;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import org.springframework.stereotype.Service;
 
@@ -20,25 +20,20 @@ public class UserInSearchService {
         }
     }
 
-    public void removeUserSearchData(String userProfileId) {
-        inSearchUsers.remove(userProfileId);
-    }
-
-    public void updateUserSearchData(String userProfileId, UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
-        UserSearchData userSearchData = inSearchUsers.get(userProfileId);
-
-        if (userSearchData != null) {
-            userSearchData.setUserProfile(userProfile);
-            userSearchData.setUserPreferencesFilter(userPreferencesFilter);
-        }
-    }
-
     public UserSearchData getUserSearchData(String userProfileId) {
         return inSearchUsers.get(userProfileId);
     }
 
     public List<UserSearchData> getAllInSearchUsers() {
         return new ArrayList<>(inSearchUsers.values());
+    }
+
+    public void removeUserSearchData(String userProfileId) {
+        inSearchUsers.remove(userProfileId);
+    }
+
+    public void removeAllInSearchUsers() {
+        inSearchUsers.clear();
     }
 
     public String displayInSearchUsers() {
@@ -48,10 +43,6 @@ public class UserInSearchService {
                 .append("; User: ").append(value.toString())
                 .append("\n"));
         return builder.toString();
-    }
-
-    public void clearAllInSearchUsers() {
-        inSearchUsers.clear();
     }
 
 }
