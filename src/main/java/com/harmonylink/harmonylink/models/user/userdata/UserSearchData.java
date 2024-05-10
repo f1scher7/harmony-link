@@ -1,11 +1,12 @@
-package com.harmonylink.harmonylink.models.user;
+package com.harmonylink.harmonylink.models.user.userdata;
 
+import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 
 public class UserSearchData {
 
-    private UserProfile userProfile;
-    private UserPreferencesFilter userPreferencesFilter;
+    private final UserProfile userProfile;
+    private final UserPreferencesFilter userPreferencesFilter;
 
 
     public UserSearchData(UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
@@ -20,15 +21,6 @@ public class UserSearchData {
 
     public UserPreferencesFilter getUserPreferencesFilter() {
         return this.userPreferencesFilter;
-    }
-
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
-
-    public void setUserPreferencesFilter(UserPreferencesFilter userPreferencesFilter) {
-        this.userPreferencesFilter = userPreferencesFilter;
     }
 
 
