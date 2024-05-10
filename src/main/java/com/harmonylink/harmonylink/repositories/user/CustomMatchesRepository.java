@@ -74,7 +74,6 @@ public class CustomMatchesRepository {
 
         criteria.and("_id").ne(userPreferencesFilterId);
         criteria.and("sex").is(sex);
-        criteria.and("relationshipStatus").is(relationshipStatus);
         criteria.and("cities").in(city);
 
         MatchOperation matchOperation = Aggregation.match(criteria);
