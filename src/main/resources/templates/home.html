@@ -77,8 +77,8 @@
             </div>
             <div class="col-md-6 col-lg-6">
                 <div id="user-camera-div" class="embed-responsive embed-responsive-21by9 d-flex justify-content-center align-items-center">
-                    <video id="user-camera" class="w-100 h-100 embed-responsive-item user-camera" autoplay></video>
-                    <audio id="user-audio" autoplay></audio>
+                    <video id="local-camera" class="w-100 h-100 embed-responsive-item user-camera" autoplay playsinline></video>
+                    <audio id="local-audio" autoplay></audio>
 
                     <div id="camera-error" class="alert alert-danger d-none w-75" role="alert" style="margin-bottom: 90px;">
                         Błąd podczas uzyskiwania dostępu do kamery i mikrofonu.
@@ -248,6 +248,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/home/home.js" type="module"></script>
     <script src="/js/home/searching.js" type="module"></script>
+    <script src="/js/home/webrtc.js" type="module"></script>
     <script src="/js/home/preferencesModal.js"></script>
 
     <script th:inline="javascript">
