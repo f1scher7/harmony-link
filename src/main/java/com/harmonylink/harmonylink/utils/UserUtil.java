@@ -1,5 +1,6 @@
 package com.harmonylink.harmonylink.utils;
 
+import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -71,6 +72,11 @@ public final class UserUtil {
         Period period = Period.between(birthdate, currentDate);
 
         return period.getYears();
+    }
+
+
+    public static String getUserProfilesId(UserProfile userProfile1, UserProfile userProfile2) {
+        return userProfile1.getId() + userProfile2.getId();
     }
 
 }
