@@ -1,5 +1,6 @@
 package com.harmonylink.harmonylink.services.user;
 
+import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInCallPairService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,8 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 @Component
 public class WebRTCService {
@@ -27,6 +27,12 @@ public class WebRTCService {
         this.userInCallPairService = userInCallPairService;
     }
 
+
+    public void initiateConnection(UserProfile userProfile1) throws JSONException, IOException {
+        WebSocketSession user1Session = this.userWebSocketSessionService.getWebSocketSession(userProfile1.getId());
+
+        user1Session.sendMessage(new TextMessage(new JSONObject().put("type", "INITIATE_OFFER").toString()));
+    }
 
     public void handleVideoOffer(WebSocketSession session, JSONObject offer) throws JSONException, IOException {
         String sdp = offer.getString("sdp");
@@ -83,20 +89,18 @@ public class WebRTCService {
 
     @Async
     public CompletableFuture<String> findPeerUserProfileId(String currentUserProfileId) {
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-
-        return CompletableFuture.supplyAsync(() ->
-                this.userInCallPairService.getAllUserCallInPairData().stream()
-                        .filter(userCallPairData ->
-                                userCallPairData.getUserProfile1().getId().equals(currentUserProfileId) ||
+        String peerUserProfileId = this.userInCallPairService.getAllUserCallInPairData().stream()
+                .filter(userCallPairData ->
+                        userCallPairData.getUserProfile1().getId().equals(currentUserProfileId) ||
                                 userCallPairData.getUserProfile2().getId().equals(currentUserProfileId))
-                        .findFirst()
-                        .map(userCallPairData ->
-                              userCallPairData.getUserProfile1().getId().equals(currentUserProfileId) ?
-                              userCallPairData.getUserProfile2().getId() :
-                              userCallPairData.getUserProfile1().getId())
-                        .orElse(null),
-                executor);
+                .findFirst()
+                .map(userCallPairData ->
+                        userCallPairData.getUserProfile1().getId().equals(currentUserProfileId) ?
+                                userCallPairData.getUserProfile2().getId() :
+                                userCallPairData.getUserProfile1().getId())
+                .orElse(null);
+
+        return CompletableFuture.completedFuture(peerUserProfileId);
     }
 
 }
