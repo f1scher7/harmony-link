@@ -1,7 +1,8 @@
-package com.harmonylink.harmonylink.services.user;
+package com.harmonylink.harmonylink.services.realtime;
 
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInCallPairService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
