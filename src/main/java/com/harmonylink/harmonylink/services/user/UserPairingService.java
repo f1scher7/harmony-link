@@ -3,13 +3,16 @@ package com.harmonylink.harmonylink.services.user;
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userdata.UserSearchData;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInCallPairService;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInSearchService;
+import com.harmonylink.harmonylink.services.realtime.WebRTCService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -17,32 +20,59 @@ public class UserPairingService {
 
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
+    private final WebRTCService webRTCService;
 
 
     @Autowired
-    public UserPairingService(UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
+    public UserPairingService(UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService) {
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
+        this.webRTCService = webRTCService;
     }
 
 
     @Async
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3000)
     public void findUsersPairsForConnection() {
-        List<UserSearchData> usersInSearch = this.userInSearchService.getAllInSearchUsers();
+        List <UserSearchData> usersInSearch = this.userInSearchService.getAllInSearchUsers();
+        int pageSize = 50;
 
-        usersInSearch.parallelStream().forEach(user1 -> {
-            usersInSearch.stream()
-                    .filter(user2 -> usersInSearch.indexOf(user2) > usersInSearch.indexOf(user1))
-                    .forEach(user2 -> {
-                        if (checkMatch(user1, user2)) {
-                            this.userInCallPairService.addUserCallPairData(user1.getUserProfile(), user2.getUserProfile());
-                            this.userInSearchService.removeUserSearchData(user1.getUserProfile().getId());
-                            this.userInSearchService.removeUserSearchData(user2.getUserProfile().getId());
-                        }
-                    });
-        });
+        if (usersInSearch.size() >= 2) {
+            for (int page = 0; page * pageSize < usersInSearch.size(); page++) {
+                int start = page * pageSize;
+                int end = Math.min((page + 1) * pageSize, usersInSearch.size());
+
+                List<UserSearchData> usersPage = usersInSearch.subList(start, end);
+
+                processUsersPage(usersPage);
+            }
+        }
     }
+
+    private void processUsersPage(List<UserSearchData> usersPage) {
+        for (int i = 0; i < usersPage.size(); i++) {
+            UserSearchData userSearchData1 = usersPage.get(i);
+
+            for (int j = i + 1; j < usersPage.size(); j++) {
+                UserSearchData userSearchData2 = usersPage.get(j);
+
+                if (checkMatch(userSearchData1, userSearchData2)) {
+                    this.userInCallPairService.addUserCallPairData(userSearchData1.getUserProfile(), userSearchData2.getUserProfile());
+                    this.userInSearchService.removeUserSearchData(userSearchData1.getUserProfile().getId());
+                    this.userInSearchService.removeUserSearchData(userSearchData2.getUserProfile().getId());
+
+                    try {
+                        this.webRTCService.initiateConnection(userSearchData1.getUserProfile());
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
 
     public boolean checkMatch(UserSearchData userSearchData1, UserSearchData userSearchData2) {
         UserProfile userProfile1 = userSearchData1.getUserProfile();
