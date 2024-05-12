@@ -21,11 +21,13 @@ public class VerificationToken {
     @Indexed(expireAfterSeconds = 900)
     private LocalDateTime localDateTime;
 
+
     public VerificationToken(String token, UserAccount userAccount) {
         this.token = token;
         this.userAccount = userAccount;
         this.localDateTime = LocalDateTime.now();
     }
+
 
     public String getId() {
         return this.id;

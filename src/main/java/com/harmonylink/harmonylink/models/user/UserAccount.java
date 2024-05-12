@@ -196,6 +196,7 @@ public class UserAccount implements UserDetails {
         this.userAccountNonLocked = userAccountNonLocked;
     }
 
+
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }

@@ -22,11 +22,13 @@ public class ResetPasswordToken {
     @Indexed(expireAfterSeconds = 3600)
     private LocalDateTime localDateTime;
 
+
     public ResetPasswordToken(String token, UserAccount userAccount) {
         this.token = token;
         this.userAccount = userAccount;
         this.localDateTime = LocalDateTime.now();
     }
+
 
     public String getId() {
         return this.id;
@@ -56,4 +58,5 @@ public class ResetPasswordToken {
     public void setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
     }
+
 }
