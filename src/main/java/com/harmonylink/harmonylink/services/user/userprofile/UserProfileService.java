@@ -9,6 +9,7 @@ import com.harmonylink.harmonylink.repositories.user.userprofile.EducationReposi
 import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.user.UserPreferencesFilterService;
+import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.*;
@@ -34,16 +35,18 @@ public class UserProfileService {
     private final CityRepository cityRepository;
     private final HobbyRepository hobbyRepository;
     private final UserPreferencesFilterService userPreferencesFilterService;
+    private final UserTalkersHistoryService userTalkersHistoryService;
 
 
     @Autowired
-    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository, UserPreferencesFilterService userPreferencesFilterService) {
+    public UserProfileService(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository, EducationRepository educationRepository, CityRepository cityRepository, HobbyRepository hobbyRepository, UserPreferencesFilterService userPreferencesFilterService, UserTalkersHistoryService userTalkersHistoryService) {
         this.userAccountRepository = userAccountRepository;
         this.userProfileRepository = userProfileRepository;
         this.educationRepository = educationRepository;
         this.cityRepository = cityRepository;
         this.hobbyRepository = hobbyRepository;
         this.userPreferencesFilterService = userPreferencesFilterService;
+        this.userTalkersHistoryService = userTalkersHistoryService;
     }
 
 
@@ -54,8 +57,10 @@ public class UserProfileService {
         validateUserProfileData(userProfile, userAccount);
 
         userProfile.setUserAccount(userAccount);
+
         this.userProfileRepository.save(userProfile);
         this.userPreferencesFilterService.saveDefaultUserPreferencesFilters(userProfile);
+        this.userTalkersHistoryService.saveDefaultUserTalkersHistory(userProfile);
     }
 
     private void validateUserProfileData(UserProfile userProfile, UserAccount userAccount) throws InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
