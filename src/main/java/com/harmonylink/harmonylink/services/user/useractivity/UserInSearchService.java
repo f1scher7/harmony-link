@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.services.user.useractivitystatus;
+package com.harmonylink.harmonylink.services.user.useractivity;
 
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userdata.UserSearchData;

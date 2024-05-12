@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.services.user.useractivitystatus;
+package com.harmonylink.harmonylink.services.user.useractivity;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
