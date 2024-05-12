@@ -74,7 +74,6 @@ public final class UserUtil {
         return period.getYears();
     }
 
-
     public static String getUserProfilesId(UserProfile userProfile1, UserProfile userProfile2) {
         return userProfile1.getId() + userProfile2.getId();
     }
