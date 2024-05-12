@@ -1,3 +1,29 @@
+export function initiateOffer() {
+    window.localPeerConnection.createOffer()
+        .then(offer => {
+            return window.localPeerConnection.setLocalDescription(offer);
+        })
+        .then(() => {
+            window.websocket.send(JSON.stringify({
+                type: 'VIDEO_OFFER',
+                sdp: window.localPeerConnection.localDescription
+            }));
+        })
+        .catch(error => {
+            console.error("Error during offer creation:", error);
+        });
+}
+
+export function sendCandidateToPeer(candidate) {
+    const candidateMsg = {
+        type: 'NEW_ICE_CANDIDATE',
+        candidate: candidate
+    };
+
+    window.websocket.send(JSON.stringify(candidateMsg));
+}
+
+
 export function handleVideoOfferMsg(msg) {
     const desc = new RTCSessionDescription(msg.sdp);
 
@@ -32,13 +58,4 @@ export function handleNewICECandidateMsg(msg) {
         .catch(error => {
             console.error('Error during handleNewICECandidateMsg:', error);
         })
-}
-
-export function sendCandidateToPeer(candidate) {
-    const candidateMsg = {
-        type: 'NEW_ICE_CANDIDATE',
-        candidate: candidate
-    };
-
-    window.websocket.send(JSON.stringify(candidateMsg));
 }

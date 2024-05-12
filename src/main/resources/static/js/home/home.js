@@ -1,8 +1,8 @@
 import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from './functions/utils.js';
 import { sendUserIdByWebsocket, sendHearBeatByWebsocket } from './functions/websocketFuncs.js';
-import { handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "./functions/webrtcFuncs.js";
+import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "./functions/webrtcFuncs.js";
 
-$(document).ready(function (url, data) {
+$(document).ready(function () {
 
     $(window).on('load resize', adjustMainContainer);
 
@@ -19,9 +19,13 @@ $(document).ready(function (url, data) {
     }
 
     window.websocket.onmessage = function (event) {
+        //console.log("Received message: " + event.data);
         const message = JSON.parse(event.data);
 
         switch (message.type) {
+            case 'INITIATE_OFFER':
+                initiateOffer();
+                break;
             case 'VIDEO_OFFER':
                 handleVideoOfferMsg(message);
                 break;
