@@ -1,12 +1,12 @@
 package com.harmonylink.harmonylink.config;
 
 import com.harmonylink.harmonylink.handlers.websocket.HarmonyWebSocketHandler;
-import com.harmonylink.harmonylink.services.user.UserWebSocketSessionService;
-import com.harmonylink.harmonylink.services.user.WebRTCService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
+import com.harmonylink.harmonylink.services.realtime.WebRTCService;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserActivityStatusService;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInSearchService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
