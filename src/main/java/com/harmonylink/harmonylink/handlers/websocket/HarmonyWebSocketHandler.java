@@ -5,25 +5,19 @@ import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
-import com.harmonylink.harmonylink.services.user.UserWebSocketSessionService;
-import com.harmonylink.harmonylink.services.user.WebRTCService;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserActivityStatusService;
-import com.harmonylink.harmonylink.services.user.useractivitystatus.UserInSearchService;
-import com.harmonylink.harmonylink.services.user.userprofile.exceptions.UserProfileDoesntExistException;
+import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
+import com.harmonylink.harmonylink.services.realtime.WebRTCService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
-import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatChecker {
+public class HarmonyWebSocketHandler implements WebSocketHandler {
 
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
@@ -31,7 +25,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
     private final WebRTCService webRTCService;
     private final UserProfileRepository userProfileRepository;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
-    private final Map<String, Long> userRequestTimes;
 
 
     @Autowired
@@ -42,7 +35,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
         this.webRTCService = webRTCService;
         this.userProfileRepository = userProfileRepository;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
-        this.userRequestTimes = new ConcurrentHashMap<>();
     }
 
 
@@ -65,7 +57,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
         }
 
         if ("HEARTBEAT_REQUEST".equals(jsonMessage.getString("type"))) {
-            session.sendMessage(new TextMessage("HEARTBEAT_RESPONSE"));
+            session.sendMessage(new TextMessage(new JSONObject().put("type", "HEARTBEAT_RESPONSE").toString()));
         }
 
         if ("IN_SEARCH".equals(jsonMessage.getString("type"))) {
@@ -123,60 +115,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler, HeartBeatCheck
     @Override
     public boolean supportsPartialMessages() {
         return false;
-    }
-
-
-    @Override
-    @Async
-    public void sendAsyncHeartRequest(WebSocketSession session) {
-        if (session.isOpen()) {
-            try {
-                session.sendMessage(new TextMessage("HEARTBEAT_REQUEST"));
-
-                this.userRequestTimes.put(this.userActivityStatusService.retrieveUserIdFromWebSocketSession(session), System.currentTimeMillis());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    @Scheduled(fixedRate = 30000)
-    public void sendHeartBeatRequest() {
-        for (WebSocketSession webSocketSession: this.userWebSocketSessionService.getAllWebSocketSessions()) {
-            sendAsyncHeartRequest(webSocketSession);
-        }
-    }
-
-    @Override
-    @Scheduled(fixedRate = 30000)
-    public void checkResponses() {
-        long currentTime = System.currentTimeMillis();
-        this.userRequestTimes.forEach((userProfileId, requestTime) -> {
-
-            if (currentTime - requestTime > 35000) {
-                WebSocketSession session = this.userWebSocketSessionService.getWebSocketSession(userProfileId);
-
-                if (session != null) {
-                    try {
-                        session.close();
-                        this.userInSearchService.removeUserSearchData(userProfileId);
-                        this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                this.userRequestTimes.remove(userProfileId);
-
-                try {
-                    this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
-                } catch (UserProfileDoesntExistException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
     }
 
 }
