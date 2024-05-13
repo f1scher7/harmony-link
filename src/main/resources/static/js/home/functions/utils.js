@@ -14,10 +14,10 @@ export function checkCameraStatus (videoElement) {
     if (videoElement && videoElement.srcObject) {
         let tracks = videoElement.srcObject.getTracks();
         if (tracks.length > 0) {
-            $('#user-camera-div').removeClass('h-100');
+            $('#user-local-camera-div').removeClass('h-100');
         }
     } else {
-        $('#user-camera-div').addClass('h-100')
+        $('#user-local-camera-div').addClass('h-100')
     }
 }
 
