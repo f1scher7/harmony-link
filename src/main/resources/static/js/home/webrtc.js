@@ -23,20 +23,35 @@ $(document).ready(function () {
         }
     };
 
-    window.localPeerConnection.createOffer()
-        .then(offer => {
-            return window.localPeerConnection.setLocalDescription(offer)
-        })
-        .then(() => {
-            const offerMsg = {
-                type: 'VIDEO_OFFER',
-                sdp: window.localPeerConnection.localDescription
-            };
+    window.localPeerConnection.ontrack = function (event) {
+        const remoteStream = event.streams[0];
 
-            window.websocket.send(JSON.stringify(offerMsg));
-        })
-        .catch(error => {
-            console.error('Error during offer creation:', error);
-        })
+        const remoteVideoElement = $('#remote-camera').get(0);
+        const remoteAudioElement = $('#remote-audio').get(0);
+
+        remoteVideoElement.srcObject = remoteStream;
+        remoteAudioElement.srcObject = remoteStream;
+
+        $('.main-container').addClass('mb-2');
+
+        $('.main-info-div').addClass('d-none');
+        $('.main-remote-user-div').removeClass('d-none');
+
+    }
+
+    window.localPeerConnection.onconnectionstatechange = function (event) {
+        switch (window.localPeerConnection.connectionState) {
+            case 'connected':
+                break;
+            case 'disconnected':
+            case "failed":
+                $('.main-container').removeClass('mb-2');
+                $('.main-info-div').removeClass('d-none');
+                $('.main-remote-user-div').addClass('d-none');
+                break;
+            case "closed":
+                break;
+        }
+    }
 
 })
