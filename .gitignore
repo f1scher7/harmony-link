@@ -35,3 +35,4 @@ build/
 .vscode/
 /.env
 /TODOLIST.txt
+/src/main/resources/local-ssl.p12
