@@ -9,7 +9,7 @@ $(document).ready(function () {
     window.userProfileId = $('#user-profile-id').text();
 
 
-    const wsUri = "ws://localhost:8080/harmony-websocket-handler";
+    const wsUri = "wss://localhost:8443/harmony-websocket-handler";
     window.websocket = new WebSocket(wsUri);
 
     window.websocket.onopen = function (event) {
@@ -60,7 +60,7 @@ $(document).ready(function () {
         })
         .catch(error => {
             console.error("Error accessing camera and microphone", error);
-            $('#user-camera-div').addClass('info-div');
+            $('#user-local-camera-div').addClass('info-div');
             $('#local-camera').remove();
             $('#camera-error').removeClass('d-none');
             $('#start-btn').addClass('disabled');
