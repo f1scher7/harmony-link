@@ -7,15 +7,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-
-@Component
+@Service
 public class WebRTCService {
 
     private final UserWebSocketSessionService userWebSocketSessionService;
@@ -43,7 +42,7 @@ public class WebRTCService {
         if (peerSession != null) {
             JSONObject videoOffer = new JSONObject();
 
-            videoOffer.put("type", "VIDEO_OFFER");
+            videoOffer.put("type", "offer");
             videoOffer.put("sdp", sdp);
 
             peerSession.sendMessage(new TextMessage(videoOffer.toString()));
@@ -59,7 +58,7 @@ public class WebRTCService {
         if (peerSession != null) {
             JSONObject videoAnswer = new JSONObject();
 
-            videoAnswer.put("type", "VIDEO_ANSWER");
+            videoAnswer.put("type", "answer");
             videoAnswer.put("sdp", sdp);
 
             peerSession.sendMessage(new TextMessage(videoAnswer.toString()));
@@ -72,7 +71,7 @@ public class WebRTCService {
         if (peerSession != null) {
             JSONObject iceCandidate = new JSONObject();
 
-            iceCandidate.put("type", "NEW_ICE_CANDIDATE");
+            iceCandidate.put("type", "candidate");
             iceCandidate.put("candidate", candidate);
 
             peerSession.sendMessage(new TextMessage(iceCandidate.toString()));
