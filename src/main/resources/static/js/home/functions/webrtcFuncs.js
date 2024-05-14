@@ -5,8 +5,8 @@ export function initiateOffer() {
         })
         .then(() => {
             window.websocket.send(JSON.stringify({
-                type: 'VIDEO_OFFER',
-                sdp: window.localPeerConnection.localDescription
+                type: 'offer',
+                sdp: window.localPeerConnection.localDescription.sdp
             }));
         })
         .catch(error => {
@@ -16,7 +16,7 @@ export function initiateOffer() {
 
 export function sendCandidateToPeer(candidate) {
     const candidateMsg = {
-        type: 'NEW_ICE_CANDIDATE',
+        type: 'candidate',
         candidate: candidate
     };
 
@@ -25,15 +25,20 @@ export function sendCandidateToPeer(candidate) {
 
 
 export function handleVideoOfferMsg(msg) {
-    const desc = new RTCSessionDescription(msg.sdp);
+    const remoteDesc = new RTCSessionDescription({
+        type: msg.type,
+        sdp: msg.sdp
+    });
 
-    window.localPeerConnection.setRemoteDescription(desc)
+    window.localPeerConnection.setRemoteDescription(remoteDesc)
         .then(() => window.localPeerConnection.createAnswer())
-        .then(answer => window.localPeerConnection.setLocalDescription(answer))
+        .then(answer => {
+            return window.localPeerConnection.setLocalDescription(answer)
+        })
         .then(() => {
             const answerMsg = {
-                type: 'VIDEO_ANSWER',
-                sdp: window.localPeerConnection.localDescription
+                type: 'answer',
+                sdp: window.localPeerConnection.localDescription.sdp
             };
             window.websocket.send(JSON.stringify(answerMsg));
         })
@@ -43,16 +48,27 @@ export function handleVideoOfferMsg(msg) {
 }
 
 export function handleVideoAnswerMsg(msg) {
-    const desc = new RTCSessionDescription(msg.sdp);
+    const sdpData = {
+        type: 'answer',
+        sdp: msg.sdp
+    };
 
-    window.localPeerConnection.setRemoteDescription(desc)
+    const remoteDesc = new RTCSessionDescription(sdpData);
+
+    window.localPeerConnection.setRemoteDescription(remoteDesc)
         .catch(error => {
             console.error('Error during handleVideoAnswerMsg:', error);
         });
 }
 
 export function handleNewICECandidateMsg(msg) {
-    const candidate = new RTCIceCandidate(msg.candidate);
+    const candidateData = {
+        candidate: msg.candidate.candidate.candidate,
+        sdpMid: msg.candidate.candidate.sdpMid,
+        sdpMLineIndex: msg.candidate.candidate.sdpMLineIndex
+    };
+
+    const candidate = new RTCIceCandidate(candidateData);
 
     window.localPeerConnection.addIceCandidate(candidate)
         .catch(error => {
