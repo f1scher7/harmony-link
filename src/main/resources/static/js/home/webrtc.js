@@ -18,8 +18,12 @@ $(document).ready(function () {
     window.localPeerConnection = new RTCPeerConnection(configIceServers);
 
     window.localPeerConnection.onicecandidate = function(event) {
-        if (event.candidate) {
-            sendCandidateToPeer(event.candidate);
+        try {
+            if (event.candidate) {
+                sendCandidateToPeer(event.candidate);
+            }
+        } catch (error) {
+            console.error("ICE error:", error);
         }
     };
 
@@ -33,22 +37,22 @@ $(document).ready(function () {
         remoteAudioElement.srcObject = remoteStream;
 
         $('.main-container').addClass('mb-2');
-
         $('.main-info-div').addClass('d-none');
         $('.main-remote-user-div').removeClass('d-none');
-
     }
 
     window.localPeerConnection.onconnectionstatechange = function (event) {
         switch (window.localPeerConnection.connectionState) {
             case 'connected':
                 break;
+
             case 'disconnected':
             case "failed":
                 $('.main-container').removeClass('mb-2');
                 $('.main-info-div').removeClass('d-none');
                 $('.main-remote-user-div').addClass('d-none');
                 break;
+
             case "closed":
                 break;
         }
