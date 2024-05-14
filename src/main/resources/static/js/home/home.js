@@ -9,7 +9,7 @@ $(document).ready(function () {
     window.userProfileId = $('#user-profile-id').text();
 
 
-    const wsUri = "wss://localhost:8443/harmony-websocket-handler";
+    const wsUri = "wss://address/harmony-websocket-handler";
     window.websocket = new WebSocket(wsUri);
 
     window.websocket.onopen = function (event) {
@@ -26,13 +26,13 @@ $(document).ready(function () {
             case 'INITIATE_OFFER':
                 initiateOffer();
                 break;
-            case 'VIDEO_OFFER':
+            case 'offer':
                 handleVideoOfferMsg(message);
                 break;
-            case 'VIDEO_ANSWER':
+            case 'answer':
                 handleVideoAnswerMsg(message);
                 break;
-            case 'NEW_ICE_CANDIDATE':
+            case 'candidate':
                 handleNewICECandidateMsg(message);
                 break;
         }
@@ -54,12 +54,18 @@ $(document).ready(function () {
 
     navigator.mediaDevices.getUserMedia( {video: true, audio: true})
         .then(stream => {
+            stream.getTracks().forEach(track => {
+                window.localPeerConnection.addTrack(track, stream);
+            });
+
             localVideoElement.srcObject = stream;
             localAudioElement.srcObject = stream;
+
             $('#camera-error').addClass('d-none');
         })
         .catch(error => {
             console.error("Error accessing camera and microphone", error);
+
             $('#user-local-camera-div').addClass('info-div');
             $('#local-camera').remove();
             $('#camera-error').removeClass('d-none');
