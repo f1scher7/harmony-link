@@ -83,15 +83,15 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             this.userInSearchService.removeUserSearchData(userProfileId);
         }
 
-        if ("VIDEO_OFFER".equals(jsonMessage.getString("type"))) {
+        if ("offer".equals(jsonMessage.getString("type"))) {
             this.webRTCService.handleVideoOffer(session, jsonMessage);
         }
 
-        if ("VIDEO_ANSWER".equals(jsonMessage.getString("type"))) {
+        if ("answer".equals(jsonMessage.getString("type"))) {
             this.webRTCService.handleVideoAnswer(session, jsonMessage);
         }
 
-        if ("NEW_ICE_CANDIDATE".equals(jsonMessage.getString("type"))) {
+        if ("candidate".equals(jsonMessage.getString("type"))) {
             this.webRTCService.handleNewIceCandidate(session, jsonMessage);
         }
 
