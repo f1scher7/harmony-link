@@ -40,18 +40,25 @@ $(document).ready(function () {
     })
 
     stopBtn.on('click', function () {
-        sendStopActivityByWebsocket(window.websocket)
-
-        if (window.innerHeight > 1600) {
-            hlLogoInInfoDiv.removeClass('mb-5');
-            hlLogoInInfoDiv.addClass('mb-2');
+        if (window.localPeerConnection) {
+            switch (window.localPeerConnection.connectionState) {
+                case "connected":
+                    
+            }
         } else {
-            hlLogoInInfoDiv.removeClass('mb-2');
-            hlLogoInInfoDiv.addClass('mb-5');
-        }
 
-        statisticDataDiv.empty();
-        statisticDataDiv.html(`
+            sendStopActivityByWebsocket(window.websocket)
+
+            if (window.innerHeight > 1600) {
+                hlLogoInInfoDiv.removeClass('mb-5');
+                hlLogoInInfoDiv.addClass('mb-2');
+            } else {
+                hlLogoInInfoDiv.removeClass('mb-2');
+                hlLogoInInfoDiv.addClass('mb-5');
+            }
+
+            statisticDataDiv.empty();
+            statisticDataDiv.html(`
             <div class="d-inline-block">
                 <h5 class="font-weight-bold" id="users-online"><i class="fas fa-users"></i> Aktualna liczba użytkowników online: </h5>
                 <h5 class="font-weight-bold" id="users-in-search"><i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: </h5>
@@ -59,13 +66,14 @@ $(document).ready(function () {
             </div>
         `);
 
-        fetchUsersActivityStatus();
+            fetchUsersActivityStatus();
 
-        window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
+            window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
 
-        stopBtn.addClass('disabled');
-        startBtn.removeClass('disabled');
-        filtersBtn.removeClass('disabled');
+            stopBtn.addClass('disabled');
+            startBtn.removeClass('disabled');
+            filtersBtn.removeClass('disabled');
+        }
     })
 
 })
