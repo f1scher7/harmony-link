@@ -12,11 +12,13 @@ public class UserWebSocketSessionService {
 
     private final ConcurrentHashMap<String, WebSocketSession> userWebSocketSessions = new ConcurrentHashMap<>();
 
+
     public void addWebSocketSession(String userProfileId, WebSocketSession webSocketSession) {
         if (userProfileId != null && webSocketSession != null) {
             userWebSocketSessions.put(userProfileId, webSocketSession);
         }
     }
+
 
     public WebSocketSession getWebSocketSession(String userProfileId) {
         return userWebSocketSessions.get(userProfileId);
@@ -26,6 +28,7 @@ public class UserWebSocketSessionService {
         return new ArrayList<>(userWebSocketSessions.values());
     }
 
+
     public void removeWebSocketSession(String userProfileId) {
         userWebSocketSessions.remove(userProfileId);
     }
@@ -33,6 +36,7 @@ public class UserWebSocketSessionService {
     public void removeAllWebSocketSessions() {
         userWebSocketSessions.clear();
     }
+
 
     public String displayWebSocketSessions() {
         StringBuilder builder = new StringBuilder();
