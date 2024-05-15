@@ -1,13 +1,14 @@
 import { fetchUsersActivityStatus } from "./functions/utils.js";
-import { sendInSearchStatusByWebsocket, sendStopActivityByWebsocket } from "./functions/websocketFuncs.js";
+import { sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "./functions/websocketFuncs.js";
+import { createPeerConnection } from "./functions/webrtcFuncs.js";
 
 $(document).ready(function () {
 
-    let startBtn = $('#start-btn');
-    let stopBtn = $('#stop-btn');
-    let filtersBtn = $('#filters-btn');
-    let statisticDataDiv = $('.statistics-data');
-    let hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
+    const startBtn = $('#start-btn');
+    const stopBtn = $('#stop-btn');
+    const filtersBtn = $('#filters-btn');
+    const statisticDataDiv = $('.statistics-data');
+    const hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
 
     startBtn.on('click', function () {
         sendInSearchStatusByWebsocket(window.websocket);
@@ -39,41 +40,49 @@ $(document).ready(function () {
         `);
     })
 
+
     stopBtn.on('click', function () {
-        if (window.localPeerConnection) {
-            switch (window.localPeerConnection.connectionState) {
-                case "connected":
-                    
-            }
-        } else {
+        switch (window.localPeerConnection.connectionState) {
+            case "new":
+                sendStopSearchingByWebsocket(window.websocket)
+                break;
+            case "connected":
+                sendStopWebRTCConn(window.websocket);
 
-            sendStopActivityByWebsocket(window.websocket)
+                window.localPeerConnection.close();
+                window.localPeerConnection = null;
 
-            if (window.innerHeight > 1600) {
-                hlLogoInInfoDiv.removeClass('mb-5');
-                hlLogoInInfoDiv.addClass('mb-2');
-            } else {
-                hlLogoInInfoDiv.removeClass('mb-2');
-                hlLogoInInfoDiv.addClass('mb-5');
-            }
+                createPeerConnection();
 
-            statisticDataDiv.empty();
-            statisticDataDiv.html(`
-            <div class="d-inline-block">
-                <h5 class="font-weight-bold" id="users-online"><i class="fas fa-users"></i> Aktualna liczba użytkowników online: </h5>
-                <h5 class="font-weight-bold" id="users-in-search"><i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: </h5>
-                <h5 class="font-weight-bold" id="users-in-call"><i class="fa fa-filter"></i> Ilość użytkowników szukających Ciebie:</h5>
-            </div>
-        `);
-
-            fetchUsersActivityStatus();
-
-            window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
-
-            stopBtn.addClass('disabled');
-            startBtn.removeClass('disabled');
-            filtersBtn.removeClass('disabled');
+                $('.main-container').removeClass('mb-2');
+                $('.main-info-div').removeClass('d-none');
+                $('.main-remote-user-div').addClass('d-none');
         }
+
+        if (window.innerHeight > 1600) {
+            hlLogoInInfoDiv.removeClass('mb-5');
+            hlLogoInInfoDiv.addClass('mb-2');
+        } else {
+            hlLogoInInfoDiv.removeClass('mb-2');
+            hlLogoInInfoDiv.addClass('mb-5');
+        }
+
+        statisticDataDiv.empty();
+        statisticDataDiv.html(`
+                        <div class="d-inline-block">
+                            <h5 class="font-weight-bold" id="users-online"><i class="fas fa-users"></i> Aktualna liczba użytkowników online: </h5>
+                            <h5 class="font-weight-bold" id="users-in-search"><i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: </h5>
+                            <h5 class="font-weight-bold" id="users-in-call"><i class="fa fa-filter"></i> Ilość użytkowników szukających Ciebie:</h5>
+                        </div>
+                    `);
+
+        fetchUsersActivityStatus();
+
+        window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
+
+        stopBtn.addClass('disabled');
+        startBtn.removeClass('disabled');
+        filtersBtn.removeClass('disabled');
     })
 
 })
