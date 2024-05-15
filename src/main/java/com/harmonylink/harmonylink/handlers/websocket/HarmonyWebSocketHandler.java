@@ -5,6 +5,8 @@ import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
+import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
@@ -22,17 +24,21 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
     private final UserInSearchService userInSearchService;
+    private final UserInCallPairService userInCallPairService;
     private final WebRTCService webRTCService;
+    private final UserTalkersHistoryService userTalkersHistoryService;
     private final UserProfileRepository userProfileRepository;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
 
 
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, WebRTCService webRTCService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
-        this.userInSearchService = userInSearchService;
-        this.userWebSocketSessionService = userWebSocketSessionService;
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userActivityStatusService = userActivityStatusService;
+        this.userWebSocketSessionService = userWebSocketSessionService;
+        this.userInSearchService = userInSearchService;
+        this.userInCallPairService = userInCallPairService;
         this.webRTCService = webRTCService;
+        this.userTalkersHistoryService = userTalkersHistoryService;
         this.userProfileRepository = userProfileRepository;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
     }
@@ -53,6 +59,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             session.getAttributes().put("userProfileId", userProfileId);
 
             this.userWebSocketSessionService.addWebSocketSession(userProfileId, session);
+
             this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
         }
 
@@ -75,12 +82,20 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             this.userInSearchService.addUserSearchData(userProfile, userPreferencesFilter);
         }
 
-        if ("STOP_ACTIVITY".equals(jsonMessage.getString("type"))) {
+        if ("STOP_SEARCHING".equals(jsonMessage.getString("type"))) {
             String userProfileId = jsonMessage.getString("userProfileId");
 
             this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
 
             this.userInSearchService.removeUserSearchData(userProfileId);
+        }
+
+        if ("STOP_WEBRTC_CONN".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.userTalkersHistoryService.saveUserTalkersHistory(userProfileId);
+
+            this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
         }
 
         if ("offer".equals(jsonMessage.getString("type"))) {
