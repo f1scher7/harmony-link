@@ -14,11 +14,6 @@ public class UserInSearchService {
 
     private final ConcurrentHashMap<String, UserSearchData> inSearchUsers = new ConcurrentHashMap<>();
 
-    public void addUserSearchData(UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
-        if (userProfile != null && userPreferencesFilter != null) {
-            inSearchUsers.put(userProfile.getId(), new UserSearchData(userProfile, userPreferencesFilter));
-        }
-    }
 
     public UserSearchData getUserSearchData(String userProfileId) {
         return inSearchUsers.get(userProfileId);
@@ -28,6 +23,14 @@ public class UserInSearchService {
         return new ArrayList<>(inSearchUsers.values());
     }
 
+
+    public void addUserSearchData(UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
+        if (userProfile != null && userPreferencesFilter != null) {
+            inSearchUsers.put(userProfile.getId(), new UserSearchData(userProfile, userPreferencesFilter));
+        }
+    }
+
+
     public void removeUserSearchData(String userProfileId) {
         inSearchUsers.remove(userProfileId);
     }
@@ -35,6 +38,7 @@ public class UserInSearchService {
     public void removeAllInSearchUsers() {
         inSearchUsers.clear();
     }
+
 
     public String displayInSearchUsers() {
         StringBuilder builder = new StringBuilder();
