@@ -6,47 +6,47 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Document("users_talkers_history")
 public class UserTalkersHistory {
 
     @Id
-    private String UserTalkersHistoryId;
+    private String userTalkersHistoryId;
     @DBRef
     private UserProfile userProfile;
     @Field
-    private List<UserProfile> talkers;
+    private SortedMap<LocalDate, UserProfile> talkers;
+
 
 
     public UserTalkersHistory() {
-        this.talkers = new ArrayList<>();
+        this.talkers = new TreeMap<>();
     }
 
-    public UserTalkersHistory(UserProfile userProfile, List<UserProfile> talkers) {
+    public UserTalkersHistory(UserProfile userProfile, SortedMap<LocalDate, UserProfile> talkers) {
         this.userProfile = userProfile;
         this.talkers = talkers;
     }
 
 
     public void addTalker(UserProfile userProfile) {
-        if (!this.talkers.contains(userProfile)) {
-            this.talkers.add(userProfile);
-        }
+        this.talkers.put(LocalDate.now(), userProfile);
     }
 
 
     public String getUserTalkersHistoryId() {
-        return this.UserTalkersHistoryId;
+        return this.userTalkersHistoryId;
     }
 
     public UserProfile getUserProfile() {
         return this.userProfile;
     }
 
-    public List<UserProfile> getTalkers() {
-        return this.talkers;
+    public SortedMap<LocalDate, UserProfile> getTalkers() {
+        return talkers;
     }
 
 
@@ -54,7 +54,7 @@ public class UserTalkersHistory {
         this.userProfile = userProfile;
     }
 
-    public void setTalkers(List<UserProfile> talkers) {
+    public void setTalkers(SortedMap<LocalDate, UserProfile> talkers) {
         this.talkers = talkers;
     }
 
@@ -62,7 +62,7 @@ public class UserTalkersHistory {
     @Override
     public String toString() {
         return "UserTalkersHistory{" +
-                "UserTalkersHistoryId='" + this.UserTalkersHistoryId + '\'' +
+                "UserTalkersHistoryId='" + this.userTalkersHistoryId + '\'' +
                 ", userProfile=" + this.userProfile +
                 ", talkers=" + this.talkers +
                 '}';
