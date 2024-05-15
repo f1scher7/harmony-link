@@ -22,9 +22,17 @@ export function sendInSearchStatusByWebsocket(websocket) {
     }
 }
 
-export function sendStopActivityByWebsocket(websocket) {
+export function sendStopSearchingByWebsocket(websocket) {
     if (websocket.readyState === WebSocket.OPEN) {
-        websocket.send(JSON.stringify({ type: 'STOP_ACTIVITY', userProfileId: window.userProfileId }));
+        websocket.send(JSON.stringify({ type: 'STOP_SEARCHING', userProfileId: window.userProfileId }));
+    } else {
+        console.error("WebSocket is not connected");
+    }
+}
+
+export function sendStopWebRTCConn(websocket) {
+    if (websocket.readyState === WebSocket.OPEN) {
+        websocket.send(JSON.stringify({ type: 'STOP_WEBRTC_CONN', userProfileId: window.userProfileId }));
     } else {
         console.error("WebSocket is not connected");
     }
