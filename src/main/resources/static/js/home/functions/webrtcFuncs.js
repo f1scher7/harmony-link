@@ -1,3 +1,21 @@
+export function createPeerConnection() {
+    const configIceServers = {
+        iceServers: [
+            {
+                urls: 'stun:stun.l.google.com:19302'
+            },
+
+            {
+                urls: 'turn:openrelay.metered.ca:443',
+                username: 'openrelayproject',
+                credential: 'openrelayproject'
+            }
+        ]
+    }
+
+    window.localPeerConnection = new RTCPeerConnection(configIceServers);
+}
+
 export function initiateOffer() {
     window.localPeerConnection.createOffer()
         .then(offer => {
