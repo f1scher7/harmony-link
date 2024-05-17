@@ -30,6 +30,18 @@ public class UserInCallPairService {
         return inCallUsersPairs.get(getUserProfilesId(userProfile1, userProfile2));
     }
 
+    public UserProfile getUserProfileByUserProfileId(String userProfileId) {
+        for (UserCallPairData userCallPairData: inCallUsersPairs.values()) {
+            if (userCallPairData.getUserProfile1().getId().equals(userProfileId)) {
+                return userCallPairData.getUserProfile1();
+            } else if (userCallPairData.getUserProfile2().getId().equals(userProfileId)) {
+                return userCallPairData.getUserProfile2();
+            }
+        }
+
+        return null;
+    }
+
     public UserProfile getAnotherUserProfileByUserProfileId(String userProfileId) {
         for (UserCallPairData userCallPairData: inCallUsersPairs.values()) {
             if (userCallPairData.getUserProfile1().getId().equals(userProfileId)) {
