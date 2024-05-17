@@ -37,3 +37,26 @@ export function fetchUsersActivityStatus() {
         }
     })
 }
+
+export function setDefaultInfoDiv(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn) {
+    if (window.innerHeight > 1600) {
+        hlLogoInInfoDiv.removeClass('mb-5');
+        hlLogoInInfoDiv.addClass('mb-2');
+    } else {
+        hlLogoInInfoDiv.removeClass('mb-2');
+        hlLogoInInfoDiv.addClass('mb-5');
+    }
+
+    statisticDataDiv.empty();
+    statisticDataDiv.html(`
+        <div class="d-inline-block">
+            <h5 class="font-weight-bold" id="users-online"><i class="fas fa-users"></i> Aktualna liczba użytkowników online: </h5>
+            <h5 class="font-weight-bold" id="users-in-search"><i class="fas fa-sliders-h"></i> Ilość osób odpowiadających Twoim filtrom: </h5>
+            <h5 class="font-weight-bold" id="users-in-call"><i class="fa fa-filter"></i> Ilość użytkowników szukających Ciebie:</h5>
+        </div>
+    `);
+
+    stopBtn.addClass('disabled');
+    startBtn.removeClass('disabled');
+    filtersBtn.removeClass('disabled');
+}
