@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
-@EnableScheduling
-@EnableAsync
 public class HarmonyLinkApplication implements CommandLineRunner {
 
     private final Random random = new Random();
