@@ -1,4 +1,7 @@
-export function createPeerConnection() {
+import {fetchUsersActivityStatus, setDefaultInfoDiv} from "./utils.js";
+import {sendGetTalkerNickname} from "./websocketFuncs.js";
+
+export function createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn) {
     const configIceServers = {
         iceServers: [
             {
@@ -14,7 +17,72 @@ export function createPeerConnection() {
     }
 
     window.localPeerConnection = new RTCPeerConnection(configIceServers);
+
+    navigator.mediaDevices.getUserMedia( {video: true, audio: true})
+        .then(stream => {
+            stream.getTracks().forEach(track => {
+                window.localPeerConnection.addTrack(track, stream);
+            })
+        })
+
+    window.localPeerConnection.onicecandidate = function(event) {
+        try {
+            if (event.candidate) {
+                sendCandidateToPeer(event.candidate);
+            }
+        } catch (error) {
+            console.error("ICE error:", error);
+        }
+    };
+
+    window.localPeerConnection.ontrack = function (event) {
+        const remoteStream = event.streams[0];
+
+        const remoteVideoElement = $('#remote-camera').get(0);
+        const remoteAudioElement = $('#remote-audio').get(0);
+
+        remoteVideoElement.srcObject = remoteStream;
+        remoteAudioElement.srcObject = remoteStream;
+
+        $('.main-container').addClass('mb-2');
+        $('.main-info-div').addClass('d-none');
+        $('.main-remote-user-div').removeClass('d-none');
+    }
+
+    window.localPeerConnection.onconnectionstatechange = function (event) {
+        console.log(window.localPeerConnection.connectionState);
+        switch (window.localPeerConnection.connectionState) {
+            case 'connected':
+                break;
+            case 'connecting':
+                break
+
+            case 'disconnected':
+            case "failed":
+                $('#disconnectModal').modal('show');
+
+                window.localPeerConnection.close();
+                window.localPeerConnection = null;
+
+                createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn);
+
+                $('.main-container').removeClass('mb-2');
+                $('.main-info-div').removeClass('d-none');
+                $('.main-remote-user-div').addClass('d-none');
+
+                setDefaultInfoDiv(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn);
+
+                fetchUsersActivityStatus();
+                window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
+
+                break;
+
+            case "closed":
+                break;
+        }
+    }
 }
+
 
 export function initiateOffer() {
     window.localPeerConnection.createOffer()
@@ -31,6 +99,7 @@ export function initiateOffer() {
             console.error("Error during offer creation:", error);
         });
 }
+
 
 export function sendCandidateToPeer(candidate) {
     const candidateMsg = {
@@ -65,6 +134,7 @@ export function handleVideoOfferMsg(msg) {
         });
 }
 
+
 export function handleVideoAnswerMsg(msg) {
     const sdpData = {
         type: 'answer',
@@ -78,6 +148,7 @@ export function handleVideoAnswerMsg(msg) {
             console.error('Error during handleVideoAnswerMsg:', error);
         });
 }
+
 
 export function handleNewICECandidateMsg(msg) {
     const candidateData = {
