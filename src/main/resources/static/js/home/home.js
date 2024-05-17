@@ -9,7 +9,7 @@ $(document).ready(function () {
     window.userProfileId = $('#user-profile-id').text();
 
 
-    const wsUri = "wss://address/harmony-websocket-handler";
+    const wsUri = "wss://192.168.0.102:8443/harmony-websocket-handler";
     window.websocket = new WebSocket(wsUri);
 
     window.websocket.onopen = function (event) {
@@ -35,6 +35,11 @@ $(document).ready(function () {
             case 'candidate':
                 handleNewICECandidateMsg(message);
                 break;
+            case 'TALKER_NICKNAME':
+                console.log("asd");
+                console.log(message.nickname);
+                $('#disconnectModalLabel').text(message.nickname + " zakończył/a spotkanie");
+                break;
         }
     }
 
@@ -54,10 +59,6 @@ $(document).ready(function () {
 
     navigator.mediaDevices.getUserMedia( {video: true, audio: true})
         .then(stream => {
-            stream.getTracks().forEach(track => {
-                window.localPeerConnection.addTrack(track, stream);
-            });
-
             localVideoElement.srcObject = stream;
             localAudioElement.srcObject = stream;
 
@@ -78,6 +79,6 @@ $(document).ready(function () {
 
 
     fetchUsersActivityStatus()
-    window.userActivityInterval = setInterval(fetchUsersActivityStatus, 3000);
+    window.userActivityInterval = setInterval(fetchUsersActivityStatus, 10000);
 
 })
