@@ -1,11 +1,10 @@
 package com.harmonylink.harmonylink.controllers.home;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.CustomMatchesRepository;
-import com.harmonylink.harmonylink.repositories.user.UserActivityStatusRepository;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
+import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,15 +19,15 @@ import java.util.List;
 public class HomeController {
 
     private final UserProfileService userProfileService;
-    private final UserActivityStatusRepository userActivityStatusRepository;
+    private final UserWebSocketSessionService userWebSocketSessionService;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
     private final CustomMatchesRepository customMatchesRepository;
 
 
     @Autowired
-    public HomeController(UserProfileService userProfileService, UserActivityStatusRepository userActivityStatusRepository, UserPreferencesFilterRepository userPreferencesFilterRepository, CustomMatchesRepository customMatchesRepository) {
+    public HomeController(UserProfileService userProfileService, UserWebSocketSessionService userWebSocketSessionService, UserPreferencesFilterRepository userPreferencesFilterRepository, CustomMatchesRepository customMatchesRepository) {
         this.userProfileService = userProfileService;
-        this.userActivityStatusRepository = userActivityStatusRepository;
+        this.userWebSocketSessionService = userWebSocketSessionService;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
         this.customMatchesRepository = customMatchesRepository;
     }
@@ -48,12 +47,10 @@ public class HomeController {
 
         List<Long> usersActivityStatistic = new ArrayList<>();
 
-        long inSearch = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_SEARCH);
-        long inCall = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.IN_CALL);
-        long online = this.userActivityStatusRepository.countByActivityStatus(UserActivityStatusEnum.ONLINE) + inSearch + inCall;
-
+        long online = this.userWebSocketSessionService.getNumberOfSessions();
         long matchesUserProfilesInSearch = this.customMatchesRepository.countUserProfilesMatchesInSearch(userProfile.getId(), userPreferencesFilter.getSex(), ages.get(0), ages.get(1), heights.get(0), heights.get(1), userPreferencesFilter.getRelationshipStatus(), cities, hobbyIds, studies);
         long matchesUserPreferencesFiltersInSearch = this.customMatchesRepository.countUserPreferencesFiltersMatchesInSearch(userPreferencesFilter.getUserPreferenceFilterId(), Character.toString(userProfile.getSex()), userProfile.getRelationshipStatus(), userProfile.getCity());
+
         usersActivityStatistic.add(online);
         usersActivityStatistic.add(matchesUserProfilesInSearch);
         usersActivityStatistic.add(matchesUserPreferencesFiltersInSearch);
