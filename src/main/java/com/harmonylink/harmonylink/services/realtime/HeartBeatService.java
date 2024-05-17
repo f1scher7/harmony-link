@@ -1,6 +1,7 @@
 package com.harmonylink.harmonylink.services.realtime;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
+import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
@@ -23,14 +24,16 @@ public class HeartBeatService {
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
     private final UserInSearchService userInSearchService;
+    private final UserInCallPairService userInCallPairService;
     private final ConcurrentHashMap<String, Long> userRequestTimes = new ConcurrentHashMap<>();
 
 
     @Autowired
-    public HeartBeatService(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService) {
+    public HeartBeatService(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userInSearchService = userInSearchService;
+        this.userInCallPairService = userInCallPairService;
     }
 
 
@@ -47,13 +50,29 @@ public class HeartBeatService {
         }
     }
 
+    @Async
     @Scheduled(fixedRate = 30000)
     public void sendHeartBeatRequest() {
+        System.out.println("SESSION");
+        System.out.println(this.userWebSocketSessionService.displayWebSocketSessions());
+        System.out.println("============================");
+
+        System.out.println("IN_SEARCH");
+        System.out.println(this.userInSearchService.displayInSearchUsers());
+        System.out.println("============================");
+
+        System.out.println("IN_CALL");
+        System.out.println(this.userInCallPairService.displayInSearchUsers());
+        System.out.println("============================");
+
         for (WebSocketSession webSocketSession: this.userWebSocketSessionService.getAllWebSocketSessions()) {
-            sendAsyncHeartRequest(webSocketSession);
+            if (webSocketSession.isOpen()) {
+                sendAsyncHeartRequest(webSocketSession);
+            }
         }
     }
 
+    @Async
     @Scheduled(fixedRate = 30000)
     public void checkResponses() {
         long currentTime = System.currentTimeMillis();
