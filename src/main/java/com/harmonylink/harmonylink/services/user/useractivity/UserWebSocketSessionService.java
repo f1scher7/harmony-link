@@ -28,6 +28,10 @@ public class UserWebSocketSessionService {
         return new ArrayList<>(userWebSocketSessions.values());
     }
 
+    public long getNumberOfSessions() {
+        return userWebSocketSessions.size();
+    }
+
 
     public void removeWebSocketSession(String userProfileId) {
         userWebSocketSessions.remove(userProfileId);
