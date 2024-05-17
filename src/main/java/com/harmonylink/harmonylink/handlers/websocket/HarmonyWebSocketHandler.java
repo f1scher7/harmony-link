@@ -98,6 +98,12 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
         }
 
+        if ("GET_TALKER_NICKNAME".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.webRTCService.getTalkerNickname(userProfileId, session);
+        }
+
         if ("offer".equals(jsonMessage.getString("type"))) {
             this.webRTCService.handleVideoOffer(session, jsonMessage);
         }
