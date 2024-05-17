@@ -103,4 +103,19 @@ public class WebRTCService {
         return CompletableFuture.completedFuture(peerUserProfileId);
     }
 
+    public void getTalkerNickname(String userProfileId, WebSocketSession session) throws JSONException, IOException {
+        String talkerNickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
+
+        WebSocketSession talkerSession = findPeerSession(session);
+        System.out.println(talkerNickname);
+        if (talkerSession != null) {
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("type", "TALKER_NICKNAME");
+            jsonObject.put("nickname", talkerNickname);
+
+            talkerSession.sendMessage(new TextMessage(jsonObject.toString()));
+        }
+    }
+
 }
