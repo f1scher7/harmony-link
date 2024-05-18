@@ -2,13 +2,10 @@ package com.harmonylink.harmonylink.config;
 
 import com.harmonylink.harmonylink.handlers.websocket.HarmonyWebSocketHandler;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
+import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
-import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +20,7 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
+    private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
     private final WebRTCService webRTCService;
@@ -32,9 +30,10 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 
 
     @Autowired
-    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
+        this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
         this.webRTCService = webRTCService;
@@ -46,7 +45,16 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 
     @Bean
     public WebSocketHandler harmonyWebSocket() {
-        return new HarmonyWebSocketHandler(this.userActivityStatusService, this.userWebSocketSessionService, this.userInSearchService, this.userInCallPairService, this.webRTCService, this.userTalkersHistoryService, this.userProfileRepository, this.userPreferencesFilterRepository);
+        return new HarmonyWebSocketHandler(
+                this.userActivityStatusService,
+                this.userWebSocketSessionService,
+                this.userTabsControlService,
+                this.userInSearchService,
+                this.userInCallPairService,
+                this.webRTCService,
+                this.userTalkersHistoryService,
+                this.userProfileRepository,
+                this.userPreferencesFilterRepository);
     }
 
     @Override
