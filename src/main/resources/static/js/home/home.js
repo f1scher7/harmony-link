@@ -1,5 +1,5 @@
 import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from './functions/utils.js';
-import { sendUserIdByWebsocket, sendHearBeatByWebsocket } from './functions/websocketFuncs.js';
+import { sendUserIdByWebsocket, sendHeartbeatByWebsocket } from './functions/websocketFuncs.js';
 import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "./functions/webrtcFuncs.js";
 
 $(document).ready(function () {
@@ -7,6 +7,8 @@ $(document).ready(function () {
     $(window).on('load resize', adjustMainContainer);
 
     window.userProfileId = $('#user-profile-id').text();
+
+    let heartbeatResponseCount = 0;
 
 
     const wsUri = "wss://192.168.0.102:8443/harmony-websocket-handler";
@@ -19,8 +21,29 @@ $(document).ready(function () {
     }
 
     window.websocket.onmessage = function (event) {
-        //console.log("Received message: " + event.data);
+        console.log("Received message: " + event.data);
+
         const message = JSON.parse(event.data);
+
+        if (message.type === 'HEARTBEAT_RESPONSE') {
+            heartbeatResponseCount++;
+
+            if (heartbeatResponseCount === 3) {
+                $('#inactivePageModal').modal('show');
+
+                window.websocket.close();
+                window.websocket = null;
+
+                window.localPeerConnection.close();
+                window.localPeerConnection = null;
+
+                clearInterval(window.userActivityInterval);
+
+                heartbeatResponseCount = 0;
+            }
+        } else {
+            heartbeatResponseCount = 0;
+        }
 
         switch (message.type) {
             case 'INITIATE_OFFER':
@@ -36,22 +59,27 @@ $(document).ready(function () {
                 handleNewICECandidateMsg(message);
                 break;
             case 'TALKER_NICKNAME':
-                console.log("asd");
-                console.log(message.nickname);
                 $('#disconnectModalLabel').text(message.nickname + " zakończył/a spotkanie");
                 break;
         }
     }
 
     window.websocket.onclose = function (event) {
-        console.log("Disconnected from WebSocket server");
+        console.log("Disconnected from WebSocket server" + event);
     }
 
     window.websocket.onerror = function(event) {
         console.error("WebSocket error: " + event);
     };
 
-    setInterval(() => sendHearBeatByWebsocket(window.websocket), 30000);
+    window.addEventListener('beforeunload', function () {
+        if (window.websocket) {
+            window.websocket.close();
+        }
+    })
+
+
+    setInterval(() => sendHeartbeatByWebsocket(window.websocket), 3000);
 
 
     const localVideoElement = $('#local-camera').get(0);
