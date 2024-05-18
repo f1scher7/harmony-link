@@ -6,11 +6,8 @@ import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
+import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +20,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
+    private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
     private final WebRTCService webRTCService;
@@ -32,9 +30,10 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
 
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
+        this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
         this.webRTCService = webRTCService;
@@ -58,6 +57,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             String userProfileId = jsonMessage.getString("userProfileId");
             session.getAttributes().put("userProfileId", userProfileId);
 
+            this.userTabsControlService.incrementTabsCounter(userProfileId);
             this.userWebSocketSessionService.addWebSocketSession(userProfileId, session);
 
             this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
@@ -127,10 +127,12 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         String userProfileId = this.userActivityStatusService.retrieveUserIdFromWebSocketSession(session);
 
-        this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
+        if (this.userTabsControlService.decrementTabsCounter(userProfileId)) {
+            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
 
-        this.userInSearchService.removeUserSearchData(userProfileId);
-        this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
+            this.userInSearchService.removeUserSearchData(userProfileId);
+            this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
+        }
     }
 
     @Override

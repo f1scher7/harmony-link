@@ -1,10 +1,7 @@
 package com.harmonylink.harmonylink.services.realtime;
 
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserActivityStatusService;
-import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
+import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.UserProfileDoesntExistException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,15 +20,17 @@ public class HeartBeatService {
 
     private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
+    private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
     private final ConcurrentHashMap<String, Long> userRequestTimes = new ConcurrentHashMap<>();
 
 
     @Autowired
-    public HeartBeatService(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
+    public HeartBeatService(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
+        this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
     }
@@ -51,7 +50,7 @@ public class HeartBeatService {
     }
 
     @Async
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 3000)
     public void sendHeartBeatRequest() {
         System.out.println("SESSION");
         System.out.println(this.userWebSocketSessionService.displayWebSocketSessions());
@@ -73,20 +72,20 @@ public class HeartBeatService {
     }
 
     @Async
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 3000)
     public void checkResponses() {
         long currentTime = System.currentTimeMillis();
         userRequestTimes.forEach((userProfileId, requestTime) -> {
 
-            if (currentTime - requestTime > 35000) {
+            if (currentTime - requestTime > 35000 && this.userTabsControlService.decrementTabsCounter(userProfileId)) {
                 WebSocketSession session = this.userWebSocketSessionService.getWebSocketSession(userProfileId);
 
                 if (session != null) {
                     try {
                         session.close();
+
                         this.userInSearchService.removeUserSearchData(userProfileId);
                         this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
-
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
