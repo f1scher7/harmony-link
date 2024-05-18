@@ -111,7 +111,7 @@
                 <div class="modal fade" id="preferencesModal" tabindex="-1" aria-labelledby="preferencesModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <div class="modal-header">
+                            <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title" id="preferencesModalLabel">Dopasuj filtry, aby znaleźć idealnego rozmówcę</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -242,6 +242,27 @@
                                 <div class="text-center">
                                     <img th:src="@{/img/home/disconnectModal.gif}" class="img-fluid w-100" alt="">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="inactivePageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="inactivePageModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="inactivePageModalLabel">Strona jest nieaktywna</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <p>Wygląda na to, że inna karta tej witryny jest obecnie otwarta.</p>
+                                <p>
+                                    Aby kontynuować na tej karcie, zamknij wszystkie inne karty tej witryny i
+                                    <a href="/" class="text-dark fw-bold text-decoration-none">odśwież</a>
+                                    niniejszą stronę.
+                                </p>
+                                <p>Lub zamknij tę kartę i przejdź do aktywnej karty.</p>
                             </div>
                         </div>
                     </div>
