@@ -1,5 +1,7 @@
 package com.harmonylink.harmonylink.services.realtime;
 
+import com.harmonylink.harmonylink.constants.WebRTCConstants;
+import com.harmonylink.harmonylink.constants.WebsocketConstants;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
@@ -31,7 +33,7 @@ public class WebRTCService {
     public void initiateConnection(UserProfile userProfile1) throws JSONException, IOException {
         WebSocketSession user1Session = this.userWebSocketSessionService.getWebSocketSession(userProfile1.getId());
 
-        user1Session.sendMessage(new TextMessage(new JSONObject().put("type", "INITIATE_OFFER").toString()));
+        user1Session.sendMessage(new TextMessage(WebRTCConstants.INITIATE_OFFER_JSON));
     }
 
     public void handleVideoOffer(WebSocketSession session, JSONObject offer) throws JSONException, IOException {
@@ -65,7 +67,7 @@ public class WebRTCService {
         }
     }
 
-    public void handleNewIceCandidate(WebSocketSession session, JSONObject candidate) throws JSONException, IOException {
+    public void handleNewIceCandidate(WebSocketSession session, JSONObject candidate) throws IOException, JSONException {
         WebSocketSession peerSession = findPeerSession(session);
 
         if (peerSession != null) {
@@ -103,18 +105,13 @@ public class WebRTCService {
         return CompletableFuture.completedFuture(peerUserProfileId);
     }
 
-    public void getTalkerNickname(String userProfileId, WebSocketSession session) throws JSONException, IOException {
-        String talkerNickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
+    public void getTalkerNickname(String userProfileId, WebSocketSession session) throws IOException {
+        String nickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
+        String talkerNickname = nickname != null ? nickname : "error";
 
         WebSocketSession talkerSession = findPeerSession(session);
-        System.out.println(talkerNickname);
         if (talkerSession != null) {
-            JSONObject jsonObject = new JSONObject();
-
-            jsonObject.put("type", "TALKER_NICKNAME");
-            jsonObject.put("nickname", talkerNickname);
-
-            talkerSession.sendMessage(new TextMessage(jsonObject.toString()));
+            talkerSession.sendMessage(new TextMessage(String.format(WebsocketConstants.TALKER_NICKNAME_JSON, talkerNickname)));
         }
     }
 
