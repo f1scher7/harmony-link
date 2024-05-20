@@ -1,6 +1,7 @@
 package com.harmonylink.harmonylink.config;
 
 import com.harmonylink.harmonylink.handlers.websocket.HarmonyWebSocketHandler;
+import com.harmonylink.harmonylink.services.realtime.WebSocketService;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
@@ -23,6 +24,7 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
     private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
+    private final WebSocketService webSocketService;
     private final WebRTCService webRTCService;
     private final UserTalkersHistoryService userTalkersHistoryService;
     private final UserProfileRepository userProfileRepository;
@@ -30,12 +32,13 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
 
 
     @Autowired
-    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
+        this.webSocketService = webSocketService;
         this.webRTCService = webRTCService;
         this.userTalkersHistoryService = userTalkersHistoryService;
         this.userProfileRepository = userProfileRepository;
@@ -51,6 +54,7 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
                 this.userTabsControlService,
                 this.userInSearchService,
                 this.userInCallPairService,
+                this.webSocketService,
                 this.webRTCService,
                 this.userTalkersHistoryService,
                 this.userProfileRepository,
