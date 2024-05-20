@@ -1,5 +1,4 @@
 import {fetchUsersActivityStatus, setDefaultInfoDiv} from "./utils.js";
-import {sendGetTalkerNickname} from "./websocketFuncs.js";
 
 export function createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn) {
     const configIceServers = {
