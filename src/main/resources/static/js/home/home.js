@@ -1,6 +1,14 @@
 import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from './functions/utils.js';
-import { sendUserIdByWebsocket, sendHeartbeatByWebsocket } from './functions/websocketFuncs.js';
+
+import {
+    sendUserIdByWebsocket,
+    sendHeartbeatByWebsocket,
+    sendGetTalkerNickname,
+    sendStopWebRTCConn
+} from './functions/websocketFuncs.js';
+
 import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "./functions/webrtcFuncs.js";
+
 
 $(document).ready(function () {
 
@@ -28,7 +36,7 @@ $(document).ready(function () {
         if (message.type === 'HEARTBEAT_RESPONSE') {
             heartbeatResponseCount++;
 
-            if (heartbeatResponseCount === 3) {
+            if (heartbeatResponseCount === 2) {
                 $('#inactivePageModal').modal('show');
 
                 window.websocket.close();
@@ -70,24 +78,29 @@ $(document).ready(function () {
 
     window.websocket.onerror = function(event) {
         console.error("WebSocket error: " + event);
+        $('#inactivePageModal').modal('show');
     };
 
+
     window.addEventListener('beforeunload', function () {
-        if (window.websocket) {
+        if (window.websocket && window.localPeerConnection.connectionState === 'new') {
             window.websocket.close();
+        } else if (window.websocket.readyState === WebSocket.OPEN && window.localPeerConnection.connectionState === 'connected') {
+            sendGetTalkerNickname(window.websocket);
+            sendStopWebRTCConn(window.websocket);
         }
     })
 
 
-    setInterval(() => sendHeartbeatByWebsocket(window.websocket), 3000);
+    setInterval(() => sendHeartbeatByWebsocket(window.websocket), 4000);
 
 
-    const localVideoElement = $('#local-camera').get(0);
+    window.localVideoElement = $('#local-camera').get(0);
     const localAudioElement = $('#local-audio').get(0);
 
     navigator.mediaDevices.getUserMedia( {video: true, audio: true})
         .then(stream => {
-            localVideoElement.srcObject = stream;
+            window.localVideoElement.srcObject = stream;
             localAudioElement.srcObject = stream;
 
             $('#camera-error').addClass('d-none');
@@ -102,8 +115,8 @@ $(document).ready(function () {
             $('#filters-btn').addClass('disabled')
         });
 
-    checkCameraStatus(localVideoElement);
-    localVideoElement.onplaying = (()=> checkCameraStatus(localVideoElement));
+    checkCameraStatus(window.localVideoElement);
+    window.localVideoElement.onplaying = (()=> checkCameraStatus(window.localVideoElement));
 
 
     fetchUsersActivityStatus()

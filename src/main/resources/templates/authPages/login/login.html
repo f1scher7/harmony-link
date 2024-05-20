@@ -24,7 +24,7 @@
                 <div class="login-form bg-white p-4 mx-auto">
                     <form action="/auth/login" method="post" class="row g-3">
                         <h4 class="mb-3">Witaj ponownie!</h4>
-                        <div class="col-12">
+                        <div th:if="${loginError}" class="col-12">
                             <div th:if="${loginError}" class="alert alert-danger" role="alert">
                                 <p th:text="${loginError}"></p>
                             </div>
