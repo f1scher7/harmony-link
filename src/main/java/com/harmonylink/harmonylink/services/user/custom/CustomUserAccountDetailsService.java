@@ -13,10 +13,12 @@ public class CustomUserAccountDetailsService implements UserDetailsService {
 
     private final UserAccountRepository userAccountRepository;
 
+
     @Autowired
     public CustomUserAccountDetailsService(UserAccountRepository userAccountRepository) {
         this.userAccountRepository = userAccountRepository;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {

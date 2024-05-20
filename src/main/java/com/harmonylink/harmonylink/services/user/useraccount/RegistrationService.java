@@ -10,6 +10,7 @@ import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -104,13 +105,11 @@ public class RegistrationService {
     @Transactional
     public void verifyNewUserAccount(String token) throws InvalidTokenException {
         VerificationToken verificationToken = this.verificationTokenRepository.findByToken(token);
-
         if (verificationToken == null) {
             throw new InvalidTokenException();
         }
 
         UserAccount userAccount = verificationToken.getUserAccount();
-
         if (userAccount == null) {
             throw new InvalidTokenException();
         }
@@ -120,13 +119,13 @@ public class RegistrationService {
         this.verificationTokenRepository.delete(verificationToken);
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Async
+    @Scheduled(fixedDelay = 100000)
     public void deleteUnconfirmedUserAccounts() {
         List<UserAccount> userAccounts = this.userAccountRepository.findAllByRole(Role.TEMP_USER);
 
         for (UserAccount userAccount: userAccounts) {
             VerificationToken token = this.verificationTokenRepository.findByUserAccount(userAccount);
-
             if (token == null) {
                 this.userAccountRepository.delete(userAccount);
             }

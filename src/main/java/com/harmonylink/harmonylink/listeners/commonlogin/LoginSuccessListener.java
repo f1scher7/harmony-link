@@ -19,7 +19,6 @@ import java.util.List;
 public class LoginSuccessListener {
 
     private final Logger USER_LOGIN_LOGGER = LoggerFactory.getLogger("UserLogin");
-
     private final UserAccountRepository userAccountRepository;
 
 

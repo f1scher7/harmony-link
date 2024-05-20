@@ -13,6 +13,7 @@ public class LoginFailureListener {
 
     private final Logger USER_LOGIN_LOGGER = LoggerFactory.getLogger("UserLogin");
 
+
     @EventListener
     public void onLoginFailure(AuthenticationFailureBadCredentialsEvent event) {
         String login = event.getAuthentication().getName();

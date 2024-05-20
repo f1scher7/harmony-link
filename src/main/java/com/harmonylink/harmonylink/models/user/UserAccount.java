@@ -101,7 +101,6 @@ public class UserAccount implements UserDetails {
         this.ipAddresses.add(ipAddress);
     }
 
-
     public void lockAccount() {
         this.userAccountNonLocked = false;
     }
@@ -196,10 +195,10 @@ public class UserAccount implements UserDetails {
         this.userAccountNonLocked = userAccountNonLocked;
     }
 
-
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
+
 
     @Override
     public String toString() {

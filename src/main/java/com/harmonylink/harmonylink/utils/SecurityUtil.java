@@ -15,6 +15,7 @@ public class SecurityUtil {
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
 
+
     @Autowired
     public SecurityUtil(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository) {
         this.userAccountRepository = userAccountRepository;

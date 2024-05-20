@@ -21,6 +21,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
     private final UserAccountRepository userAccountRepository;
     private final UserProfileRepository userProfileRepository;
 
+
     @Autowired
     public AuthenticationSuccessHandler(UserAccountRepository userAccountRepository, UserProfileRepository userProfileRepository) {
         this.userAccountRepository = userAccountRepository;

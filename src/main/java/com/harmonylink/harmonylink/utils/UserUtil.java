@@ -13,10 +13,6 @@ import static java.lang.Character.isLetterOrDigit;
 
 public final class UserUtil {
 
-    public static Pageable createPageableWithLimit(int limit) {
-        return PageRequest.of(0, limit);
-    }
-
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }
@@ -34,6 +30,11 @@ public final class UserUtil {
         return true;
     }
 
+
+    public static String uniqueLoginGenerator(String email) {
+        return email.replaceAll("@.*", "") + generateToken();
+    }
+
     public static boolean isLoginValid(String login) {
         if (login == null || login.length() < 4 || login.length() > 12) {
             return false;
@@ -48,11 +49,6 @@ public final class UserUtil {
 
         return true;
     }
-
-    public static String uniqueLoginGenerator(String email) {
-        return email.replaceAll("@.*", "") + generateToken();
-    }
-
 
     public static boolean isPasswordValid(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*") && password.matches(".*[0-9].*");
@@ -74,8 +70,9 @@ public final class UserUtil {
         return period.getYears();
     }
 
-    public static String getUserProfilesId(UserProfile userProfile1, UserProfile userProfile2) {
-        return userProfile1.getId() + userProfile2.getId();
+
+    public static Pageable createPageableWithLimit(int limit) {
+        return PageRequest.of(0, limit);
     }
 
 }

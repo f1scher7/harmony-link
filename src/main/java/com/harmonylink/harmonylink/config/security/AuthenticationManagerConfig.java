@@ -10,6 +10,7 @@ public class AuthenticationManagerConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
+
     public AuthenticationManagerConfig(AuthenticationConfiguration authenticationConfiguration) {
         this.authenticationConfiguration = authenticationConfiguration;
     }
