@@ -4,7 +4,6 @@ import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
-import com.harmonylink.harmonylink.services.user.UserPreferencesFilterService;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,22 +17,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 import java.util.Optional;
 
+import static com.harmonylink.harmonylink.utils.JSONUtil.getIntegerListFromJSON;
+import static com.harmonylink.harmonylink.utils.JSONUtil.getStringListFromJSON;
+
 @Controller
 public class UserPreferencesFilterController {
 
-    private final UserPreferencesFilterService userPreferencesFilterService;
     private final UserProfileService userProfileService;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
     private final UserProfileRepository userProfileRepository;
 
 
     @Autowired
-    public UserPreferencesFilterController(UserPreferencesFilterService userPreferencesFilterService, UserProfileService userProfileService, UserPreferencesFilterRepository userPreferencesFilterRepository, UserProfileRepository userProfileRepository) {
-        this.userPreferencesFilterService = userPreferencesFilterService;
+    public UserPreferencesFilterController(UserProfileService userProfileService, UserPreferencesFilterRepository userPreferencesFilterRepository, UserProfileRepository userProfileRepository) {
         this.userProfileService = userProfileService;
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
         this.userProfileRepository = userProfileRepository;
     }
+
 
     @PostMapping("/user-preferences-data")
     @ResponseBody
@@ -51,14 +52,14 @@ public class UserPreferencesFilterController {
         String sex = jsonObject.optString("sex");
 
 
-        List<Integer> ages = this.userPreferencesFilterService.getIntegerListFromJSON(agesArray);
-        List<Integer> heights = this.userPreferencesFilterService.getIntegerListFromJSON(heightsArray);
-        List<String> cities = this.userPreferencesFilterService.getStringListFromJSON(citiesArray);
+        List<Integer> ages = getIntegerListFromJSON(agesArray);
+        List<Integer> heights = getIntegerListFromJSON(heightsArray);
+        List<String> cities = getStringListFromJSON(citiesArray);
 
-        List<String> hobbies = this.userPreferencesFilterService.getStringListFromJSON(hobbiesArray);
+        List<String> hobbies = getStringListFromJSON(hobbiesArray);
         List<String> hobbyIds = this.userProfileService.getHobbyIds(hobbies);
 
-        List<String> studies = this.userPreferencesFilterService.getStringListFromJSON(studiesArray);
+        List<String> studies = getStringListFromJSON(studiesArray);
 
         Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
 
