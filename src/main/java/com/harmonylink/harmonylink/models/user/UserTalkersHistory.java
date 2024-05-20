@@ -1,5 +1,6 @@
 package com.harmonylink.harmonylink.models.user;
 
+import com.harmonylink.harmonylink.models.user.userdata.UserTalkerData;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -7,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -18,22 +22,21 @@ public class UserTalkersHistory {
     @DBRef
     private UserProfile userProfile;
     @Field
-    private SortedMap<LocalDate, UserProfile> talkers;
-
+    private List<UserTalkerData> talkers;
 
 
     public UserTalkersHistory() {
-        this.talkers = new TreeMap<>();
+        this.talkers = new ArrayList<>();
     }
 
-    public UserTalkersHistory(UserProfile userProfile, SortedMap<LocalDate, UserProfile> talkers) {
+    public UserTalkersHistory(UserProfile userProfile, List<UserTalkerData> talkers) {
         this.userProfile = userProfile;
         this.talkers = talkers;
     }
 
 
-    public void addTalker(UserProfile userProfile) {
-        this.talkers.put(LocalDate.now(), userProfile);
+    public void addTalker(UserTalkerData userTalkerData) {
+        this.talkers.add(userTalkerData);
     }
 
 
@@ -45,17 +48,13 @@ public class UserTalkersHistory {
         return this.userProfile;
     }
 
-    public SortedMap<LocalDate, UserProfile> getTalkers() {
-        return talkers;
+    public List<UserTalkerData> getTalkers() {
+        return this.talkers;
     }
 
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
-    }
-
-    public void setTalkers(SortedMap<LocalDate, UserProfile> talkers) {
-        this.talkers = talkers;
     }
 
 

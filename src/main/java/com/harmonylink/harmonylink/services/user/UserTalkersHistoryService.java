@@ -1,6 +1,7 @@
 package com.harmonylink.harmonylink.services.user;
 
 import com.harmonylink.harmonylink.models.user.UserTalkersHistory;
+import com.harmonylink.harmonylink.models.user.userdata.UserTalkerData;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserTalkersHistoryRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
@@ -44,8 +45,8 @@ public class UserTalkersHistoryService {
                 UserTalkersHistory userTalkersHistory1 = this.userTalkersHistoryRepository.findByUserProfile(userProfile1);
                 UserTalkersHistory userTalkersHistory2 = this.userTalkersHistoryRepository.findByUserProfile(userProfile2);
 
-                userTalkersHistory1.addTalker(userProfile2);
-                userTalkersHistory2.addTalker(userProfile1);
+                userTalkersHistory1.addTalker(new UserTalkerData(userProfile2));
+                userTalkersHistory2.addTalker(new UserTalkerData(userProfile1));
 
                 this.userTalkersHistoryRepository.save(userTalkersHistory1);
                 this.userTalkersHistoryRepository.save(userTalkersHistory2);
