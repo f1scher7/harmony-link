@@ -1,10 +1,12 @@
 package com.harmonylink.harmonylink.handlers.websocket;
 
+import com.harmonylink.harmonylink.constants.WebsocketConstants;
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
 import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
 import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
+import com.harmonylink.harmonylink.services.realtime.WebSocketService;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
@@ -23,6 +25,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
     private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
+    private final WebSocketService webSocketService;
     private final WebRTCService webRTCService;
     private final UserTalkersHistoryService userTalkersHistoryService;
     private final UserProfileRepository userProfileRepository;
@@ -30,12 +33,13 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
 
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
+        this.webSocketService = webSocketService;
         this.webRTCService = webRTCService;
         this.userTalkersHistoryService = userTalkersHistoryService;
         this.userProfileRepository = userProfileRepository;
@@ -64,7 +68,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
         }
 
         if ("HEARTBEAT_REQUEST".equals(jsonMessage.getString("type"))) {
-            session.sendMessage(new TextMessage(new JSONObject().put("type", "HEARTBEAT_RESPONSE").toString()));
+            this.webSocketService.sendSynchronizedMessage(session, WebsocketConstants.HEARTBEAT_RESPONSE_JSON);
         }
 
         if ("IN_SEARCH".equals(jsonMessage.getString("type"))) {
@@ -74,6 +78,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
             Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
             UserProfile userProfile = null;
+
             if (userProfileOptional.isPresent()) {
                 userProfile = userProfileOptional.get();
             }
@@ -128,10 +133,14 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
         String userProfileId = this.userActivityStatusService.retrieveUserIdFromWebSocketSession(session);
 
         if (this.userTabsControlService.decrementTabsCounter(userProfileId)) {
-            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
+            if (this.userInCallPairService.getUserProfileByUserProfileId(userProfileId) != null) {
+                this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
+            }
 
             this.userInSearchService.removeUserSearchData(userProfileId);
             this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
+
+            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
         }
     }
 
