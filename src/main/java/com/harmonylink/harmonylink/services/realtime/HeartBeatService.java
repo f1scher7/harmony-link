@@ -1,10 +1,7 @@
 package com.harmonylink.harmonylink.services.realtime;
 
-import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
+import com.harmonylink.harmonylink.constants.WebsocketConstants;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
-import com.harmonylink.harmonylink.services.user.userprofile.exceptions.UserProfileDoesntExistException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,24 +10,18 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class HeartBeatService {
 
-    private final UserActivityStatusService userActivityStatusService;
     private final UserWebSocketSessionService userWebSocketSessionService;
-    private final UserTabsControlService userTabsControlService;
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
-    private final ConcurrentHashMap<String, Long> userRequestTimes = new ConcurrentHashMap<>();
 
 
     @Autowired
-    public HeartBeatService(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
-        this.userActivityStatusService = userActivityStatusService;
+    public HeartBeatService(UserWebSocketSessionService userWebSocketSessionService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService) {
         this.userWebSocketSessionService = userWebSocketSessionService;
-        this.userTabsControlService = userTabsControlService;
         this.userInSearchService = userInSearchService;
         this.userInCallPairService = userInCallPairService;
     }
@@ -40,18 +31,24 @@ public class HeartBeatService {
     public void sendAsyncHeartRequest(WebSocketSession session) {
         if (session.isOpen()) {
             try {
-                session.sendMessage(new TextMessage(new JSONObject().put("type", "HEARTBEAT_REQUEST").toString()));
-
-                userRequestTimes.put(this.userActivityStatusService.retrieveUserIdFromWebSocketSession(session), System.currentTimeMillis());
-            } catch (IOException | JSONException e) {
+                session.sendMessage(new TextMessage(WebsocketConstants.HEARTBEAT_REQUEST_JSON));
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Async
-    @Scheduled(fixedRate = 3000)
-    public void sendHeartBeatRequest() {
+    @Scheduled(fixedDelay = 3000)
+    public void sendHeartBeatRequestToAllSessions() {
+        displaySessionInfo();
+
+        this.userWebSocketSessionService.getAllWebSocketSessions().stream()
+                .filter(WebSocketSession::isOpen)
+                .forEach(this::sendAsyncHeartRequest);
+    }
+
+    public void displaySessionInfo() {
         System.out.println("SESSION");
         System.out.println(this.userWebSocketSessionService.displayWebSocketSessions());
         System.out.println("============================");
@@ -63,43 +60,6 @@ public class HeartBeatService {
         System.out.println("IN_CALL");
         System.out.println(this.userInCallPairService.displayInSearchUsers());
         System.out.println("============================");
-
-        for (WebSocketSession webSocketSession: this.userWebSocketSessionService.getAllWebSocketSessions()) {
-            if (webSocketSession.isOpen()) {
-                sendAsyncHeartRequest(webSocketSession);
-            }
-        }
-    }
-
-    @Async
-    @Scheduled(fixedRate = 3000)
-    public void checkResponses() {
-        long currentTime = System.currentTimeMillis();
-        userRequestTimes.forEach((userProfileId, requestTime) -> {
-
-            if (currentTime - requestTime > 35000 && this.userTabsControlService.decrementTabsCounter(userProfileId)) {
-                WebSocketSession session = this.userWebSocketSessionService.getWebSocketSession(userProfileId);
-
-                if (session != null) {
-                    try {
-                        session.close();
-
-                        this.userInSearchService.removeUserSearchData(userProfileId);
-                        this.userWebSocketSessionService.removeWebSocketSession(userProfileId);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                userRequestTimes.remove(userProfileId);
-
-                try {
-                    this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.OFFLINE);
-                } catch (UserProfileDoesntExistException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
     }
 
 }
