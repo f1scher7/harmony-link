@@ -21,7 +21,11 @@ public class UserWebSocketSessionService {
 
 
     public WebSocketSession getWebSocketSession(String userProfileId) {
-        return userWebSocketSessions.get(userProfileId);
+        if (userProfileId != null) {
+            return userWebSocketSessions.get(userProfileId);
+        }
+
+        return null;
     }
 
     public List<WebSocketSession> getAllWebSocketSessions() {
@@ -34,7 +38,9 @@ public class UserWebSocketSessionService {
 
 
     public void removeWebSocketSession(String userProfileId) {
-        userWebSocketSessions.remove(userProfileId);
+        if (userProfileId != null) {
+            userWebSocketSessions.remove(userProfileId);
+        }
     }
 
     public void removeAllWebSocketSessions() {
