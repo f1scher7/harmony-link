@@ -2,10 +2,6 @@ package com.harmonylink.harmonylink.handlers.websocket;
 
 import com.harmonylink.harmonylink.constants.WebsocketConstants;
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
-import com.harmonylink.harmonylink.models.user.UserPreferencesFilter;
-import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
-import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
-import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.realtime.WebSocketService;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
@@ -14,8 +10,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
-
-import java.util.Optional;
 
 @Component
 public class HarmonyWebSocketHandler implements WebSocketHandler {
@@ -28,12 +22,10 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
     private final WebSocketService webSocketService;
     private final WebRTCService webRTCService;
     private final UserTalkersHistoryService userTalkersHistoryService;
-    private final UserProfileRepository userProfileRepository;
-    private final UserPreferencesFilterRepository userPreferencesFilterRepository;
 
 
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userTabsControlService = userTabsControlService;
@@ -42,8 +34,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
         this.webSocketService = webSocketService;
         this.webRTCService = webRTCService;
         this.userTalkersHistoryService = userTalkersHistoryService;
-        this.userProfileRepository = userProfileRepository;
-        this.userPreferencesFilterRepository = userPreferencesFilterRepository;
     }
 
 
@@ -74,17 +64,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
         if ("IN_SEARCH".equals(jsonMessage.getString("type"))) {
             String userProfileId = jsonMessage.getString("userProfileId");
 
-            this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.IN_SEARCH);
-
-            Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
-            UserProfile userProfile = null;
-
-            if (userProfileOptional.isPresent()) {
-                userProfile = userProfileOptional.get();
-            }
-
-            UserPreferencesFilter userPreferencesFilter = this.userPreferencesFilterRepository.findByUserProfile(userProfile);
-            this.userInSearchService.addUserSearchData(userProfile, userPreferencesFilter);
+            this.userInSearchService.addUserSearchData(userProfileId);
         }
 
         if ("STOP_SEARCHING".equals(jsonMessage.getString("type"))) {
@@ -93,20 +73,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             this.userActivityStatusService.updateUserActivityStatusInDB(userProfileId, UserActivityStatusEnum.ONLINE);
 
             this.userInSearchService.removeUserSearchData(userProfileId);
-        }
-
-        if ("STOP_WEBRTC_CONN".equals(jsonMessage.getString("type"))) {
-            String userProfileId = jsonMessage.getString("userProfileId");
-
-            this.userTalkersHistoryService.saveUserTalkersHistory(userProfileId);
-
-            this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
-        }
-
-        if ("GET_TALKER_NICKNAME".equals(jsonMessage.getString("type"))) {
-            String userProfileId = jsonMessage.getString("userProfileId");
-
-            this.webRTCService.getTalkerNickname(userProfileId, session);
         }
 
         if ("offer".equals(jsonMessage.getString("type"))) {
@@ -119,6 +85,26 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
         if ("candidate".equals(jsonMessage.getString("type"))) {
             this.webRTCService.handleNewIceCandidate(session, jsonMessage);
+        }
+
+        if ("WEBRTC_CONN_ERROR".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
+        }
+
+        if ("GET_TALKER_NICKNAME".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.webRTCService.getTalkerNickname(userProfileId, session);
+        }
+
+        if ("STOP_WEBRTC_CONN".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("userProfileId");
+
+            this.userTalkersHistoryService.saveUserTalkersHistory(userProfileId);
+
+            this.userInCallPairService.removeUserCallPairDataByUserProfileId(userProfileId);
         }
 
     }
