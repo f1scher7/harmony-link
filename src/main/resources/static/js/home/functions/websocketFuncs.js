@@ -36,6 +36,15 @@ export function sendStopWebRTCConn(websocket) {
     }
 }
 
+export function sendWebRTCConnectionError(websocket) {
+    if (websocket && (websocket.readyState === WebSocket.OPEN || websocket.readyState === WebSocket.CLOSING)) {
+        websocket.send(JSON.stringify({ type: 'WEBRTC_CONN_ERROR', userProfileId: window.userProfileId }));
+    } else {
+        console.error("WebSocket is not connected");
+    }
+}
+
+
 export function sendGetTalkerNickname(websocket) {
     if (websocket && (websocket.readyState === WebSocket.OPEN || websocket.readyState === WebSocket.CLOSING)) {
         websocket.send(JSON.stringify({ type: 'GET_TALKER_NICKNAME', userProfileId: window.userProfileId }))
