@@ -5,8 +5,6 @@ import com.harmonylink.harmonylink.services.realtime.WebSocketService;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
 import com.harmonylink.harmonylink.services.realtime.WebRTCService;
-import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
-import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,12 +25,10 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
     private final WebSocketService webSocketService;
     private final WebRTCService webRTCService;
     private final UserTalkersHistoryService userTalkersHistoryService;
-    private final UserProfileRepository userProfileRepository;
-    private final UserPreferencesFilterRepository userPreferencesFilterRepository;
 
 
     @Autowired
-    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
+    public WebSocketConfig(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userTabsControlService = userTabsControlService;
@@ -41,8 +37,6 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
         this.webSocketService = webSocketService;
         this.webRTCService = webRTCService;
         this.userTalkersHistoryService = userTalkersHistoryService;
-        this.userProfileRepository = userProfileRepository;
-        this.userPreferencesFilterRepository = userPreferencesFilterRepository;
     }
 
 
@@ -56,9 +50,8 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
                 this.userInCallPairService,
                 this.webSocketService,
                 this.webRTCService,
-                this.userTalkersHistoryService,
-                this.userProfileRepository,
-                this.userPreferencesFilterRepository);
+                this.userTalkersHistoryService
+        );
     }
 
     @Override
