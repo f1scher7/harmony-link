@@ -32,7 +32,7 @@ public class UserPairingService {
 
 
     @Async
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedDelay = 3000)
     public void findUsersPairsForConnection() {
         List <UserSearchData> usersInSearch = this.userInSearchService.getAllInSearchUsers();
         int pageSize = 50;
@@ -64,10 +64,8 @@ public class UserPairingService {
                     try {
                         this.webRTCService.initiateConnection(userSearchData1.getUserProfile());
                     } catch (JSONException | IOException e) {
-                        e.printStackTrace();
+                        this.userInCallPairService.removeUserCallPairData(userSearchData1.getUserProfile(), userSearchData2.getUserProfile());
                     }
-
-                    break;
                 }
             }
         }
@@ -81,39 +79,44 @@ public class UserPairingService {
         UserProfile userProfile2 = userSearchData2.getUserProfile();
         UserPreferencesFilter userPreferencesFilter2 = userSearchData2.getUserPreferencesFilter();
 
-        return isUserProfileMatchesUserPreferencesFilter(userProfile1, userPreferencesFilter2) && isUserProfileMatchesUserPreferencesFilter(userProfile2, userPreferencesFilter1);
+        int paringRating1 = isUserProfileMatchesUserPreferencesFilter(userProfile1, userPreferencesFilter2);
+        int paringRating2 = isUserProfileMatchesUserPreferencesFilter(userProfile2, userPreferencesFilter1);
+
+        return paringRating1 >= 70 && paringRating2 >= 70;
     }
 
-    public boolean isUserProfileMatchesUserPreferencesFilter(UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
+    public int isUserProfileMatchesUserPreferencesFilter(UserProfile userProfile, UserPreferencesFilter userPreferencesFilter) {
+        int pairingRating = 100;
+
         if (!userPreferencesFilter.getCities().isEmpty() && !userPreferencesFilter.getCities().contains(userProfile.getCity())) {
-            return false;
+            pairingRating -= 20;
         }
 
         if (!userPreferencesFilter.getSex().isEmpty() && !userPreferencesFilter.getSex().equals(Character.toString(userProfile.getSex()))) {
-            return false;
+            pairingRating -= 40;
         }
 
         if (userPreferencesFilter.getAges().get(0) > userProfile.getAge() || userPreferencesFilter.getAges().get(1) < userProfile.getAge()) {
-            return false;
+            pairingRating -= 10;
         }
 
         if (userPreferencesFilter.getHeights().get(0) > userProfile.getHeight() || userPreferencesFilter.getHeights().get(1) < userProfile.getHeight()) {
-            return false;
+            pairingRating -= 5;
         }
 
         if (!userPreferencesFilter.getRelationshipStatus().isEmpty() && !userPreferencesFilter.getRelationshipStatus().equals(userProfile.getRelationshipStatus())) {
-            return false;
+            pairingRating -= 10;
         }
 
         if (!userPreferencesFilter.getHobbyIds().isEmpty() && !userPreferencesFilter.getHobbyIds().containsAll(userProfile.getHobbyIds())) {
-            return false;
+            pairingRating -= 10;
         }
 
         if (!userPreferencesFilter.getFieldsOfStudy().isEmpty() && !userPreferencesFilter.getFieldsOfStudy().contains(userProfile.getFieldOfStudy())) {
-            return false;
+            pairingRating -= 5;
         }
 
-        return true;
+        return pairingRating;
     }
 
 }
