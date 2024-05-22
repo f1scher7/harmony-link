@@ -12,9 +12,8 @@
     <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
     <title>HarmonyLink</title>
 </head>
-<body class="body-bg-color">
-
-    <nav class="navbar navbar-expand-lg nav-bg-color">
+<body>
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex align-items-center">
             <a class="navbar-brand w-25 ps-3" href="/">
                 <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
@@ -25,7 +24,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="px-3">
-                        <a class="nav-link" href="#" th:text="${userProfile?.getNickname()}"></a>
+                        <a class="nav-link" href="" th:text="${userProfile?.getNickname()}"></a>
                     </li>
                     <li class="nav-item px-3">
                         <a class="nav-link" href="#"><i class="fa fa-filter"></i> Twoje filtry</a>
@@ -44,8 +43,8 @@
         </div>
     </nav>
 
-    <div class="main-container d-flex flex-column align-items-center vh-75">
-        <div class="row mt-2 d-flex justify-content-center">
+    <div class="main-container">
+        <div class="row mt-1 d-flex justify-content-center">
             <div class="main-info-div col-md-6 col-lg-6 d-flex justify-content-center align-items-center">
                 <div class="info-div h-100 d-flex justify-content-center align-items-center">
                     <div class="row">
@@ -64,8 +63,6 @@
                         </div>
                         <div class="col-md-12 mb-5 mt-4">
                         </div>
-                        <div class="col-md-12 mt-1">
-                        </div>
                         <div class="w-100 d-flex justify-content-center mt-5">
                             <div class="text-center w-25">
                                 <img th:src="@{/img/logo/blueLogoFischer.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
@@ -76,12 +73,6 @@
                 </div>
             </div>
 
-            <div class="main-remote-user-div col-md-6 col-lg-6 d-none">
-                <div id="user-remote-camera-div" class="embed-responsive embed-responsive-16by9 d-flex justify-content-center align-items-center">
-                    <video id="remote-camera" class="w-100 h-100 embed-responsive-item user-camera" autoplay controls></video>
-                    <audio id="remote-audio" autoplay></audio>
-                </div>
-            </div>
 
             <div class="col-md-6 col-lg-6">
                 <div id="user-local-camera-div" class="embed-responsive embed-responsive-16by9 d-flex justify-content-center align-items-center">
@@ -96,7 +87,7 @@
             </div>
         </div>
 
-        <div class="row mt-3 w-100">
+        <div class="row mx-auto mt-3 w-100">
             <div class="col-md-6 d-flex flex-row align-items-center justify-content-center ps-0">
                 <button type="button" id="start-btn" class="btn btn-success w-100 h-100">
                     <i class="fas fa-play"></i> Start
@@ -244,6 +235,23 @@
                                 <div class="text-center">
                                     <img th:src="@{/img/home/disconnectModal.gif}" class="img-fluid w-100" alt="">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="webRTCConnErrorModal" tabindex="-1" aria-labelledby="webRTCConnErrorModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="webRTCConnErrorModalLabel">Błąd podczas połaczenia wideo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <p>Nie udało się nawiązać połączenia z ewentualnym rozmówcą.</p>
+                                <p>Możesz spokojnie zamknąć ten komunikat.</p>
                             </div>
                         </div>
                     </div>

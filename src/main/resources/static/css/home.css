@@ -1,10 +1,18 @@
-.body-bg-color {
-    background-color: #f6f9ff;
+html, body {
+    background-color: aliceblue !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+body {
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 
-.nav-bg-color {
-    background-color: #439dfd;
+.navbar {
+    background-color: dodgerblue;
+    margin: 0 auto !important;
 }
 
 .nav-item {
@@ -25,6 +33,15 @@
     border-color: white;
 }
 
+
+.main-container {
+    margin: auto !important;
+}
+
+.remote-user-camera {
+    box-shadow: 0 2px 8px 0 rgb(173, 173, 199);
+    border-radius: 20px;
+}
 
 .user-camera {
     transform: scaleX(-1);
