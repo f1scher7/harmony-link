@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.harmonylink.harmonylink.utils.UserUtil.getUserProfilesId;
-
 @Service
 public class UserInCallPairService {
 
@@ -26,8 +24,16 @@ public class UserInCallPairService {
     }
 
 
+    public String getUserProfilesId(UserProfile userProfile1, UserProfile userProfile2) {
+        return userProfile1.getId() + userProfile2.getId();
+    }
+
     public UserCallPairData getUserCallPairData(UserProfile userProfile1, UserProfile userProfile2) {
-        return inCallUsersPairs.get(getUserProfilesId(userProfile1, userProfile2));
+        if (userProfile1 != null && userProfile2 != null) {
+            return inCallUsersPairs.get(getUserProfilesId(userProfile1, userProfile2));
+        }
+
+        return null;
     }
 
     public UserProfile getUserProfileByUserProfileId(String userProfileId) {
@@ -71,7 +77,9 @@ public class UserInCallPairService {
 
 
     public void removeUserCallPairData(UserProfile userProfile1, UserProfile userProfile2) {
-        inCallUsersPairs.remove(getUserProfilesId(userProfile1, userProfile2));
+        if (userProfile1 != null && userProfile2 != null) {
+            inCallUsersPairs.remove(getUserProfilesId(userProfile1, userProfile2));
+        }
     }
 
     public void removeUserCallPairDataByUserProfileId(String userProfileId) throws UserProfileDoesntExistException {
