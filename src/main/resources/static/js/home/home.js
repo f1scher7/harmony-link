@@ -12,6 +12,12 @@ import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICEC
 
 $(document).ready(function () {
 
+    if (sessionStorage.getItem('showWebRTCConnectionErrorModal') === 'true') {
+        $('#webRTCConnErrorModal').modal('show');
+
+        sessionStorage.removeItem('showWebRTCConnectionErrorModal');
+    }
+
     $(window).on('load resize', adjustMainContainer);
 
     window.userProfileId = $('#user-profile-id').text();
@@ -92,7 +98,7 @@ $(document).ready(function () {
     })
 
 
-    setInterval(() => sendHeartbeatByWebsocket(window.websocket), 4000);
+    setInterval(() => sendHeartbeatByWebsocket(window.websocket), 7000);
 
 
     window.localVideoElement = $('#local-camera').get(0);
