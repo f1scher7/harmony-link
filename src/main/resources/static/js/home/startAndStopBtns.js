@@ -1,14 +1,15 @@
-import { fetchUsersActivityStatus, setDefaultInfoDiv } from "./functions/utils.js";
+import { fetchUsersActivityStatus, setDefaultInfoDiv, setMainInfoDivAfterCall } from "./functions/utils.js";
 import { sendGetTalkerNickname, sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "./functions/websocketFuncs.js";
 import { createPeerConnection } from "./functions/webrtcFuncs.js";
 
 $(document).ready(function () {
 
-    const hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
-    const statisticDataDiv = $('.statistics-data');
-    const startBtn = $('#start-btn');
-    const stopBtn = $('#stop-btn');
-    const filtersBtn = $('#filters-btn');
+    let mainInfoDiv = $('.main-info-div');
+    let hlLogoInInfoDiv = $('.hlLogoInInfoDiv');
+    let statisticDataDiv = $('.statistics-data');
+    let startBtn = $('#start-btn');
+    let stopBtn = $('#stop-btn');
+    let filtersBtn = $('#filters-btn');
 
 
     startBtn.on('click', function () {
@@ -56,10 +57,7 @@ $(document).ready(function () {
                 window.localPeerConnection = null;
 
                 createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn);
-
-                $('.main-container').removeClass('mb-2');
-                $('.main-info-div').removeClass('d-none');
-                $('.main-remote-user-div').addClass('d-none');
+                setMainInfoDivAfterCall(mainInfoDiv);
         }
 
         setDefaultInfoDiv(hlLogoInInfoDiv, statisticDataDiv, startBtn, stopBtn, filtersBtn);
