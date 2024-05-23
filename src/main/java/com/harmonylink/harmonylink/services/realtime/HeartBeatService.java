@@ -39,7 +39,7 @@ public class HeartBeatService {
     }
 
     @Async
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 5000)
     public void sendHeartBeatRequestToAllSessions() {
         displaySessionInfo();
 
