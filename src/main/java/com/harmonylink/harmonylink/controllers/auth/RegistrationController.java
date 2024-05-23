@@ -36,7 +36,11 @@ public class RegistrationController {
         String password = "";
 
         if (userAccount != null) {
+            userAccount.setLogin(userAccount.getLogin().toLowerCase());
+            userAccount.setEmail(userAccount.getEmail().toLowerCase());
+
             modelAndView.addObject("userData", userAccount);
+
             login = userAccount.getLogin();
             email = userAccount.getEmail();
             password = userAccount.getPassword();
