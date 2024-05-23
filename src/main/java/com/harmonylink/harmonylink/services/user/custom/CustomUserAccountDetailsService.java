@@ -22,10 +22,10 @@ public class CustomUserAccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserAccount userAccount = this.userAccountRepository.findByLogin(login);
+        UserAccount userAccount = this.userAccountRepository.findByLogin(login.toLowerCase());
 
         if (userAccount == null) {
-            userAccount = this.userAccountRepository.findByEmail(login);
+            userAccount = this.userAccountRepository.findByEmail(login.toLowerCase());
         }
 
         if (userAccount == null) {
