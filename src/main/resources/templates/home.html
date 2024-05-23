@@ -24,18 +24,18 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="px-3">
-                        <a class="nav-link" href="" th:text="${userProfile?.getNickname()}"></a>
+                        <a class="nav-link" href="/" th:text="${userProfile?.getNickname()}"></a>
                     </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="#"><i class="fa fa-filter"></i> Twoje filtry</a>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="/user-profile-data"><i class="fa fa-id-badge"></i> Twój profil</a>
                     </li>
-                    <li class="nav-item px-3">
+                    <li class="nav-item px-3 mx-1">
                         <a class="nav-link" href="#"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
                     </li>
-                    <li class="nav-item px-3">
+                    <li class="nav-item px-3 mx-1">
                         <a class="nav-link" href="#"><i class="fa fa-cog"></i> Ustawienia konta</a>
                     </li>
-                    <li class="nav-item px-3">
+                    <li class="nav-item px-3 mx-1">
                         <a class="nav-link" href="/auth/logout"><i class="fa fa-sign-out-alt"></i> Wyloguj się</a>
                     </li>
                 </ul>
