@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -28,7 +29,7 @@ public class EmailService {
         this.emailConfig = emailConfig;
     }
 
-
+    @Async
     public void  sendEmail(String userMail, String subject, String templateName, Context context) throws EmailNotFoundException {
         try {
             MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
