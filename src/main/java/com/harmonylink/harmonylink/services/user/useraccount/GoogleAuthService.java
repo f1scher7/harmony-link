@@ -4,6 +4,7 @@ import com.harmonylink.harmonylink.enums.Role;
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class GoogleAuthService {
         this.userAccountRepository = userAccountRepository;
     }
 
-
+    @Async
     public void saveOrUpdateUserAccount(UserAccount userAccount, String ip) {
         UserAccount userGoogleAccount = this.userAccountRepository.findByGoogleId(userAccount.getGoogleId());
 
