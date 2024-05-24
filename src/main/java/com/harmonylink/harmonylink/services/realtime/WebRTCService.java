@@ -30,12 +30,16 @@ public class WebRTCService {
     }
 
 
+    @Async
     public void initiateConnection(UserProfile userProfile1) throws JSONException, IOException {
         WebSocketSession user1Session = this.userWebSocketSessionService.getWebSocketSession(userProfile1.getId());
 
-        user1Session.sendMessage(new TextMessage(WebRTCConstants.INITIATE_OFFER_JSON));
+        synchronized (user1Session) {
+            user1Session.sendMessage(new TextMessage(WebRTCConstants.INITIATE_OFFER_JSON));
+        }
     }
 
+    @Async
     public void handleVideoOffer(WebSocketSession session, JSONObject offer) throws JSONException, IOException {
         String sdp = offer.getString("sdp");
 
@@ -47,11 +51,14 @@ public class WebRTCService {
             videoOffer.put("type", "offer");
             videoOffer.put("sdp", sdp);
 
-            peerSession.sendMessage(new TextMessage(videoOffer.toString()));
+            synchronized (peerSession) {
+                peerSession.sendMessage(new TextMessage(videoOffer.toString()));
+            }
         }
 
     }
 
+    @Async
     public void handleVideoAnswer(WebSocketSession session, JSONObject answer) throws JSONException, IOException {
         String sdp = answer.getString("sdp");
 
@@ -63,10 +70,13 @@ public class WebRTCService {
             videoAnswer.put("type", "answer");
             videoAnswer.put("sdp", sdp);
 
-            peerSession.sendMessage(new TextMessage(videoAnswer.toString()));
+            synchronized (peerSession) {
+                peerSession.sendMessage(new TextMessage(videoAnswer.toString()));
+            }
         }
     }
 
+    @Async
     public void handleNewIceCandidate(WebSocketSession session, JSONObject candidate) throws IOException, JSONException {
         WebSocketSession peerSession = findPeerSession(session);
 
@@ -76,7 +86,9 @@ public class WebRTCService {
             iceCandidate.put("type", "candidate");
             iceCandidate.put("candidate", candidate);
 
-            peerSession.sendMessage(new TextMessage(iceCandidate.toString()));
+            synchronized (peerSession) {
+                peerSession.sendMessage(new TextMessage(iceCandidate.toString()));
+            }
         }
     }
 
@@ -105,6 +117,7 @@ public class WebRTCService {
         return CompletableFuture.completedFuture(peerUserProfileId);
     }
 
+    @Async
     public void getTalkerNickname(String userProfileId, WebSocketSession session) throws IOException {
         String nickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
         String talkerNickname = nickname != null ? nickname : "error";
