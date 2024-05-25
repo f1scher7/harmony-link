@@ -1,13 +1,13 @@
-import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from './functions/utils.js';
+import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from '../functions/utils.js';
 
 import {
     sendUserIdByWebsocket,
     sendHeartbeatByWebsocket,
     sendGetTalkerNickname,
     sendStopWebRTCConn
-} from './functions/websocketFuncs.js';
+} from '../functions/websocketFuncs.js';
 
-import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "./functions/webrtcFuncs.js";
+import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "../functions/webrtcFuncs.js";
 
 
 $(document).ready(function () {

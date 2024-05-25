@@ -1,6 +1,6 @@
-import { fetchUsersActivityStatus, setDefaultInfoDiv, setMainInfoDivAfterCall } from "./functions/utils.js";
-import { sendGetTalkerNickname, sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "./functions/websocketFuncs.js";
-import { createPeerConnection } from "./functions/webrtcFuncs.js";
+import { fetchUsersActivityStatus, setDefaultInfoDiv, setMainInfoDivAfterCall } from "../functions/utils.js";
+import { sendGetTalkerNickname, sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "../functions/websocketFuncs.js";
+import { createPeerConnection } from "../functions/webrtcFuncs.js";
 
 $(document).ready(function () {
 

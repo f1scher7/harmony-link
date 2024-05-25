@@ -1,4 +1,4 @@
-import { createPeerConnection } from "./functions/webrtcFuncs.js";
+import { createPeerConnection } from "../functions/webrtcFuncs.js";
 
 $(document).ready(function () {
 
