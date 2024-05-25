@@ -1,0 +1,99 @@
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+body {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+
+.navbar {
+    background-color: rgba(30, 144, 255, 0.6);
+    margin: 0 auto !important;
+    box-shadow: 0 8px 8px -6px rgb(191, 193, 253);
+}
+
+.nav-item {
+    border: 1px solid transparent;
+    transition: all 0.3s ease !important;
+}
+
+.nav-link {
+    font-size: 1.15rem !important;
+    color: white !important;
+}
+
+.user-profile-data-item {
+    background-color: white !important;
+    border-radius: 7px;
+}
+
+.user-profile-data-link {
+    font-size: 1.15rem !important;
+    color: dodgerblue !important;
+}
+
+
+.nav-item:hover,
+.nav-item:focus {
+    border-radius: 7px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+}
+
+
+.main-container {
+    margin: auto !important;
+}
+
+.user-profile-data-form-div {
+    background-color: rgba(255, 255, 255, 0.65);
+    border-radius: 15px;
+}
+
+.small-text {
+    font-size: 0.90rem !important;
+}
+
+.selected-hobby {
+    background-color: #3a8dee;
+    color: white;
+    border-radius: 3px;
+}
+
+.form-control {
+    border-radius: 10px !important;
+    border-width: 2px !important;
+}
+
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+select {
+    border-radius: 10px !important;
+    border-width: 2px !important;
+}
+
+select:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.selected-badge {
+    background-color: #3a8dee;
+    color: white;
+    border-radius: 3px;
+}
