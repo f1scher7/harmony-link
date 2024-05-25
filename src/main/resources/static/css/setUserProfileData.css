@@ -19,6 +19,7 @@
 }
 
 .form-control {
+    border-radius: 10px !important;
     border-width: 2px !important;
 }
 
@@ -30,6 +31,7 @@
 }
 
 select {
+    border-radius: 10px !important;
     border-width: 2px !important;
 }
 
