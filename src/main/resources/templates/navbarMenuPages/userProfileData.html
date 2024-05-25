@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/navbarMenuPagesStyles/userProfileData.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
+    <title>HarmonyLink</title>
+</head>
+<body style="background-image: url('/img/home/userProfileDataBG.jpeg')">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid d-flex align-items-center">
+            <a class="navbar-brand w-25 ps-3" href="/">
+                <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="px-3 mx-1">
+                        <a class="nav-link" href="/" th:text="${userProfile?.getNickname()}"></a>
+                    </li>
+                    <li class="user-profile-data-item px-3 mx-1">
+                        <a class="nav-link user-profile-data-link" href="/user-profile-data"><i class="fa fa-id-badge"></i> Twój profil</a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="#"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="#"><i class="fa fa-cog"></i> Ustawienia konta</a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="/auth/logout"><i class="fa fa-sign-out-alt"></i> Wyloguj się</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-8 user-profile-data-form-div">
+                <form id="user-profile-data-form" action="/user-profile-data" method="post">
+                    <div class="col-12 vstack w-50 mx-auto mt-4">
+                        <h4>Tutaj możesz zaktualizować swój profil,</h4>
+                        <h4>aby lepiej odzwierciedlić Twoją osobowość</h4>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <input type="text" class="form-control" id="sex" name="sex" readonly>
+                                    <label for="sex">Płeć</label>
+                                </div>
+                            </div>
+
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <input type="number" class="form-control" id="height" th:value="${height}" placeholder="Wzrost" name="height" readonly>
+                                    <label for="height" class="form-label">Wzrost</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <select class="form-select small-text" id="relationshipStatus" name="relationshipStatus">
+                                        <option value="single">Singiel/Singielka</option>
+                                        <option value="relationship">W związku</option>
+                                        <option value="married">Żonaty/Zamężna</option>
+                                        <option value="divorced">Wszystko skomplikowane</option>
+                                    </select>
+                                    <label for="relationshipStatus" class="form-label">Status związku</label>
+                                </div>
+                            </div>
+
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column">
+                                    <input type="number" class="form-control" id="age" placeholder="Wiek" name="age" max="87" required>
+                                    <label for="age" class="form-label">Wiek</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column align-items-center">
+                                    <input type="text" class="form-control" id="city" th:value="${city}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
+                                    <label for="city" class="form-label">Miasto</label>
+
+                                    <datalist id="cityList">
+                                    </datalist>
+
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5 mx-3">
+                                <div class="form-floating d-flex flex-column align-items-center">
+                                    <input type="text" class="form-control" id="study" th:value="${study}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
+                                    <label for="study" class="form-label">Kierunek studiów/edukacji</label>
+
+                                    <datalist id="educationList">
+                                    </datalist>
+
+                                    <div class="invalid-feedback">
+                                        <p class="ms-3 fw-bold"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 mb-3">
+                        <div class="col-12 d-flex form-floating d-flex flex-column align-items-center">
+                            <div class="form-floating w-50">
+                                <input type="text" class="form-control" id="hobbies" placeholder="Hobby (wybierz spośród podanych)" list="hobbyList" autocomplete="off">
+                                <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
+
+                                <div id="selectedHobbies">
+                                </div>
+
+                                <datalist id="hobbyList">
+                                </datalist>
+
+                                <div class="invalid-feedback">
+                                    <p class="ms-3 fw-bold"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="hobbyValues" id="hobbyValuesField" value="">
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center mb-4">
+                        <button type="submit" class="btn btn-primary w-25 py-2">Zapisz zmiany</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/navbarMenuPages/userProfileData.js" type="module"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var sexProfileData = [[${sex}]].toString();
+        var relationshipStatusProfileData = [[${relationshipStatus}]].toString();
+        var hobbiesProfileData = [[${hobbies}]];
+        /*]]>*/
+    </script>
+</body>
+</html>
