@@ -9,8 +9,6 @@ import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.CityRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.EducationRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.HobbyRepository;
-import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserNotFoundException;
-import com.harmonylink.harmonylink.services.user.useraccount.exceptions.UserTooYoungException;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,44 +104,17 @@ public class SetUserProfileController {
             UserAccount userAccount = this.userAccountRepository.findByGoogleId(googleId);
 
             modelAndView.addObject("userProfile", userProfile);
-            processUserProfile(modelAndView, userProfile, userAccount);
+            this.userProfileService.processUserProfileFromForm(modelAndView, userProfile, userAccount, "", "setUserProfileData");
         } else if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
             String login = usernamePasswordAuthenticationToken.getName();
             UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
             modelAndView.addObject("userProfile", userProfile);
 
-            processUserProfile(modelAndView, userProfile, userAccount);
+            this.userProfileService.processUserProfileFromForm(modelAndView, userProfile, userAccount, "", "setUserProfileData");
         }
 
         return modelAndView;
-    }
-
-    private void processUserProfile(ModelAndView modelAndView, UserProfile userProfile, UserAccount userAccount) {
-        try {
-            this.userProfileService.setOrUpdateUserProfileData(userProfile, userAccount.getId());
-            modelAndView.setViewName("redirect:/");
-        } catch (UserNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidRelationshipStatusException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorRelationship", e.getMessage());
-        } catch (InvalidUserHeightException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorHeight", e.getMessage());
-        } catch (InvalidUserCityException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorCity", e.getMessage());
-        } catch (InvalidUserFieldOfStudyException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorStudy", e.getMessage());
-        } catch (InvalidUserHobbiesExceptions e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorHobbies", e.getMessage());
-        } catch (UserTooYoungException e) {
-            modelAndView.setViewName("setUserProfileData");
-            modelAndView.addObject("errorAge", e.getMessage());
-        }
     }
 
 }
