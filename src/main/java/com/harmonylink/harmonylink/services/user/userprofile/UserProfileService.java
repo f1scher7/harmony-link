@@ -18,7 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +50,22 @@ public class UserProfileService {
     }
 
 
-    @Transactional
     public void setOrUpdateUserProfileData(UserProfile userProfile, String userAccountId) throws UserNotFoundException, InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         UserAccount userAccount = this.userAccountRepository.findById(userAccountId).orElseThrow(UserNotFoundException::new);
 
+        Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfile.getId());
+
         validateUserProfileData(userProfile, userAccount);
 
-        userProfile.setUserAccount(userAccount);
+        if (userProfileOptional.isPresent()) {
+            this.userProfileRepository.save(userProfile);
+        } else {
+            userProfile.setUserAccount(userAccount);
 
-        this.userProfileRepository.save(userProfile);
-        this.userPreferencesFilterService.saveDefaultUserPreferencesFilters(userProfile);
-        this.userTalkersHistoryService.saveDefaultUserTalkersHistory(userProfile);
+            this.userProfileRepository.save(userProfile);
+            this.userPreferencesFilterService.saveDefaultUserPreferencesFilters(userProfile);
+            this.userTalkersHistoryService.saveDefaultUserTalkersHistory(userProfile);
+        }
     }
 
     private void validateUserProfileData(UserProfile userProfile, UserAccount userAccount) throws InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
@@ -92,7 +97,40 @@ public class UserProfileService {
             if (userProfile.getAge() < 16) {
                 throw new UserTooYoungException();
             }
+
             userProfile.setNickname(userAccount.getEmail().substring(0, userAccount.getEmail().indexOf('@')));
+        }
+    }
+
+    public void processUserProfileFromForm(ModelAndView modelAndView, UserProfile userProfile, UserAccount userAccount, String redirectPage, String errorPage) {
+        modelAndView.addObject("userProfile", userProfile);
+        modelAndView.addObject("sex", userProfile.getSex());
+        modelAndView.addObject("relationshipStatus", userProfile.getRelationshipStatus());
+        modelAndView.addObject("hobbies", getHobbies(userProfile.getHobbyIds()));
+
+        try {
+            setOrUpdateUserProfileData(userProfile, userAccount.getId());
+            modelAndView.setViewName("redirect:/" + redirectPage);
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidRelationshipStatusException e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorRelationship", e.getMessage());
+        } catch (InvalidUserHeightException e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorHeight", e.getMessage());
+        } catch (InvalidUserCityException e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorCity", e.getMessage());
+        } catch (InvalidUserFieldOfStudyException e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorStudy", e.getMessage());
+        } catch (InvalidUserHobbiesExceptions e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorHobbies", e.getMessage());
+        } catch (UserTooYoungException e) {
+            modelAndView.setViewName(errorPage);
+            modelAndView.addObject("errorAge", e.getMessage());
         }
     }
 
