@@ -7,9 +7,11 @@ export function addBadgesToDiv(addedBadges, selectedBadges) {
         });
 
         removeBtn.on('click', function () {
-            addedBadges = addedBadges.filter(function(badgeForDelete) {
-                return badgeForDelete !== badge;
-            });
+            let index = addedBadges.indexOf(badge);
+
+            if (index !== -1) {
+                addedBadges.splice(index, 1);
+            }
             div.remove();
         });
 
@@ -40,7 +42,7 @@ export function searchCities() {
 export function searchHobbies(addedHobbies) {
     $('#hobbies').on('input', function () {
         let prefix = $(this).val();
-        let hobbiesList = $("#hobbyList");
+        let hobbiesList = $("#hobbiesList");
         let hobbiesOptions = hobbiesList.find('option').map(function() {
             return $(this).val();
         }).get();
@@ -61,9 +63,23 @@ export function searchHobbies(addedHobbies) {
 
         if (hobbiesOptions.includes(prefix) && !addedHobbies.includes(prefix)) {
             addedHobbies.push(prefix);
+            let hobbiesDiv = $('<div>').addClass('selected-hobby badge mx-1 d-inline-flex align-items-center').text(prefix);
+            let removeBtn = $('<span>').addClass('remove-hobby ms-1 bi bi-x').css({
+                'cursor': 'pointer',
+                'font-size': '1rem'
+            });
 
-            addBadgesToDiv(addedHobbies, $('#selectedHobbies'));
+            removeBtn.on('click', function () {
+                let index = addedBadges.indexOf(badge);
 
+                if (index !== -1) {
+                    addedBadges.splice(index, 1);
+                }
+                div.remove();
+            });
+
+            hobbiesDiv.append(removeBtn);
+            $('#selectedHobbies').append(hobbiesDiv);
             $(this).val('');
         }
     });
