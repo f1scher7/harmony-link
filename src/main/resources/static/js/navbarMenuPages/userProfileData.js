@@ -2,17 +2,16 @@ import { addBadgesToDiv, searchCities, searchHobbies, searchStudies } from "../f
 
 $(document).ready(function () {
 
-    function updateHobbyIdsField() {
-        $('#hobbyValuesField').val(addedHobbies.join(","));
+    if (displaySuccessModal === "1") {
+        $('#successUserProfileModal').modal('show');
     }
 
-    $('#set-profile-form').on('submit', function () {
-        updateHobbyIdsField();
+    $('#user-profile-data-form').on('submit', function () {
+        $('#sexHiddenField').val(sexProfileData);
+        $('#hobbyValuesField').val(addedHobbies.join(","));
     })
 
-
     let addedHobbies = [...hobbiesProfileData];
-
     let selectedHobbies = $('#selectedHobbies');
 
     addBadgesToDiv(addedHobbies, selectedHobbies)
