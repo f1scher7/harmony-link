@@ -55,14 +55,14 @@
                         <div class="col-12 d-flex justify-content-center">
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
-                                    <input type="text" class="form-control" id="sex" name="sex" readonly>
+                                    <input type="text" class="form-control" id="sex" readonly>
                                     <label for="sex">Płeć</label>
                                 </div>
                             </div>
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
-                                    <input type="number" class="form-control" id="height" th:value="${height}" placeholder="Wzrost" name="height" readonly>
+                                    <input type="number" class="form-control" id="height" th:value="${userProfile?.getHeight()}" placeholder="Wzrost" name="height" readonly>
                                     <label for="height" class="form-label">Wzrost</label>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
-                                    <input type="number" class="form-control" id="age" placeholder="Wiek" name="age" max="87" required>
+                                    <input type="number" class="form-control" id="age" th:value="${userProfile?.getAge()}" placeholder="Wiek" name="age" min="16" max="87" required>
                                     <label for="age" class="form-label">Wiek</label>
                                 </div>
                             </div>
@@ -96,28 +96,28 @@
                         <div class="col-12 d-flex justify-content-center">
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
-                                    <input type="text" class="form-control" id="city" th:value="${city}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
+                                    <input type="text" class="form-control" id="city" th:value="${userProfile?.getCity() ?: ''}" th:classappend="${errorCity != null ? 'is-invalid' : ''}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
                                     <label for="city" class="form-label">Miasto</label>
 
                                     <datalist id="cityList">
                                     </datalist>
 
                                     <div class="invalid-feedback">
-                                        <p class="ms-3 fw-bold"></p>
+                                        <p class="ms-3 fw-bold" th:if="${errorCity}" th:text="${errorCity}"></p>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
-                                    <input type="text" class="form-control" id="study" th:value="${study}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
+                                    <input type="text" class="form-control" id="study" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
                                     <label for="study" class="form-label">Kierunek studiów/edukacji</label>
 
                                     <datalist id="educationList">
                                     </datalist>
 
                                     <div class="invalid-feedback">
-                                        <p class="ms-3 fw-bold"></p>
+                                        <p class="ms-3 fw-bold" th:if="${errorStudy}" th:text="${errorStudy}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -127,21 +127,23 @@
                     <div class="row mt-4 mb-3">
                         <div class="col-12 d-flex form-floating d-flex flex-column align-items-center">
                             <div class="form-floating w-50">
-                                <input type="text" class="form-control" id="hobbies" placeholder="Hobby (wybierz spośród podanych)" list="hobbyList" autocomplete="off">
+                                <input type="text" class="form-control" id="hobbies"  th:classappend="${errorHobbies != null ? 'is-invalid' : ''}" placeholder="Hobby (wybierz spośród podanych)" list="hobbiesList" autocomplete="off">
                                 <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
 
                                 <div id="selectedHobbies">
                                 </div>
 
-                                <datalist id="hobbyList">
+                                <datalist id="hobbiesList">
                                 </datalist>
 
                                 <div class="invalid-feedback">
-                                    <p class="ms-3 fw-bold"></p>
+                                    <p class="ms-3 fw-bold" th:if="${errorHobbies}" th:text="${errorHobbies}"></p>
                                 </div>
                             </div>
                         </div>
 
+                        <input type="hidden" name="userProfileId" id="userProfileId" th:value="${userProfile?.getId()}" value="">
+                        <input type="hidden" name="sex" id="sexHiddenField" value="">
                         <input type="hidden" name="hobbyValues" id="hobbyValuesField" value="">
                     </div>
 
@@ -149,6 +151,22 @@
                         <button type="submit" class="btn btn-primary w-25 py-2">Zapisz zmiany</button>
                     </div>
                 </form>
+
+                <div class="modal fade" id="successUserProfileModal" tabindex="-1" aria-labelledby="successUserProfileModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="successUserProfileModalLabel">Informacja</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-primary" role="alert">
+                                    <p>Twój profil został pomyślnie zapisany</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -162,6 +180,7 @@
         var sexProfileData = [[${sex}]].toString();
         var relationshipStatusProfileData = [[${relationshipStatus}]].toString();
         var hobbiesProfileData = [[${hobbies}]];
+        var displaySuccessModal = [[${displaySuccessModal}]].toString();
         /*]]>*/
     </script>
 </body>
