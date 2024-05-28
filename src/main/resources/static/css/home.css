@@ -11,7 +11,7 @@ body {
 
 
 .navbar {
-    background-color: dodgerblue;
+    background-color: rgba(30, 144, 255);
     margin: 0 auto !important;
 }
 
@@ -58,6 +58,7 @@ body {
 
 
 .form-control {
+    border-radius: 10px !important;
     border-width: 2px !important;
 }
 
@@ -69,6 +70,7 @@ body {
 }
 
 select {
+    border-radius: 10px !important;
     border-width: 2px !important;
 }
 

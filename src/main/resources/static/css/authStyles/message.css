@@ -8,6 +8,11 @@
     border-radius: 10px;
 }
 
+.form-control {
+    border-radius: 10px !important;
+    border-width: 2px !important;
+}
+
 .form-control:focus {
     border-width: 2px !important;
     border-color: #59a5fc !important;
