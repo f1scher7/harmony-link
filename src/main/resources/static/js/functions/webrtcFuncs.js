@@ -30,9 +30,6 @@ export function createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn
                 window.localPeerConnection.addTrack(track, stream);
             })
         })
-        .catch(error => {
-            displayWebRTCConnectionErrorModal(error);
-        })
 
     window.localPeerConnection.onicecandidate = function(event) {
         try {
