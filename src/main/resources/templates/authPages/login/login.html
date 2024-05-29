@@ -17,7 +17,7 @@
 
             </div>
             <div class="col d-flex flex-column justify-content-center mx-auto rightPanel">
-                <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="mb-3 img-fluid w-75" alt="Logo">
+                <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="mb-3 img-fluid w-75" alt="Logo" oncontextmenu="return false;">
                 <h5>HarmonyLink, Bez Granic: Wideołącze to Nie Tylko Aplikacja - To Otwarte Okno do Nowych Światów, Nowych Przyjaźni i Nowych Możliwości</h5>
             </div>
             <div class="col d-flex flex-column">
@@ -38,10 +38,10 @@
                         <div class="col-12">
                             <div class="input-group form-floating mb-3">
                                 <div class="form-floating flex-grow-1">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Hasło" required>
+                                    <input type="password" id="password" name="password" class="form-control password-input" placeholder="Hasło" required>
                                     <label for="password">Hasło</label>
                                 </div>
-                                <span class="input-group-text">
+                                <span class="input-group-text password-eye">
                                     <i id="togglePassword" class="bi bi-eye-slash" onclick="togglePasswordVisibility()"></i>
                                 </span>
                             </div>

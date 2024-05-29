@@ -1,6 +1,9 @@
+body {
+    background-color: aliceblue !important;
+}
+
 .custom-col-width {
-    flex: 0 0 auto !important;
-    width: 30% !important;
+    width: 40% !important;
 }
 
 .registration-form {
@@ -11,7 +14,16 @@
 }
 
 .form-control {
+    border-radius: 10px !important;
     border-width: 2px !important;
+}
+
+.password-input {
+    border-radius: 10px 0 0 10px !important;
+}
+
+.password-eye {
+    border-radius: 0 10px 10px 0 !important;
 }
 
 .form-control:focus {
@@ -22,6 +34,7 @@
 }
 
 select {
+    border-radius: 10px !important;
     border-width: 2px !important;
 }
 
