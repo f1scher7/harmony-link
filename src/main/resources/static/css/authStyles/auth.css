@@ -1,3 +1,7 @@
+body {
+    background-color: aliceblue !important;
+}
+
 #carouselAuth {
     margin-top: 4%;
 }
