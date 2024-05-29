@@ -36,3 +36,4 @@ build/
 /.env
 /TODOLIST.txt
 /src/main/resources/local-ssl.p12
+/src/main/resources/static/img/
