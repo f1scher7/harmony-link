@@ -1,0 +1,62 @@
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+body {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.navbar {
+    background-color: rgba(30, 144, 255);
+    margin: 0 auto !important;
+    box-shadow: 0 8px 8px -6px rgb(191, 193, 253);
+}
+
+.nav-item {
+    border: 1px solid transparent;
+    transition: all 0.3s ease !important;
+}
+
+.nav-link {
+    font-size: 1.15rem !important;
+    color: white !important;
+}
+
+.talkers-history-item {
+    background-color: white !important;
+    border-radius: 7px;
+}
+
+.talkers-history-link {
+    font-size: 1.15rem !important;
+    color: dodgerblue !important;
+}
+
+.nav-item:hover,
+.nav-item:focus {
+    border-radius: 7px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+}
+
+.main-container {
+    margin: auto !important;
+}
+
+.talkers-history-main-div {
+    background-color: rgba(255, 255, 255, 0.65);
+    border-radius: 15px;
+}
+
+.border {
+    background-color: #2e96fc !important;
+    border-width: 0 !important;
+    border-radius: 10px !important;
+}
