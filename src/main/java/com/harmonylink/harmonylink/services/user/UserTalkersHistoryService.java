@@ -9,6 +9,7 @@ import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,14 +40,27 @@ public class UserTalkersHistoryService {
         Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId1);
         if (userProfileOptional.isPresent()) {
             UserProfile userProfile1 = userProfileOptional.get();
-
             UserProfile userProfile2 = this.userInCallPairService.getAnotherUserProfileByUserProfileId(userProfileId1);
             if (userProfile2 != null) {
                 UserTalkersHistory userTalkersHistory1 = this.userTalkersHistoryRepository.findByUserProfile(userProfile1);
                 UserTalkersHistory userTalkersHistory2 = this.userTalkersHistoryRepository.findByUserProfile(userProfile2);
 
-                userTalkersHistory1.addTalker(new UserTalkerData(userProfile2));
-                userTalkersHistory2.addTalker(new UserTalkerData(userProfile1));
+                List<UserTalkerData> talkersList1 = userTalkersHistory1.getTalkers();
+                List<UserTalkerData> talkersList2 = userTalkersHistory2.getTalkers();
+
+                if(talkersList1.size() >= 7) {
+                    talkersList1.remove(0);
+                }
+
+                if(talkersList2.size() >= 7) {
+                    talkersList2.remove(0);
+                }
+
+                talkersList1.add(new UserTalkerData(userProfile2));
+                talkersList2.add(new UserTalkerData(userProfile1));
+
+                userTalkersHistory1.setTalkers(talkersList1);
+                userTalkersHistory2.setTalkers(talkersList2);
 
                 this.userTalkersHistoryRepository.save(userTalkersHistory1);
                 this.userTalkersHistoryRepository.save(userTalkersHistory2);
