@@ -57,6 +57,10 @@ public class UserTalkersHistory {
         this.userProfile = userProfile;
     }
 
+    public void setTalkers(List<UserTalkerData> userTalkerDataList) {
+        this.talkers = userTalkerDataList;
+    }
+
 
     @Override
     public String toString() {
