@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/home.css" rel="stylesheet"/>
+    <link href="/css/navbarMenuPagesStyles/talkersHistory.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
+    <title>Ostatnie współrozmówcy | HarmonyLink</title>
+</head>
+<body style="background-image: url('/img/home/navbarPagesBG.jpg')">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid d-flex align-items-center">
+            <a class="navbar-brand w-25 ps-3" href="/">
+                <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="px-3">
+                        <a class="nav-link" href="/" th:text="${userProfileNickname}"></a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="/user-profile-data"><i class="fa fa-id-badge"></i> Twój profil</a>
+                    </li>
+                    <li class="talkers-history-item px-3 mx-1">
+                        <a class="nav-link talkers-history-link" href="/talkers-history"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="#"><i class="fa fa-cog"></i> Ustawienia konta</a>
+                    </li>
+                    <li class="nav-item px-3 mx-1">
+                        <a class="nav-link" href="/auth/logout"><i class="fa fa-sign-out-alt"></i> Wyloguj się</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-8 talkers-history-main-div">
+                <div class="col-12 mx-auto mt-4 mb-5">
+                    <h4 class="text-center">Tutaj możesz zobaczyć 7 ostatnich współrozmówców</h4>
+                </div>
+
+                <div class="modal fade" id="talkerDataModal" tabindex="-1" aria-labelledby="talkerDataModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="talkerDataModalLabel"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Miasto: <span class="modal-city fw-bold"></span></p>
+                                <p>Wiek: <span class="modal-age fw-bold"></span></p>
+                                <p>Płeć: <span class="modal-sex fw-bold"></span></p>
+                                <p>Status związku: <span class="modal-relationshipStatus fw-bold"></span></p>
+                                <p>Hobby: <span class="modal-hobby fw-bold"></span></p>
+                                <p>Kierunek studiów/edukacji: <span class="modal-study fw-bold"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/navbarMenuPages/talkersHistory.js" type="module"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var talkersHistoryData = [[${userTalkersDataJSON}]].toString();
+        /*]]>*/
+    </script>
+</body>
+</html>
