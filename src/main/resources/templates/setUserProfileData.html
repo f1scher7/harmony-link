@@ -6,6 +6,7 @@
     <link href="/css/setUserProfileData.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
     <link href="/img/logo/faviconHarmonyLink.ico" rel="shortcut icon" type="image/x-icon">
     <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -31,13 +32,18 @@
                                         <option value="M">Mężczyzna</option>
                                         <option value="K">Kobieta</option>
                                     </select>
-                                    <label for="sex">Płeć</label>
+                                    <label for="sex">
+                                        Płeć <i class="fa fa-venus-mars"></i>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
                                     <input type="number" class="form-control" id="age" th:value="${userProfile?.getAge() ?: ''}" th:classappend="${errorAge != null ? 'is-invalid' : ''}" placeholder="Wiek" name="age" min="16" max="87" required>
-                                    <label for="age" class="form-label">Wiek</label>
+                                    <label for="age" class="form-label">
+                                        Wiek <i class="fa fa-child"></i>
+                                    </label>
+
                                     <div class="invalid-feedback">
                                         <p class="ms-3 fw-bold" th:if="${errorAge}" th:text="${errorAge}"></p>
                                     </div>
@@ -56,7 +62,10 @@
                                         <option value="married">Żonaty/Zamężna</option>
                                         <option value="divorced">Wszystko skomplikowane</option>
                                     </select>
-                                    <label for="relationshipStatus" class="form-label">Status związku</label>
+                                    <label for="relationshipStatus" class="form-label">
+                                        Status związku <i class="fa fa-user-friends"></i>
+                                    </label>
+
                                     <div class="invalid-feedback">
                                         <p class="ms-3 fw-bold" th:if="${errorRelationship}" th:text="${errorRelationship}"></p>
                                     </div>
@@ -66,7 +75,10 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
                                     <input type="number" class="form-control" id="height" name="height" th:value="${userProfile?.getHeight() ?: ''}" th:classappend="${errorHeight != null ? 'is-invalid' : ''}" placeholder="Wzrost" min="16" max="87" required>
-                                    <label for="height" class="form-label">Wzrost</label>
+                                    <label for="height" class="form-label">
+                                        Wzrost <i class="fas fa-arrow-up"></i>
+                                    </label>
+
                                     <div class="invalid-feedback">
                                         <p class="ms-3 fw-bold" th:if="${errorHeight}" th:text="${errorHeight}"></p>
                                     </div>
@@ -80,7 +92,9 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
                                     <input type="text" class="form-control" id="city" th:value="${userProfile?.getCity() ?: ''}" th:classappend="${errorCity != null ? 'is-invalid' : ''}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
-                                    <label for="city" class="form-label">Miasto</label>
+                                    <label for="city" class="form-label">
+                                        Miasto <i class="fa fa-city"></i>
+                                    </label>
 
                                     <datalist id="cityList">
                                     </datalist>
@@ -94,7 +108,9 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
                                     <input type="text" class="form-control" id="study" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
-                                    <label for="study" class="form-label">Kierunek studiów/edukacji</label>
+                                    <label for="study" class="form-label">
+                                        Kierunek studiów/edukacji  <i class="fa fa-graduation-cap"></i>
+                                    </label>
 
                                     <datalist id="educationList">
                                     </datalist>
@@ -111,7 +127,9 @@
                         <div class="col-12 d-flex form-floating d-flex flex-column align-items-center">
                             <div class="form-floating w-50">
                                 <input type="text" class="form-control" id="hobbies" th:classappend="${errorHobbies != null ? 'is-invalid' : ''}" placeholder="Hobby (wybierz spośród podanych)" list="hobbiesList" autocomplete="off">
-                                <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
+                                <label for="hobbies" class="form-label">
+                                    Hobby (wybierz spośród podanych) <i class="fa fa-chess-knight"></i>
+                                </label>
 
                                 <div id="selectedHobbies">
                                 </div>

@@ -9,9 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
     <link href="/img/logo/faviconHarmonyLink.ico" rel="shortcut icon" type="image/x-icon">
     <link href="/img/logo/faviconHarmonyLink.ico" rel="icon" type="image/x-icon">
-    <title>HarmonyLink</title>
+    <title>Twój profil | HarmonyLink</title>
 </head>
-<body style="background-image: url('/img/home/userProfileDataBG.jpg')">
+<body style="background-image: url('/img/home/navbarPagesBG.jpg')">
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex align-items-center">
             <a class="navbar-brand w-25 ps-3" href="/">
@@ -29,7 +29,7 @@
                         <a class="nav-link user-profile-data-link" href="/user-profile-data"><i class="fa fa-id-badge"></i> Twój profil</a>
                     </li>
                     <li class="nav-item px-3 mx-1">
-                        <a class="nav-link" href="#"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
+                        <a class="nav-link" href="/talkers-history"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
                     </li>
                     <li class="nav-item px-3 mx-1">
                         <a class="nav-link" href="#"><i class="fa fa-cog"></i> Ustawienia konta</a>
@@ -46,9 +46,9 @@
         <div class="row d-flex justify-content-center">
             <div class="col-8 user-profile-data-form-div">
                 <form id="user-profile-data-form" action="/user-profile-data" method="post">
-                    <div class="col-12 vstack w-50 mx-auto mt-4">
-                        <h4>Tutaj możesz zaktualizować swój profil,</h4>
-                        <h4>aby lepiej odzwierciedlić Twoją osobowość</h4>
+                    <div class="col-12 vstack mx-auto mt-4">
+                        <h4 class="text-center">Tutaj możesz zaktualizować swój profil,</h4>
+                        <h4 class="text-center">aby lepiej odzwierciedlić Twoją osobowość</h4>
                     </div>
 
                     <div class="row mt-5">
@@ -56,14 +56,18 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
                                     <input type="text" class="form-control" id="sex" readonly>
-                                    <label for="sex">Płeć</label>
+                                    <label for="sex">
+                                        Płeć <i class="fa fa-venus-mars"></i>
+                                    </label>
                                 </div>
                             </div>
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
                                     <input type="number" class="form-control" id="height" th:value="${userProfile?.getHeight()}" placeholder="Wzrost" name="height" readonly>
-                                    <label for="height" class="form-label">Wzrost</label>
+                                    <label for="height" class="form-label">
+                                        Wzrost <i class="fas fa-arrow-up"></i>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -79,14 +83,18 @@
                                         <option value="married">Żonaty/Zamężna</option>
                                         <option value="divorced">Wszystko skomplikowane</option>
                                     </select>
-                                    <label for="relationshipStatus" class="form-label">Status związku</label>
+                                    <label for="relationshipStatus" class="form-label">
+                                        Status związku <i class="fa fa-user-friends"></i>
+                                    </label>
                                 </div>
                             </div>
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
                                     <input type="number" class="form-control" id="age" th:value="${userProfile?.getAge()}" placeholder="Wiek" name="age" min="16" max="87" required>
-                                    <label for="age" class="form-label">Wiek</label>
+                                    <label for="age" class="form-label">
+                                        Wiek <i class="fa fa-child"></i>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +105,9 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
                                     <input type="text" class="form-control" id="city" th:value="${userProfile?.getCity() ?: ''}" th:classappend="${errorCity != null ? 'is-invalid' : ''}" placeholder="Miasto" name="city" list="cityList" autocomplete="off" required>
-                                    <label for="city" class="form-label">Miasto</label>
+                                    <label for="city" class="form-label">
+                                        Miasto <i class="fa fa-city"></i>
+                                    </label>
 
                                     <datalist id="cityList">
                                     </datalist>
@@ -111,7 +121,9 @@
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column align-items-center">
                                     <input type="text" class="form-control" id="study" th:value="${userProfile?.getFieldOfStudy() ?: ''}" th:classappend="${errorStudy != null ? 'is-invalid' : ''}" placeholder="Kierunek studiów/edukacji" name="fieldOfStudy" list="educationList" autocomplete="off" required>
-                                    <label for="study" class="form-label">Kierunek studiów/edukacji</label>
+                                    <label for="study" class="form-label">
+                                        Kierunek studiów/edukacji  <i class="fa fa-graduation-cap"></i>
+                                    </label>
 
                                     <datalist id="educationList">
                                     </datalist>
@@ -128,7 +140,9 @@
                         <div class="col-12 d-flex form-floating d-flex flex-column align-items-center">
                             <div class="form-floating w-50">
                                 <input type="text" class="form-control" id="hobbies"  th:classappend="${errorHobbies != null ? 'is-invalid' : ''}" placeholder="Hobby (wybierz spośród podanych)" list="hobbiesList" autocomplete="off">
-                                <label for="hobbies" class="form-label">Hobby (wybierz spośród podanych)</label>
+                                <label for="hobbies" class="form-label">
+                                    Hobby (wybierz spośród podanych) <i class="fa fa-chess-knight"></i>
+                                </label>
 
                                 <div id="selectedHobbies">
                                 </div>
