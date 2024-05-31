@@ -10,4 +10,6 @@ public interface UserProfileRepository extends MongoRepository<UserProfile, Stri
 
     UserProfile findByUserAccount(UserAccount userAccount);
 
+    UserProfile findByNickname(String nickname);
+
 }
