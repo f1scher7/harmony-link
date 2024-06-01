@@ -39,7 +39,6 @@ body {
     color: dodgerblue !important;
 }
 
-
 .nav-item:hover,
 .nav-item:focus {
     border-radius: 7px;
@@ -60,12 +59,6 @@ body {
 
 .small-text {
     font-size: 0.90rem !important;
-}
-
-.selected-hobby {
-    background-color: #3a8dee;
-    color: white;
-    border-radius: 3px;
 }
 
 .form-control {
@@ -90,6 +83,12 @@ select:focus {
     border-color: #59a5fc !important;
     box-shadow: none !important;
     outline: none !important;
+}
+
+.selected-hobby {
+    background-color: #3a8dee;
+    color: white;
+    border-radius: 3px;
 }
 
 .selected-badge {
