@@ -47,14 +47,77 @@
         <div class="row d-flex justify-content-center">
             <div class="col-8 account-settings-main-div">
                 <div class="col-12 mx-auto mt-4 mb-5">
-                    <h4 class="text-center">Ustawienia konta</h4>
+                    <h3 class="text-center">Ustawienia konta</h3>
                 </div>
 
+                <div class="row">
+                    <div class="col-6 d-flex justify-content-center">
+                        <div class="change-password-div w-75">
+                            <form action="/change-password" method="post">
+                                <h4 class="ms-2 mb-3">Zmiana hasła</h4>
+                                <div class="input-group form-floating mb-2">
+                                    <div class="form-floating flex-grow-1">
+                                        <input type="password" id="oldPassword" name="oldPassword" class="form-control password-input" th:classappend="${errorWrongPassword} ? 'is-invalid'" placeholder="Stare hasło" required>
+                                        <label for="oldPassword">Stare hasło</label>
+                                    </div>
+                                    <span class="input-group-text password-eye">
+                                        <i id="toggleOldPassword" class="bi bi-eye-slash" onclick="togglePasswordVisibility('oldPassword', 'toggleOldPassword')"></i>
+                                    </span>
+                                    <p class="ms-2 invalid-password fw-bold w-100" th:if="${errorWrongPassword}" th:text="${errorWrongPassword}"></p>
+                                </div>
+                                <div class="form-floating mb-2">
+                                    <input type="text" id="newPassword" name="newPassword" class="form-control" th:classappend="${errorInvalidNewPassword != null ? 'is-invalid' : (errorPasswordsMatching != null ? 'is-invalid' : '')}" placeholder="Nowe hasło" required autocomplete="off">
+                                    <label for="newPassword">Nowe hasło</label>
+                                    <div class="invalid-feedback">
+                                        <h6 class="fw-bold ms-1" th:if="${errorInvalidNewPassword}" th:text="${errorInvalidNewPassword}"></h6>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-2">
+                                    <input type="text" id="confirmPassword" name="confirmPassword" class="form-control" th:classappend="${errorPasswordsMatching} ? 'is-invalid'" placeholder="Powtórz nowe hasło" required autocomplete="off">
+                                    <label for="confirmPassword">Powtórz nowe hasło</label>
+                                    <div class="invalid-feedback text-center">
+                                        <h6 class="fw-bold" th:if="${errorPasswordsMatching}" th:text="${errorPasswordsMatching}"></h6>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2 mb-4">Zmień hasło</button>
+                            </form>
+
+                            <div class="modal fade" id="changePasswordSuccessModal" tabindex="-1" aria-labelledby="changePasswordSuccessModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-success text-white">
+                                            <h5 class="modal-title" id="changePasswordSuccessModalLabel">Zmiana hasła</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-success" role="alert">
+                                                <p>Twoje hasło zostało pomyślnie zmienione.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <h4>Zmiana maila</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/navbarMenuPages/accountSettings.js"></script>
+    <script src="/js/functions/passwordField.js"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var displayChangePasswordSuccessModal = [[${displayChangePasswordSuccessModal}]].toString();
+        /*]]>*/
+    </script>
 </body>
 </html>
