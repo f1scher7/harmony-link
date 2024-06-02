@@ -87,8 +87,6 @@ public class ResetPasswordController {
             modelAndView.addObject("token", token);
             modelAndView.addObject("errorPasswordsMatching", e.getMessage());
             modelAndView.setViewName("authPages/login/resetPassword");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
 
         return modelAndView;
