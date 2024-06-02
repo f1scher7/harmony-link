@@ -57,3 +57,34 @@ body {
     background-color: rgba(255, 255, 255, 0.65);
     border-radius: 15px;
 }
+
+.form-control {
+    border-radius: 10px !important;
+    border-width: 2px !important;
+}
+
+.form-control:focus {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.password-input {
+    border-radius: 10px 0 0 10px !important;
+}
+
+.password-eye {
+    border-radius: 0 10px 10px 0 !important;
+}
+
+.btn-close {
+    border-width: 2px !important;
+    border-color: #59a5fc !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.invalid-password {
+    color: #dc3545;
+}
