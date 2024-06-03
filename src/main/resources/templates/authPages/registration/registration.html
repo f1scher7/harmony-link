@@ -35,7 +35,7 @@
                                 <label for="password">Hasło</label>
                             </div>
                             <span class="input-group-text password-eye">
-                                <i id="togglePassword" class="bi bi-eye-slash" onclick="togglePasswordVisibility()"></i>
+                                <i id="togglePassword" class="bi bi-eye-slash" onclick="togglePasswordVisibility('password', 'togglePassword')"></i>
                             </span>
                         </div>
                         <p class="ms-2 invalid-password fw-bold" th:if="${errorPassword}" th:text="${errorPassword}"></p>
@@ -67,10 +67,10 @@
                     </div>
 
                     <div class="d-flex justify-content-center mx-5">
-                        <button type="submit" class="btn btn-primary w-100 py-2">Zarejestruj się</button>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Zarejestruj się</button>
                     </div>
                     <div class="d-flex justify-content-center mx-5 mt-1 mb-2">
-                        <a href="/oauth2/authorization/google" class="btn btn-danger w-100 py-2">
+                        <a href="/oauth2/authorization/google" class="btn btn-danger w-100 py-2 fw-bold">
                             <i class="bi bi-google"></i> Zarejestruj się przez Google
                         </a>
                     </div>
@@ -85,7 +85,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-    <script src="/js/passwordField.js">
+    <script src="/js/functions/passwordField.js">
     </script>
 </body>
 </html>
