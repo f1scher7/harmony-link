@@ -1,6 +1,8 @@
 package com.harmonylink.harmonylink.services.user.useraccount;
 
+import com.harmonylink.harmonylink.models.token.ChangeEmailToken;
 import com.harmonylink.harmonylink.models.user.UserAccount;
+import com.harmonylink.harmonylink.repositories.token.ChangeEmailTokenRepository;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
 import com.harmonylink.harmonylink.services.user.useraccount.exceptions.*;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.harmonylink.harmonylink.utils.UserUtil.generateToken;
 import static com.harmonylink.harmonylink.utils.UserUtil.isPasswordValid;
 
 @Service
@@ -16,13 +19,17 @@ public class UserAccountSettingsService {
 
     private final Logger UPDATE_USER_DATA_LOGGER = LoggerFactory.getLogger("UserDataUpdate");
 
+    private final EmailService emailService;
     private final UserAccountRepository userAccountRepository;
+    private final ChangeEmailTokenRepository changeEmailTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserAccountSettingsService(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+    public UserAccountSettingsService(EmailService emailService, UserAccountRepository userAccountRepository, ChangeEmailTokenRepository changeEmailTokenRepository, PasswordEncoder passwordEncoder) {
+        this.emailService = emailService;
         this.userAccountRepository = userAccountRepository;
+        this.changeEmailTokenRepository = changeEmailTokenRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -56,8 +63,28 @@ public class UserAccountSettingsService {
         }
     }
 
-    public void changeEmail(String login, String newEmail) {
+    public void changeEmail(String login, String password, String newEmail) throws UserNotFoundException, WrongPasswordException, EmailAlreadyExistsException, EmailNotFoundException {
+        UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
+        if (userAccount == null) {
+            throw new UserNotFoundException();
+        }
+
+        if (this.passwordEncoder.matches(password, userAccount.getPassword())) {
+
+            if (this.userAccountRepository.findByEmail(newEmail) == null) {
+                String token = generateToken();
+                ChangeEmailToken changeEmailToken = new ChangeEmailToken(token, userAccount);
+
+                this.emailService.sendChangeEmailEmail(userAccount.getLogin(), token, newEmail);
+                this.changeEmailTokenRepository.save(changeEmailToken);
+            } else {
+                throw new EmailAlreadyExistsException(newEmail);
+            }
+
+        } else {
+            throw new WrongPasswordException();
+        }
     }
 
 }
