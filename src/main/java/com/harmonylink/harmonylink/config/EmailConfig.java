@@ -9,14 +9,19 @@ public class EmailConfig {
 
     private String verificationSubject;
     private String resetPasswordSubject;
+    private String changeEmailSubject;
 
 
     public String getVerificationSubject() {
-        return verificationSubject;
+        return this.verificationSubject;
     }
 
     public String getResetPasswordSubject() {
-        return resetPasswordSubject;
+        return this.resetPasswordSubject;
+    }
+
+    public String getChangeEmailSubject() {
+        return this.changeEmailSubject;
     }
 
 
@@ -26,6 +31,10 @@ public class EmailConfig {
 
     public void setResetPasswordSubject(String resetPasswordSubject) {
         this.resetPasswordSubject = resetPasswordSubject;
+    }
+
+    public void setChangeEmailSubject(String changeEmailSubject) {
+        this.changeEmailSubject = changeEmailSubject;
     }
 
 }
