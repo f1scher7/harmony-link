@@ -63,7 +63,7 @@ public class UserAccountSettingsService {
         }
     }
 
-    public void changeEmail(String login, String password, String newEmail) throws UserNotFoundException, WrongPasswordException, EmailAlreadyExistsException, EmailNotFoundException {
+    public void tryToSendChangeEmailEmail(String login, String password, String newEmail) throws UserNotFoundException, WrongPasswordException, EmailAlreadyExistsException, EmailNotFoundException {
         UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
         if (userAccount == null) {
@@ -73,11 +73,18 @@ public class UserAccountSettingsService {
         if (this.passwordEncoder.matches(password, userAccount.getPassword())) {
 
             if (this.userAccountRepository.findByEmail(newEmail) == null) {
+
+                if (this.changeEmailTokenRepository.findByUserAccount(userAccount) != null) {
+                    ChangeEmailToken changeEmailToken = this.changeEmailTokenRepository.findByUserAccount(userAccount);
+                    this.changeEmailTokenRepository.delete(changeEmailToken);
+                }
+
                 String token = generateToken();
                 ChangeEmailToken changeEmailToken = new ChangeEmailToken(token, userAccount);
 
                 this.emailService.sendChangeEmailEmail(userAccount.getLogin(), token, newEmail);
                 this.changeEmailTokenRepository.save(changeEmailToken);
+
             } else {
                 throw new EmailAlreadyExistsException(newEmail);
             }
@@ -85,6 +92,15 @@ public class UserAccountSettingsService {
         } else {
             throw new WrongPasswordException();
         }
+    }
+
+    public void changeEmail(ChangeEmailToken changeEmailToken, String newEmail) {
+        UserAccount userAccount = changeEmailToken.getUserAccount();
+
+        userAccount.setEmail(newEmail);
+
+        this.userAccountRepository.save(userAccount);
+        this.changeEmailTokenRepository.delete(changeEmailToken);
     }
 
 }
