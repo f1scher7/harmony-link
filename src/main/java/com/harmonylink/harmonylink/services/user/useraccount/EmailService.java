@@ -29,6 +29,32 @@ public class EmailService {
         this.emailConfig = emailConfig;
     }
 
+
+    public void sendVerificationEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
+        Context context = new Context();
+        context.setVariable("login", userAccount.getLogin());
+        context.setVariable("verificationLink", "https://192.168.0.102:8443/auth/activate-account?token=" + token);
+
+        sendEmail(userAccount.getEmail(), this.emailConfig.getVerificationSubject(), "emailTemplates/verificationEmailTemplate", context);
+    }
+
+    public void sendResetPasswordEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
+        Context context = new Context();
+        context.setVariable("login", userAccount.getLogin());
+        context.setVariable("resetPasswordLink", "https://192.168.0.102:8443/auth/reset-password?token=" + token);
+
+        sendEmail(userAccount.getEmail(), this.emailConfig.getResetPasswordSubject(), "emailTemplates/resetPasswordTemplate", context);
+    }
+
+    public void sendChangeEmailEmail(String login, String token, String newEmail) throws EmailNotFoundException {
+        Context context = new Context();
+        context.setVariable("login", login);
+        context.setVariable("changeEmailLink", "https://192.168.0.102:8443/auth/change-email?token=" + token);
+
+        sendEmail(newEmail, this.emailConfig.getChangeEmailSubject(), "emailTemplates/changeEmailTemplate", context);
+    }
+
+
     @Async
     public void  sendEmail(String userMail, String subject, String templateName, Context context) throws EmailNotFoundException {
         try {
@@ -46,22 +72,6 @@ public class EmailService {
         } catch (MailSendException | MessagingException e) {
             throw new EmailNotFoundException(userMail);
         }
-    }
-
-    public void sendVerificationEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
-        Context context = new Context();
-        context.setVariable("login", userAccount.getLogin());
-        context.setVariable("verificationLink", "http://3.70.228.63/auth/activate-account?token=" + token);
-
-        sendEmail(userAccount.getEmail(), this.emailConfig.getVerificationSubject(), "emailTemplates/verificationEmailTemplate", context);
-    }
-
-    public void sendResetPasswordEmail(UserAccount userAccount, String token) throws EmailNotFoundException {
-        Context context = new Context();
-        context.setVariable("login", userAccount.getLogin());
-        context.setVariable("resetPasswordLink", "http://3.70.228.63/auth/reset-password?token=" + token);
-
-        sendEmail(userAccount.getEmail(), this.emailConfig.getResetPasswordSubject(), "emailTemplates/resetPasswordTemplate", context);
     }
 
 }
