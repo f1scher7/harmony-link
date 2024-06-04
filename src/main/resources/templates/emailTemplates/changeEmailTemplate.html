@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zmiana maila</title>
+</head>
+<body>
+    <p>Witaj, <span th:text="${login}">Imię</span>!</p>
+    <p>Otrzymaliśmy prośbę o zmianę adresu e-mail powiązanego z Twoim kontem.</p>
+    <p>Aby potwierdzić tę zmianę, proszę kliknij w poniższy link:</p>
+    <a th:href="${changeEmailLink}">Potwierdź zmianę adresu e-mail</a>
+    <p>Jeśli to nie Ty zgłaszałeś prośbę o zmianę adresu e-mail, prosimy o zignorowanie tej wiadomości lub skontaktowanie się z nami.</p>
+    <p>Z poważaniem,<br>Twój HarmonyLink</p>
+</body>
+</html>
