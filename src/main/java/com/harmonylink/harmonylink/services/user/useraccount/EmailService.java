@@ -49,7 +49,7 @@ public class EmailService {
     public void sendChangeEmailEmail(String login, String token, String newEmail) throws EmailNotFoundException {
         Context context = new Context();
         context.setVariable("login", login);
-        context.setVariable("changeEmailLink", "https://192.168.0.102:8443/auth/change-email?token=" + token);
+        context.setVariable("changeEmailLink", "https://192.168.0.102:8443/auth/change-email-success?token=" + token);
 
         sendEmail(newEmail, this.emailConfig.getChangeEmailSubject(), "emailTemplates/changeEmailTemplate", context);
     }
