@@ -108,10 +108,10 @@ public class SecurityConfig  {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth","/auth/login", "/auth/registration", "/login/oauth2/code/google","/auth/activate-account", "/auth/forgot-password", "/auth/reset-password").permitAll()
+                        .requestMatchers("/auth","/auth/login", "/auth/registration", "/login/oauth2/code/google","/auth/activate-account", "/auth/forgot-password", "/auth/reset-password", "/auth/change-email-success").permitAll()
                         .requestMatchers("/auth/confirm-email").hasAuthority("ROLE_TEMP_USER")
                         .requestMatchers("/set-profile").access(accessToSetProfile)
-                        .requestMatchers("/", "/terms-of-service").access(accessToHome)
+                        .requestMatchers("/", "/terms-of-service", "/user-profile-data", "/talkers-history", "/account-settings").access(accessToHome)
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
