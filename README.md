@@ -1,5 +1,7 @@
 # HarmonyLink (in progress)
 
+The project deployment is scheduled for 09/06/2024.
+
 ## Technologies
 
 ### Front-End
