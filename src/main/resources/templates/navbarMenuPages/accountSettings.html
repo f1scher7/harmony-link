@@ -30,7 +30,7 @@
                         <a class="nav-link" href="/user-profile-data"><i class="fa fa-id-badge"></i> Twój profil</a>
                     </li>
                     <li class="nav-item px-3 mx-1">
-                        <a class="nav-link" href="/talkers-history"><i class="fa fa-users"></i> Ostatnie współrozmówcy</a>
+                        <a class="nav-link" href="/talkers-history"><i class="fa fa-users"></i> Ostatni rozmówcy</a>
                     </li>
                     <li class="account-settings-item px-3 mx-1">
                         <a class="nav-link account-settings-link" href="/account-settings"><i class="fa fa-cog"></i> Ustawienia konta</a>
@@ -49,7 +49,6 @@
                 <div class="col-12 mx-auto mt-4 mb-5">
                     <h3 class="text-center">Ustawienia konta</h3>
                 </div>
-
                 <div class="row">
                     <div class="col-6 d-flex justify-content-center">
                         <div class="change-password-div w-75">
@@ -79,7 +78,7 @@
                                         <h6 class="fw-bold" th:if="${errorPasswordsMatching}" th:text="${errorPasswordsMatching}"></h6>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100 py-2 mb-4">Zmień hasło</button>
+                                <button type="submit" class="btn btn-primary w-100 py-2 mb-4 fw-bold">Zmień hasło</button>
                             </form>
 
                             <div class="modal fade" id="changePasswordSuccessModal" tabindex="-1" aria-labelledby="changePasswordSuccessModalLabel" aria-hidden="true">
@@ -97,12 +96,54 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
-                    <div class="col-6">
-                        <h4>Zmiana maila</h4>
+                    <div class="col-6 d-flex justify-content-center">
+                        <div class="change-email-div w-75">
+                            <form action="/change-email" method="post">
+                                <h4 class="ms-2 mb-3">Zmiana maila</h4>
+                                <div class="input-group form-floating mb-2">
+                                    <div class="form-floating flex-grow-1">
+                                        <input type="password" id="passwordForEmail" name="passwordForEmail" class="form-control password-input" th:classappend="${errorWrongPasswordChangingEmail} ? 'is-invalid'" placeholder="Hasło dla zatwierdzenia zmiany maila" required>
+                                        <label for="passwordForEmail">Hasło dla zatwierdzenia zmiany maila</label>
+                                    </div>
+                                    <span class="input-group-text password-eye">
+                                        <i id="togglePasswordForEmail" class="bi bi-eye-slash" onclick="togglePasswordVisibility('passwordForEmail', 'togglePasswordForEmail')"></i>
+                                    </span>
+                                    <p class="ms-2 invalid-password fw-bold w-100" th:if="${errorWrongPasswordChangingEmail}" th:text="${errorWrongPasswordChangingEmail}"></p>
+                                </div>
+                                <div class="form-floating mb-2">
+                                    <input type="text" class="form-control" id="newEmail" name="newEmail" th:value="${newEmail}" th:classappend="${errorEmailNotFound != null ? 'is-invalid' : (errorEmailAlreadyExists != null ? 'is-invalid' : '')}" placeholder="Nowy mail" required>
+                                    <label for="newEmail" class="form-label">Nowy mail</label>
+                                    <div class="invalid-feedback">
+                                        <h6 class="ms-2 fw-bold" th:if="${errorEmailNotFound}" th:text="${errorEmailNotFound}"></h6>
+                                        <h6 class="ms-2 fw-bold" th:if="${errorEmailAlreadyExists}" th:text="${errorEmailAlreadyExists}"></h6>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2 mb-4 fw-bold">Zmień maila</button>
+                            </form>
+
+                            <div class="modal fade" id="changeEmailModal" tabindex="-1" aria-labelledby="changeEmailModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-success text-white">
+                                            <h5 class="modal-title" id="changeEmailModalLabel">Zmiana maila</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-success" role="alert">
+                                                <p>Na Twój nowy adres mail została wysłana wiadomość z dalszymi instrukcjami.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center mb-3 mt-5">
+                        <button class="btn btn-danger w-25 fw-bold py-2">Usuń konto</button>
                     </div>
                 </div>
             </div>
@@ -116,7 +157,8 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var displayChangePasswordSuccessModal = [[${displayChangePasswordSuccessModal}]].toString();
+        var displayChangePasswordSuccessModal = [[${displayChangePasswordSuccessModal}]];
+        var displayChangeEmailModal = [[${displayChangeEmailModal}]];
         /*]]>*/
     </script>
 </body>
