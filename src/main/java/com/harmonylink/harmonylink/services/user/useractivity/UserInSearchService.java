@@ -23,6 +23,7 @@ public class UserInSearchService {
     private final UserProfileRepository userProfileRepository;
     private final UserPreferencesFilterRepository userPreferencesFilterRepository;
 
+
     @Autowired
     public UserInSearchService(UserActivityStatusService userActivityStatusService, UserProfileRepository userProfileRepository, UserPreferencesFilterRepository userPreferencesFilterRepository) {
         this.userProfileRepository = userProfileRepository;

@@ -30,6 +30,7 @@ public class UserTabsControlService {
         return false;
     }
 
+
     public String displayTabsCounter() {
         StringBuilder builder = new StringBuilder();
         tabsCounter.forEach((key, value) -> builder

@@ -5,6 +5,7 @@ import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class UserPreferencesFilterService {
         this.userPreferencesFilterRepository = userPreferencesFilterRepository;
     }
 
-
+    @Transactional
     public void saveDefaultUserPreferencesFilters(UserProfile userProfile) {
         UserPreferencesFilter userPreferencesFilter = new UserPreferencesFilter();
 

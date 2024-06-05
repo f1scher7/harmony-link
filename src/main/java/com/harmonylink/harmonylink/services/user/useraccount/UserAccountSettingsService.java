@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.harmonylink.harmonylink.utils.UserUtil.generateToken;
 import static com.harmonylink.harmonylink.utils.UserUtil.isPasswordValid;
@@ -17,7 +18,7 @@ import static com.harmonylink.harmonylink.utils.UserUtil.isPasswordValid;
 @Service
 public class UserAccountSettingsService {
 
-    private final Logger UPDATE_USER_DATA_LOGGER = LoggerFactory.getLogger("UserDataUpdate");
+    private final Logger USER_PROFILE_DATA_CHANGE_LOGGER = LoggerFactory.getLogger("UserProfileDataChange");
 
     private final EmailService emailService;
     private final UserAccountRepository userAccountRepository;
@@ -33,7 +34,7 @@ public class UserAccountSettingsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Transactional
     public void changePassword(String login, String oldPassword, String newPassword, String confirmPassword) throws UserNotFoundException, InvalidPasswordException, WrongPasswordException, PasswordsMatchingException {
         UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
@@ -49,7 +50,7 @@ public class UserAccountSettingsService {
                     userAccount.setPassword(this.passwordEncoder.encode(newPassword));
                     this.userAccountRepository.save(userAccount);
 
-                    UPDATE_USER_DATA_LOGGER.info("Password was updated successfully for user with login: " + login + ". New password: " + newPassword);
+                    USER_PROFILE_DATA_CHANGE_LOGGER.info("Password was updated successfully for user with login: " + login + ". New password: " + newPassword);
                 } else {
                     throw new PasswordsMatchingException();
                 }
@@ -63,6 +64,7 @@ public class UserAccountSettingsService {
         }
     }
 
+    @Transactional
     public void tryToSendChangeEmailEmail(String login, String password, String newEmail) throws UserNotFoundException, WrongPasswordException, EmailAlreadyExistsException, EmailNotFoundException {
         UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
@@ -94,6 +96,7 @@ public class UserAccountSettingsService {
         }
     }
 
+    @Transactional
     public void changeEmail(ChangeEmailToken changeEmailToken, String newEmail) {
         UserAccount userAccount = changeEmailToken.getUserAccount();
 

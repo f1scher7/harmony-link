@@ -50,6 +50,21 @@ public class UserProfileService {
     }
 
 
+    public UserProfile getUserProfileByAuthentication(Authentication authentication) {
+        UserAccount userAccount = null;
+
+        if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
+            String email = oauthToken.getPrincipal().getAttribute("email");
+            userAccount = this.userAccountRepository.findByEmail(email);
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            String username = authentication.getName();
+            userAccount = this.userAccountRepository.findByLogin(username);
+        }
+
+        return this.userProfileRepository.findByUserAccount(userAccount);
+    }
+
+
     public void setOrUpdateUserProfileData(UserProfile userProfile, String userAccountId) throws UserNotFoundException, InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         UserAccount userAccount = this.userAccountRepository.findById(userAccountId).orElseThrow(UserNotFoundException::new);
 
@@ -67,6 +82,7 @@ public class UserProfileService {
             this.userTalkersHistoryService.saveDefaultUserTalkersHistory(userProfile);
         }
     }
+
 
     private void validateUserProfileData(UserProfile userProfile, UserAccount userAccount) throws InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         if (userProfile.getRelationshipStatus() == null) {
@@ -132,21 +148,6 @@ public class UserProfileService {
             modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorAge", e.getMessage());
         }
-    }
-
-
-    public UserProfile getUserProfileByAuthentication(Authentication authentication) {
-        UserAccount userAccount = null;
-
-        if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
-            String email = oauthToken.getPrincipal().getAttribute("email");
-            userAccount = this.userAccountRepository.findByEmail(email);
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            String username = authentication.getName();
-            userAccount = this.userAccountRepository.findByLogin(username);
-        }
-
-        return this.userProfileRepository.findByUserAccount(userAccount);
     }
 
 

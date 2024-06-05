@@ -8,6 +8,7 @@ import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepo
 import com.harmonylink.harmonylink.services.user.userprofile.exceptions.UserProfileDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Optional;
@@ -42,6 +43,7 @@ public class UserActivityStatusService {
         return null;
     }
 
+    @Transactional
     public void updateUserActivityStatusInDB(String userProfileId, UserActivityStatusEnum userActivityStatusEnum) throws UserProfileDoesntExistException {
         Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfileId);
 

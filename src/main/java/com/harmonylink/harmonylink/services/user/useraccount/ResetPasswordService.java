@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.harmonylink.harmonylink.utils.UserUtil.generateToken;
 import static com.harmonylink.harmonylink.utils.UserUtil.isPasswordValid;
 
-
 @Service
 public class ResetPasswordService {
 
