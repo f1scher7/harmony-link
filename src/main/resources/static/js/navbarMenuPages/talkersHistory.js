@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     let talkersHistoryList = JSON.parse(talkersHistoryData);
 
+    let indexForAnimation = 0;
+
     talkersHistoryList.forEach(function(userTalker) {
         let talkerDiv = $('<div class="d-flex w-75 p-3 mb-2 mx-auto border justify-content-between align-items-center"></div>');
         let rightPartDiv = $('<div class="d-flex"></div>')
@@ -27,6 +29,11 @@ $(document).ready(function () {
 
         rightPartDiv.append(localDateTime).append(infoIcon);
         talkerDiv.append(nickname).append(rightPartDiv);
+
+        talkerDiv.addClass('fadeIn');
+        talkerDiv.css('animation-delay', (indexForAnimation * 0.5) + 's');
+
+        indexForAnimation += 1;
 
         talkersHistoryMainDiv.append(talkerDiv);
     });
