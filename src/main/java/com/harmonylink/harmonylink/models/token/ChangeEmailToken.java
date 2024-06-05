@@ -19,7 +19,7 @@ public class ChangeEmailToken {
     @DBRef
     private UserAccount userAccount;
     @Field
-    @Indexed(expireAfterSeconds = 3600)
+    @Indexed(expireAfterSeconds = 300)
     private LocalDateTime localDateTime;
 
 
