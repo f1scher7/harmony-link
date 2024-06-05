@@ -31,6 +31,13 @@ body {
     box-shadow: 0 4px 8px 0 rgba(176, 180, 255, 0.5);
 }
 
+.bot-part-reset-password {
+    margin-top: 40%;
+    border-radius: 0 0 10px 10px;
+    background-color: #458ddc;
+    box-shadow: 0 4px 8px 0 rgba(176, 180, 255, 0.5);
+}
+
 .invalid-password {
     color: #dc3545;
 }
