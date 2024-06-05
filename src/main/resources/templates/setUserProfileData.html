@@ -25,7 +25,7 @@
                         <h5 class="w-50 text-center">Wypełnij nasz formularz filtrów, abyśmy mogli odnaleźć dla Ciebie idealnego rozmówce</h5>
                     </div>
 
-                    <div class="row mt-5" th:if="${googleId != null}">
+                    <div class="row mt-5">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
@@ -75,7 +75,7 @@
 
                             <div class="col-5 mx-3">
                                 <div class="form-floating d-flex flex-column">
-                                    <input type="number" class="form-control" id="height" name="height" th:value="${userProfile?.getHeight() ?: ''}" th:classappend="${errorHeight != null ? 'is-invalid' : ''}" placeholder="Wzrost" min="16" max="87" required>
+                                    <input type="number" class="form-control" id="height" name="height" th:value="${userProfile?.getHeight() ?: ''}" th:classappend="${errorHeight != null ? 'is-invalid' : ''}" placeholder="Wzrost" min="150" max="230" required>
                                     <label for="height" class="form-label">
                                         Wzrost <i class="fas fa-arrow-up"></i>
                                     </label>
