@@ -5,6 +5,13 @@
     <property name="LOGS_DIR" value="./logs" />
 
 
+    <appender name="ASYNC_USER_LOGIN_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="USER_LOGIN_LOGGER" />
+        <queueSize>5</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
     <appender name="USER_LOGIN_LOGGER" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/user-login.log</file>
         <encoder>
@@ -12,20 +19,47 @@
         </encoder>
     </appender>
 
-    <appender name="UPDATE_USER_DATA_LOGGER" class="ch.qos.logback.core.FileAppender">
-        <file>${LOGS_DIR}/user-update-data.log</file>
+
+    <appender name="USER_PROFILE_DATA_CHANGE_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/user-profile-data-change.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <appender name="ASYNC_USER_PROFILE_DATA_CHANGE_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="USER_PROFILE_DATA_CHANGE_LOGGER" />
+        <queueSize>5</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+
+    <appender name="ERRORS_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/errors.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_ERRORS_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERRORS_LOGGER" />
+        <queueSize>1</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
 
     <logger name="UserLogin" level="INFO">
-        <appender-ref ref="USER_LOGIN_LOGGER" />
+        <appender-ref ref="ASYNC_USER_LOGIN_LOGGER" />
     </logger>
 
-    <logger name="UserDataUpdate" level="INFO">
-        <appender-ref ref="UPDATE_USER_DATA_LOGGER" />
+    <logger name="UserProfileDataChange" level="INFO">
+        <appender-ref ref="ASYNC_USER_PROFILE_DATA_CHANGE_LOGGER" />
+    </logger>
+
+    <logger name="Errors" level="ERROR">
+        <appender-ref ref="ASYNC_ERRORS_LOGGER" />
     </logger>
 
 

@@ -1,4 +1,4 @@
-package com.harmonylink.harmonylink.listeners.commonlogin;
+package com.harmonylink.harmonylink.listeners.login;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -50,7 +49,7 @@ public class LoginSuccessListener {
                 this.userAccountRepository.save(userAccount);
             }
 
-            USER_LOGIN_LOGGER.info("User " + login + " logged in at " + LocalDateTime.now());
+            USER_LOGIN_LOGGER.info("User " + login + " logged in. IP: " + ip);
         }
     }
 
