@@ -11,7 +11,7 @@ public class LoginController {
     @GetMapping
     public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("loginError", "Nieprawidłowe dane do logowania");
+            model.addAttribute("loginError", "Podane dane logowania są nieprawidłowe lub konto zostało zablokowane");
         }
 
         return "authPages/login/login";
