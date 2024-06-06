@@ -8,4 +8,10 @@ $(document).ready(function () {
         $('#changeEmailModal').modal('show');
     }
 
+    $('#deleteAccountBtn').on('click', function () {
+        $('#deleteAccountModal').modal('show');
+    })
+
+
+
 })
