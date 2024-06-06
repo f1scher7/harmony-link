@@ -5,18 +5,18 @@
     <property name="LOGS_DIR" value="./logs" />
 
 
-    <appender name="ASYNC_USER_LOGIN_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="USER_LOGIN_LOGGER" />
-        <queueSize>5</queueSize>
-        <discardingThreshold>0</discardingThreshold>
-        <includeCallerData>false</includeCallerData>
-    </appender>
-
     <appender name="USER_LOGIN_LOGGER" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/user-login.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+    </appender>
+
+    <appender name="ASYNC_USER_LOGIN_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="USER_LOGIN_LOGGER" />
+        <queueSize>5</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
     </appender>
 
 
@@ -35,16 +35,31 @@
     </appender>
 
 
-    <appender name="ERRORS_LOGGER" class="ch.qos.logback.core.FileAppender">
-        <file>${LOGS_DIR}/errors.log</file>
+    <appender name="IN_CALL_PAIRS_DATA_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/incall-pairs-data.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="ASYNC_ERRORS_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="ERRORS_LOGGER" />
-        <queueSize>1</queueSize>
+    <appender name="ASYNC_IN_CALL_PAIRS_DATA_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="IN_CALL_PAIRS_DATA_LOGGER" />
+        <queueSize>5</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+
+    <appender name="INFO_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/info.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_INFO_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="INFO_LOGGER" />
+        <queueSize>100</queueSize>
         <discardingThreshold>0</discardingThreshold>
         <includeCallerData>false</includeCallerData>
     </appender>
@@ -58,15 +73,19 @@
         <appender-ref ref="ASYNC_USER_PROFILE_DATA_CHANGE_LOGGER" />
     </logger>
 
-    <logger name="Errors" level="ERROR">
-        <appender-ref ref="ASYNC_ERRORS_LOGGER" />
+    <logger name="InCallPairsData" level="INFO">
+        <appender-ref ref="ASYNC_IN_CALL_PAIRS_DATA_LOGGER" />
+    </logger>
+
+    <logger name="Info" level="INFO">
+        <appender-ref ref="ASYNC_INFO_LOGGER" />
     </logger>
 
 
     <root level="INFO">
+        <appender-ref ref="ASYNC_INFO_LOGGER" />
         <appender-ref ref="CONSOLE" />
     </root>
-
 
     <logger name="org.springframework.web" level="INFO"/>
 </configuration>
