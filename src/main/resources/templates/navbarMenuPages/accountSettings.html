@@ -143,8 +143,32 @@
                     </div>
 
                     <div class="col-12 d-flex justify-content-center mb-3 mt-5">
-                        <button class="btn btn-danger w-25 fw-bold py-2">Usuń konto</button>
+                        <button class="btn btn-danger w-25 fw-bold py-2" id="deleteAccountBtn">Usuń konto</button>
                     </div>
+
+                    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="deleteAccountLabel">Usunięcie konta</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger" role="alert">
+                                        <p>Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nie</button>
+                                        <form action="/delete-account" method="post">
+                                            <input type="hidden" name="userProfileNickname" th:value="${userProfileNickname}"/>
+                                            <button type="submit" class="btn btn-danger">Tak</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
