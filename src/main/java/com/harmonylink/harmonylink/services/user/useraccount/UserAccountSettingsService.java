@@ -106,4 +106,14 @@ public class UserAccountSettingsService {
         this.changeEmailTokenRepository.delete(changeEmailToken);
     }
 
+
+    public void deleteAccount(String userProfileNickname) {
+        UserAccount userAccount = userAccountRepository.findByLogin(userProfileNickname);
+
+        if (userAccount != null) {
+            userAccount.lockAccount();
+            this.userAccountRepository.save(userAccount);
+        }
+    }
+
 }
