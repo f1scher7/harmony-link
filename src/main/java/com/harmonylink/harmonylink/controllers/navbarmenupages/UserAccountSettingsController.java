@@ -125,4 +125,14 @@ public class UserAccountSettingsController {
         }
     }
 
+
+    @PostMapping("/delete-account")
+    public String deleteAccount(@RequestParam("userProfileNickname") String userProfileNickname, HttpServletRequest httpServletRequest) {
+        this.userAccountSettingsService.deleteAccount(userProfileNickname);
+
+        httpServletRequest.getSession().invalidate();
+
+        return "redirect:/auth/logout";
+    }
+
 }
