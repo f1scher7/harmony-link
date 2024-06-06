@@ -7,6 +7,8 @@ import com.harmonylink.harmonylink.services.realtime.WebRTCService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserInCallPairService;
 import com.harmonylink.harmonylink.services.user.useractivity.UserInSearchService;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class UserPairingService {
+
+    private final Logger IN_CALL_PAIRS_DATA_LOGGER = LoggerFactory.getLogger("InCallPairsData");
 
     private final UserInSearchService userInSearchService;
     private final UserInCallPairService userInCallPairService;
@@ -63,6 +67,7 @@ public class UserPairingService {
 
                     try {
                         this.webRTCService.initiateConnection(userSearchData1.getUserProfile());
+                        IN_CALL_PAIRS_DATA_LOGGER.info("Users {} and {} have been paired for a video chat.", userSearchData1.getUserProfile().getNickname(), userSearchData2.getUserProfile().getNickname());
                     } catch (JSONException | IOException e) {
                         this.userInCallPairService.removeUserCallPairData(userSearchData1.getUserProfile(), userSearchData2.getUserProfile());
                     }
