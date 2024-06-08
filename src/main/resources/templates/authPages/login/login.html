@@ -11,18 +11,14 @@
     <title>Logowanie | HarmonyLink</title>
 </head>
 <body class="bg-light-blue">
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="row">
-            <div class="col-md-1">
-
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center vh-100">
+            <div class="col-4 d-flex flex-column justify-content-center rightPanel">
+                <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="img-fluid w-75 mb-3" alt="Logo" oncontextmenu="return false;">
+                <h5 style="font-size: 1.3vw;">HarmonyLink, Bez Granic: Wideołącze to Nie Tylko Aplikacja - To Otwarte Okno do Nowych Światów, Nowych Przyjaźni i Nowych Możliwości</h5>
             </div>
 
-            <div class="col d-flex flex-column justify-content-center mx-auto rightPanel">
-                <img th:src="@{/img/logo/coloredLogoHarmonyLink.png}" class="mb-3 img-fluid w-75" alt="Logo" oncontextmenu="return false;">
-                <h5>HarmonyLink, Bez Granic: Wideołącze to Nie Tylko Aplikacja - To Otwarte Okno do Nowych Światów, Nowych Przyjaźni i Nowych Możliwości</h5>
-            </div>
-
-            <div class="col d-flex flex-column">
+            <div class="col-4 d-flex flex-column">
                 <div class="login-form bg-white p-4 mx-auto">
                     <form action="/auth/login" method="post" class="row g-3">
                         <h4 class="mb-3">Witaj ponownie!</h4>
@@ -32,14 +28,13 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="form-floating">
+                            <div class="form-floating mb-3">
                                 <input type="text" id="login" name="login" class="form-control" placeholder="Login lub Mail" required>
                                 <label for="login">Login lub Mail</label>
                             </div>
-                        </div>
-                        <div class="col-12">
+
                             <div class="input-group form-floating mb-3">
-                                <div class="form-floating flex-grow-1">
+                                <div class="form-floating">
                                     <input type="password" id="password" name="password" class="form-control password-input" placeholder="Hasło" required>
                                     <label for="password">Hasło</label>
                                 </div>
@@ -47,8 +42,7 @@
                                     <i id="togglePassword" class="bi bi-eye-slash" onclick="togglePasswordVisibility('password', 'togglePassword')"></i>
                                 </span>
                             </div>
-                        </div>
-                        <div class="col-12">
+
                             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Zaloguj się</button>
                         </div>
                     </form>
@@ -65,10 +59,6 @@
                         <p class="text-center mb-0"><a href="/auth/forgot-password" class="text-decoration-none">Nie pamiętasz hasła?</a></p>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-1">
-
             </div>
         </div>
     </div>
