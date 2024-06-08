@@ -2,14 +2,28 @@ body {
     background-color: aliceblue !important;
 }
 
-#carouselAuth {
-    margin-top: 4%;
+
+.col-8 {
+    display: grid !important;
+    align-items: center !important;
+    height: 100vh !important;
 }
+
+h5 {
+    font-size: 2.5vw !important;
+}
+
+h2 {
+    margin-top: 30% !important;
+    font-size: 2vw !important;
+}
+
 
 .carousel-item img {
     max-height: 550px;
     object-fit: cover;
 }
+
 
 .rightPanel {
     background-size: cover;
@@ -17,11 +31,14 @@ body {
     background-position: center;
 }
 
-@media (min-height: 700px) {
-    #carouselAuth {
-        margin-top: 6%;
-    }
+button {
+    width: 37%;
+    height:100%;
+    font-size: 1.1vw !important;
+}
 
+
+@media (min-height: 700px) {
     .carousel-item img {
         max-height: 550px;
         object-fit: cover;
@@ -29,12 +46,8 @@ body {
 }
 
 @media (min-height: 800px) {
-    #carouselAuth {
-        margin-top: 10%;
-    }
-
     .carousel-item img {
-        max-height: 650px;
+        max-height: 710px;
         object-fit: cover;
     }
 }

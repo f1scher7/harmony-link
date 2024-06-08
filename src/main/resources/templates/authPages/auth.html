@@ -15,7 +15,7 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-8">
                 <div id="carouselAuth" class="carousel slide" data-bs-ride="carousel" data-bs-pause="false" data-bs-interval="3000" >
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -49,16 +49,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 h-100 vh-100 rightPanel" style="background-image: url('/img/auth/authRightPanelBackground.jpg')">
+
+            <div class="col-4 h-100 vh-100 rightPanel" style="background-image: url('/img/auth/authRightPanelBackground.jpg')">
                 <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                    <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid w-50 ms-2 mt-3"  alt="HarmonyLink" oncontextmenu="return false;">
-                    <h2 class="text-white mb-3" style="margin-top: 110px;">Rozpocznij</h2>
+                    <img th:src="@{/img/logo/whiteLogoHarmonyLink.png}" class="img-fluid ms-2 mt-3" alt="HarmonyLink" style="width: 65%;" oncontextmenu="return false;">
+                    <h2 class="text-white mb-3">Rozpocznij</h2>
                     <div class="d-flex flex-row w-100 justify-content-center align-items-center mb-3">
-                        <button class="btn btn-primary mx-1 fw-bold" style="height: 45px; width: 40%;" onclick="location.href='/auth/login'">Zaloguj się</button>
-                        <button class="btn btn-light mx-1 fw-bold" style="height: 45px; width: 40%;" onclick="location.href='/auth/registration'">Zarejestruj się</button>
+                        <button class="btn btn-primary mx-1 py-2" onclick="location.href='/auth/login'">Zaloguj się</button>
+                        <button class="btn btn-light mx-1 py-2" onclick="location.href='/auth/registration'">Zarejestruj się</button>
                     </div>
-                    <img th:src="@{/img/logo/coloredLogoFischer.png}" class="img-fluid w-25 mt-6" alt="Fischer" style="margin-top: 250px;" oncontextmenu="return false;">
-                    <p class="text-white" style="margin-top: 10px;">2024</p>
+                    <img th:src="@{/img/logo/coloredLogoFischer.png}" class="img-fluid w-25 mt-6" alt="Fischer" style="margin-top: 50%;" oncontextmenu="return false;">
+                    <p class="text-white" style="margin-top: 10px; font-size: 1vw; ">2024</p>
                 </div>
             </div>
         </div>
