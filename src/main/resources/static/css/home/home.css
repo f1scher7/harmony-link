@@ -21,7 +21,7 @@ body {
 }
 
 .nav-link {
-    font-size: 1.15rem !important;
+    font-size: 1.2vw !important;
     color: white !important;
 }
 
@@ -36,6 +36,10 @@ body {
 
 .main-container {
     margin: auto !important;
+}
+
+h5:not(.modal-title) {
+    font-size: 1.3vw !important;
 }
 
 .remote-user-camera {
@@ -96,6 +100,10 @@ select:focus {
     border-color: #59a5fc !important;
     box-shadow: none !important;
     outline: none !important;
+}
+
+.terms-short-desc {
+    font-size: 1.1vw;
 }
 
 

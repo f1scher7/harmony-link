@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="/css/home.css" rel="stylesheet"/>
+    <link href="/css/home/home.css" rel="stylesheet"/>
+    <link href="/css/home/chat.css" rel="stylesheet"/>
     <link href="/css/setUserProfileData.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -53,11 +54,11 @@
                         </div>
                         <div class="col-12 statistics-data d-flex justify-content-center mt-5 mb-5">
                             <div class="d-inline-block">
-                                <h5 class="font-weight-bold" id="users-online">
+                                <h5 class="font-weight-bold" id="users-online" style="font-size: 1.3vw !important;">
                                 </h5>
-                                <h5 class="font-weight-bold" id="users-in-search">
+                                <h5 class="font-weight-bold" id="users-in-search" style="font-size: 1.3vw !important;">
                                 </h5>
-                                <h5 class="font-weight-bold" id="users-in-call">
+                                <h5 class="font-weight-bold" id="users-in-call" style="font-size: 1.3vw !important;">
                                 </h5>
                             </div>
                         </div>
@@ -66,7 +67,7 @@
                         <div class="w-100 d-flex justify-content-center mt-5">
                             <div class="text-center w-25">
                                 <img th:src="@{/img/logo/blueLogoFischer.png}" class="img-fluid w-75" alt="" oncontextmenu="return false;">
-                                <h6 class="text-center mt-2">2024</h6>
+                                <h6 class="text-center mt-2" style="font-size: 0.9vw !important;">2024</h6>
                             </div>
                         </div>
                     </div>
@@ -79,7 +80,7 @@
                     <video id="local-camera" class="w-100 h-100 embed-responsive-item user-camera" autoplay playsinline></video>
                     <audio id="local-audio" autoplay></audio>
 
-                    <div id="camera-error" class="alert alert-danger d-none w-75" role="alert" style="margin-bottom: 90px;">
+                    <div id="camera-error" class="alert alert-danger d-none w-75" role="alert" style="margin-bottom: 90px; font-size: 1.1vw !important;" >
                         Błąd podczas uzyskiwania dostępu do kamery i mikrofonu.
                         Prosimy zezwolić na dostęp do kamery i mikrofonu w przeglądarce.
                     </div>
@@ -89,15 +90,15 @@
 
         <div class="row mx-auto mt-3 w-100">
             <div class="col-md-6 d-flex flex-row align-items-center justify-content-center ps-0">
-                <button type="button" id="start-btn" class="btn btn-success w-100 h-100 fw-bold">
+                <button type="button" id="start-btn" class="btn btn-success w-100 h-100 fw-bold" style="font-size: 1.1vw;">
                     <i class="fas fa-play"></i> Start
                 </button>
 
-                <button type="button" id="stop-btn" class="btn btn-danger w-100 h-100 mx-3 disabled fw-bold">
+                <button type="button" id="stop-btn" class="btn btn-danger w-100 h-100 mx-3 disabled fw-bold" style="font-size: 1.1vw;">
                     <i class="fas fa-stop"></i> Stop
                 </button>
 
-                <button type="button" id="filters-btn" class="btn btn-primary w-100 h-100 fw-bold" data-bs-toggle="modal" data-bs-target="#preferencesModal">
+                <button type="button" id="filters-btn" class="btn btn-primary w-100 h-100 fw-bold" data-bs-toggle="modal" data-bs-target="#preferencesModal" style="font-size: 1.1vw;">
                     <i class="fas fa-sliders-h"></i> Filtry
                 </button>
 
@@ -226,7 +227,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer w-100 d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary send-preferences w-50 fw-bold">Zapisz preferencje</button>
+                                <button type="button" class="btn btn-primary send-preferences w-50">Zapisz preferencje</button>
                             </div>
                         </div>
                     </div>
@@ -287,19 +288,24 @@
                 </div>
             </div>
 
-            <div class="col-md-6 pe-0">
-                <div class="w-100">
-                    <h6 class="text ms-2">
+            <div class="col-6 pe-0" style="height: 16vh !important;">
+                <div class="terms-short-desc-div w-100 d-none">
+                    <h6 class="terms-short-desc h-100 ms-1">
                         Klikając "Start", akceptujesz <a class="text-decoration-none" href="/terms-of-service">regulamin</a> i potwierdzasz, że masz ukończone 16 lat.
                         Nieprzestrzeganie zasad może skutkować blokadą. Upewnij się,
                         że Twoja twarz jest wyraźnie widoczna w obszarze kamery.
                     </h6>
                 </div>
-                <div class="input-group w-100">
-                    <input type="text" class="form-control" placeholder="Wpisz wiadomość i naciśnij Enter" aria-describedby="basic-addon2">
-                    <span class="input-group-text">
-                        <i class="far fa-smile-wink	" aria-hidden="true"></i>
-                    </span>
+
+                <div class="chat-div w-100">
+                    <div class="row">
+                        <div class="col-12 chat-col">
+                            asd
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-div w-100">
+                    <input type="text" class="form-control chat-input h-100" placeholder="Wpisz wiadomość i naciśnij Enter" aria-describedby="basic-addon2" style="border-radius: 0 0 7px 7px !important; font-size: 1.1vw;">
                 </div>
             </div>
         </div>
