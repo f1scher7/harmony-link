@@ -25,7 +25,7 @@ body {
 }
 
 .nav-link {
-    font-size: 1.15rem !important;
+    font-size: 1.2vw !important;
     color: white !important;
 }
 
@@ -35,7 +35,7 @@ body {
 }
 
 .account-settings-link {
-    font-size: 1.15rem !important;
+    font-size: 1.2vw !important;
     color: dodgerblue !important;
 }
 
