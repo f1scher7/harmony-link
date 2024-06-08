@@ -9,6 +9,19 @@ body {
 
 }
 
+h3 {
+    font-size: 1.5vw !important;
+}
+
+h4 {
+    font-size: 1.2vw !important;
+}
+
+p {
+    font-size: 0.9vw !important;
+}
+
+
 .bot-part {
     margin-top: 5%;
     border-radius: 0 0 7px 7px;
