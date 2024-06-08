@@ -10,21 +10,21 @@ $(document).ready(function () {
         let talkerDiv = $('<div class="d-flex w-75 p-3 mb-2 mx-auto border justify-content-between align-items-center"></div>');
         let rightPartDiv = $('<div class="d-flex"></div>')
 
-        let nickname = $('<h6 class="mb-0 text-white"></h6>').text(userTalker.nickname);
+        let nickname = $('<h6 class="mb-0 text-white" style="font-size: 1.1vw;"></h6>').text(userTalker.nickname);
 
         let parts = userTalker.localDateTime.split('T');
         let datePart = parts[0].split("-");
         let timePart = parts[1].split('.')[0];
 
         let formattedDateTime = timePart + ' ' + datePart[2] + "-" + datePart[1] + "-" + datePart[0];
-        let localDateTime = $('<p class="text-white mb-0"></p>').text(formattedDateTime);
+        let localDateTime = $('<p class="text-white mb-0" style="font-size: 1.1vw;"></p>').text(formattedDateTime);
 
         let hobbiesString = userTalker.hobby.join(', ');
 
         let infoIcon = $('<i class="fas fa-info-circle ms-3" data-toggle="modal" data-target="talkerDataModal" data-nickname="' + userTalker.nickname + '"  data-city="' + userTalker.city + '" data-age="' + userTalker.age + '" data-sex="' + userTalker.sex + '" data-relationship-status="' + userTalker.relationshipStatus + '" data-hobby="' + hobbiesString + '" data-study="' + userTalker.study + '"></i>').css({
             'cursor': 'pointer',
             'color': 'white',
-            'font-size': '20px'
+            'font-size': '1.1vw'
         });
 
         rightPartDiv.append(localDateTime).append(infoIcon);

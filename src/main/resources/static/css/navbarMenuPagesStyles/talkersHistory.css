@@ -24,7 +24,7 @@ body {
 }
 
 .nav-link {
-    font-size: 1.15rem !important;
+    font-size: 1.2vw !important;
     color: white !important;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 .talkers-history-link {
-    font-size: 1.15rem !important;
+    font-size: 1.2vw !important;
     color: dodgerblue !important;
 }
 
@@ -49,6 +49,10 @@ body {
 
 .main-container {
     margin: auto !important;
+}
+
+h4 {
+    font-size: 1.6vw !important;
 }
 
 .talkers-history-main-div {
