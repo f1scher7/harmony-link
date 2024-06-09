@@ -2,6 +2,7 @@ package com.harmonylink.harmonylink.handlers.websocket;
 
 import com.harmonylink.harmonylink.constants.WebsocketConstants;
 import com.harmonylink.harmonylink.enums.UserActivityStatusEnum;
+import com.harmonylink.harmonylink.services.realtime.ChatService;
 import com.harmonylink.harmonylink.services.realtime.WebSocketService;
 import com.harmonylink.harmonylink.services.user.UserTalkersHistoryService;
 import com.harmonylink.harmonylink.services.user.useractivity.*;
@@ -21,11 +22,12 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
     private final UserInCallPairService userInCallPairService;
     private final WebSocketService webSocketService;
     private final WebRTCService webRTCService;
+    private final ChatService chatService;
     private final UserTalkersHistoryService userTalkersHistoryService;
 
 
     @Autowired
-    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, UserTalkersHistoryService userTalkersHistoryService) {
+    public HarmonyWebSocketHandler(UserActivityStatusService userActivityStatusService, UserWebSocketSessionService userWebSocketSessionService, UserTabsControlService userTabsControlService, UserInSearchService userInSearchService, UserInCallPairService userInCallPairService, WebSocketService webSocketService, WebRTCService webRTCService, ChatService chatService, UserTalkersHistoryService userTalkersHistoryService) {
         this.userActivityStatusService = userActivityStatusService;
         this.userWebSocketSessionService = userWebSocketSessionService;
         this.userTabsControlService = userTabsControlService;
@@ -33,6 +35,7 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
         this.userInCallPairService = userInCallPairService;
         this.webSocketService = webSocketService;
         this.webRTCService = webRTCService;
+        this.chatService = chatService;
         this.userTalkersHistoryService = userTalkersHistoryService;
     }
 
@@ -49,7 +52,9 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
 
         if ("USER_PROFILE_ID".equals(jsonMessage.getString("type"))) {
             String userProfileId = jsonMessage.getString("userProfileId");
+
             session.getAttributes().put("userProfileId", userProfileId);
+            session.getAttributes().put("showHarmonyInfoModal", "true");
 
             this.userTabsControlService.incrementTabsCounter(userProfileId);
             this.userWebSocketSessionService.addWebSocketSession(userProfileId, session);
@@ -97,6 +102,14 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             String userProfileId = jsonMessage.getString("userProfileId");
 
             this.webRTCService.getTalkerNickname(userProfileId, session);
+        }
+
+        if ("SEND_TEXT_MESS_TO_SERVER".equals(jsonMessage.getString("type"))) {
+            String userProfileId = jsonMessage.getString("from");
+            String talkerNickname = jsonMessage.getString("to");
+            String mess = jsonMessage.getString("mess");
+
+            this.chatService.sendMessToTalker(mess, talkerNickname, userProfileId);
         }
 
         if ("STOP_WEBRTC_CONN".equals(jsonMessage.getString("type"))) {
