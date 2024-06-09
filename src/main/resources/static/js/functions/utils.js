@@ -89,3 +89,15 @@ export function setDefaultInfoDiv(hlLogoInInfoDiv, statisticDataDiv, startBtn, s
     startBtn.removeClass('disabled');
     filtersBtn.removeClass('disabled');
 }
+
+export function displayReceivedMess(chatCol, chatDiv, mess) {
+    chatCol.append(`
+        <div class="w-100 clearfix">
+            <div class="receivedMess text-break float-start w-auto px-2 mt-1 ms-1 ">`
+                +  mess +
+            `</div>
+        </div>
+    `)
+
+    chatDiv.scrollTop(chatDiv[0].scrollHeight);
+}
