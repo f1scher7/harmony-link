@@ -54,7 +54,6 @@ public class HarmonyWebSocketHandler implements WebSocketHandler {
             String userProfileId = jsonMessage.getString("userProfileId");
 
             session.getAttributes().put("userProfileId", userProfileId);
-            session.getAttributes().put("showHarmonyInfoModal", "true");
 
             this.userTabsControlService.incrementTabsCounter(userProfileId);
             this.userWebSocketSessionService.addWebSocketSession(userProfileId, session);

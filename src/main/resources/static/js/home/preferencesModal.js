@@ -85,7 +85,6 @@ $(document).ready(function () {
     })
 
     searchHobbies(addedHobbies);
-    console.log(addedHobbies);
 
     $('#cities').on('input', function() {
         let prefix = $(this).val();
