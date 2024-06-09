@@ -50,6 +50,21 @@
     </appender>
 
 
+    <appender name="MESSAGES_LOGGER" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_DIR}/messages.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_MESSAGES_LOGGER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="MESSAGES_LOGGER" />
+        <queueSize>10</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+
     <appender name="INFO_LOGGER" class="ch.qos.logback.core.FileAppender">
         <file>${LOGS_DIR}/info.log</file>
         <encoder>
@@ -75,6 +90,10 @@
 
     <logger name="InCallPairsData" level="INFO">
         <appender-ref ref="ASYNC_IN_CALL_PAIRS_DATA_LOGGER" />
+    </logger>
+
+    <logger name="Messages" level="INFO">
+        <appender-ref ref="ASYNC_MESSAGES_LOGGER" />
     </logger>
 
     <logger name="Info" level="INFO">
