@@ -1,12 +1,11 @@
-import { adjustMainContainer, checkCameraStatus, fetchUsersActivityStatus } from '../functions/utils.js';
-
 import {
-    sendUserIdByWebsocket,
-    sendHeartbeatByWebsocket,
-    sendGetTalkerNickname,
-    sendStopWebRTCConn
-} from '../functions/websocketFuncs.js';
+    adjustMainContainer,
+    checkCameraStatus,
+    displayReceivedMess,
+    fetchUsersActivityStatus
+} from '../functions/utils.js';
 
+import { sendUserIdByWebsocket, sendHeartbeatByWebsocket, sendStopWebRTCConn } from '../functions/websocketFuncs.js';
 import { initiateOffer, handleVideoOfferMsg, handleVideoAnswerMsg, handleNewICECandidateMsg } from "../functions/webrtcFuncs.js";
 
 
@@ -18,11 +17,24 @@ $(document).ready(function () {
         sessionStorage.removeItem('showWebRTCConnectionErrorModal');
     }
 
+    if (showHarmonyInfoModal === 'true') {
+        $('#harmonyInfoModal').modal('show');
+
+    }
+
+    showHarmonyInfoModal = 'false';
+
+
     $(window).on('load resize', adjustMainContainer);
+
 
     window.userProfileId = $('#user-profile-id').text();
 
+
     let heartbeatResponseCount = 0;
+
+    let chatCol = $('.chat-col');
+    let chatDiv = $('.chat-div');
 
 
     const wsUri = "wss://192.168.0.102:8443/harmony-websocket-handler";
@@ -73,7 +85,11 @@ $(document).ready(function () {
                 handleNewICECandidateMsg(message);
                 break;
             case 'TALKER_NICKNAME':
-                $('#disconnectModalLabel').text(message.nickname + " zakończył/a spotkanie");
+                window.talkerNickname = message.nickname;
+                $('#disconnectModalLabel').text(window.talkerNickname + " zakończył/a spotkanie");
+                break;
+            case 'SEND_MESSAGE_FOR_RECIPIENT':
+                displayReceivedMess(chatCol, chatDiv, message.mess);
                 break;
         }
     }
@@ -92,7 +108,6 @@ $(document).ready(function () {
         if (window.websocket && window.localPeerConnection.connectionState === 'new') {
             window.websocket.close();
         } else if (window.websocket.readyState === WebSocket.OPEN && window.localPeerConnection.connectionState === 'connected') {
-            sendGetTalkerNickname(window.websocket);
             sendStopWebRTCConn(window.websocket);
         }
     })
