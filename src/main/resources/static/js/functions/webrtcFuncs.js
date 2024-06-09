@@ -1,5 +1,5 @@
 import { fetchUsersActivityStatus, setDefaultInfoDiv, setMainInfoDivAfterCall } from "./utils.js";
-import { sendWebRTCConnectionError } from "./websocketFuncs.js";
+import {sendGetTalkerNickname, sendTextMess, sendWebRTCConnectionError} from "./websocketFuncs.js";
 
 let mainInfoDiv = $('.main-info-div');
 
@@ -59,15 +59,49 @@ export function createPeerConnection(hlLogoInInfoDiv, statisticDataDiv, startBtn
     }
 
     window.localPeerConnection.onconnectionstatechange = function (event) {
-        console.log(window.localPeerConnection.connectionState);
+        let chatDiv = $('.chat-div');
+        let termsDiv = $('.terms-short-desc-div');
+
         switch (window.localPeerConnection.connectionState) {
             case 'connected':
+                sendGetTalkerNickname(window.websocket);
+
+                termsDiv.addClass('d-none');
+                chatDiv.removeClass('d-none');
+
+                $('.chat-input').keypress(function(e) {
+                    if (e.which === 13 && window.localPeerConnection.connectionState === 'connected') {
+                        let sendMess =  $(this).val().trim();
+
+                        if (sendMess !== '') {
+                            $('.chat-col').append(`
+                                <div class="w-100 clearfix">
+                                    <div class="sendMess text-break float-end w-auto px-2 mt-1 me-1">`
+                                        + "Ty: " +  sendMess +
+                                    `</div>
+                                </div>
+                            `)
+
+                            sendTextMess(window.websocket, sendMess, window.talkerNickname, window.userProfileId);
+
+                            $(this).val('');
+                            chatDiv.scrollTop(chatDiv[0].scrollHeight);
+                        }
+
+                        return false;
+                    }
+                })
                 break;
             case 'connecting':
                 break
 
             case 'disconnected':
             case "failed":
+                chatDiv.addClass('d-none');
+                termsDiv.removeClass('d-none');
+
+                $('.chat-col .w-100.clearfix').remove();
+
                 $('#disconnectModal').modal('show');
 
                 window.localPeerConnection.close();
