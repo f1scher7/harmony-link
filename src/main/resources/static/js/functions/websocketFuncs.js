@@ -52,3 +52,11 @@ export function sendGetTalkerNickname(websocket) {
         console.error("WebSocket is not connected");
     }
 }
+
+export function sendTextMess(websocket, mess, to, from) {
+    if (websocket && (websocket.readyState === WebSocket.OPEN || websocket.readyState === WebSocket.CLOSING)) {
+        websocket.send(JSON.stringify({ type: 'SEND_TEXT_MESS_TO_SERVER', mess: mess, to: to, from: from }));
+    } else {
+        console.error("WebSocket is not connected");
+    }
+}
