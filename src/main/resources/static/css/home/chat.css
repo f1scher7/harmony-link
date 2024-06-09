@@ -1,0 +1,50 @@
+.terms-short-desc-div {
+    height: 70%;
+}
+
+.chat-div {
+    min-height: 70%;
+    max-height: 70%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: white;
+    border-radius: 7px 7px 0 0;
+    box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
+}
+
+.chat-input-div {
+    height: 30%;
+}
+
+.chat-input {
+    padding-left: 10px;
+    font-size: 1vw;
+    border: none;
+    border-top: 1px solid #e1dfdf;
+    box-shadow: 0 2px 8px 0 rgb(191, 193, 253);
+    border-radius: 0 0 4px 4px;
+}
+
+.chat-input:focus {
+    outline: none;
+    border: none !important;
+    border-top: 1px solid #e1dfdf !important;
+    box-shadow: 0 2px 8px 0 rgb(191, 193, 253) !important;
+    border-radius: 0 0 6px 6px !important;
+}
+
+.sendMess {
+    background-color: royalblue;
+    color: white;
+    font-size: 1vw;
+    border-radius: 7px;
+    max-width: 45%;
+}
+
+.receivedMess {
+    background-color: #b102e1;
+    color: white;
+    font-size: 1vw;
+    border-radius: 7px;
+    max-width: 45%;
+}
