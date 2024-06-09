@@ -1,5 +1,5 @@
 import { fetchUsersActivityStatus, setDefaultInfoDiv, setMainInfoDivAfterCall } from "../functions/utils.js";
-import { sendGetTalkerNickname, sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "../functions/websocketFuncs.js";
+import { sendInSearchStatusByWebsocket, sendStopSearchingByWebsocket, sendStopWebRTCConn } from "../functions/websocketFuncs.js";
 import { createPeerConnection } from "../functions/webrtcFuncs.js";
 
 $(document).ready(function () {
@@ -29,10 +29,10 @@ $(document).ready(function () {
         statisticDataDiv.html(`
             <div class="d-flex flex-column justify-content-center">
                 <div class="text-center w-100">
-                    <h5 class="font-weight-bold mt-4 text-center">Wyszukujemy idealnego rozmówcy dla Ciebie...</h5>
+                    <h5 class="font-weight-bold mt-4 text-center" style="font-size: 1.3vw !important;">Wyszukujemy idealnego rozmówcy dla Ciebie...</h5>
                 </div>
                 <div class="w-50 text-center mx-auto mt-2 mb-3">
-                    <img src="/img/logo/blueLinkLogoWithoutBg.png" class="w-25 searching-animation" alt="" oncontextmenu="return false;">
+                    <img src="/img/logo/blueLinkLogoWithoutBg.png" class="img-fluid w-25 searching-animation" alt="" oncontextmenu="return false;">
                 </div>
             </div>
         `);
@@ -50,7 +50,10 @@ $(document).ready(function () {
                 sendStopSearchingByWebsocket(window.websocket)
                 break;
             case "connected":
-                sendGetTalkerNickname(window.websocket);
+                $('.chat-div').addClass('d-none');
+                $('.terms-short-desc-div').removeClass('d-none');
+                $('.chat-col .w-100.clearfix').remove();
+
                 sendStopWebRTCConn(window.websocket);
 
                 window.localPeerConnection.close();
