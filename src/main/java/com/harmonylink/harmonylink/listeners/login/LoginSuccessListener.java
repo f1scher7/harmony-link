@@ -2,6 +2,7 @@ package com.harmonylink.harmonylink.listeners.login;
 
 import com.harmonylink.harmonylink.models.user.UserAccount;
 import com.harmonylink.harmonylink.repositories.user.UserAccountRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
@@ -49,6 +52,9 @@ public class LoginSuccessListener {
                 userAccount.addIpAddress(ip);
                 this.userAccountRepository.save(userAccount);
             }
+
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            request.getSession().setAttribute("showHarmonyInfoModal", "true");
 
             USER_LOGIN_LOGGER.info("User " + login + " logged in. IP: " + ip);
         }

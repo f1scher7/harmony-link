@@ -6,6 +6,8 @@ import com.harmonylink.harmonylink.repositories.user.CustomMatchesRepository;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -60,7 +62,7 @@ public class HomeController {
 
 
     @GetMapping
-    public String showHomePage(Model model, Authentication authentication) {
+    public String showHomePage(Model model, Authentication authentication, HttpServletRequest request) {
 
         UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
 
@@ -75,6 +77,12 @@ public class HomeController {
         model.addAttribute("cities", userPreferencesFilter.getCities());
         model.addAttribute("hobbies", hobbies);
         model.addAttribute("studies", userPreferencesFilter.getFieldsOfStudy());
+
+        HttpSession session = request.getSession();
+        if ("true".equals(session.getAttribute("showHarmonyInfoModal"))) {
+            model.addAttribute("showHarmonyInfoModal", "true");
+            session.removeAttribute("showHarmonyInfoModal");
+        }
 
         return "home";
     }
