@@ -41,8 +41,6 @@ public class HeartBeatService {
     @Async
     @Scheduled(fixedDelay = 5000)
     public void sendHeartBeatRequestToAllSessions() {
-        displaySessionInfo();
-
         this.userWebSocketSessionService.getAllWebSocketSessions().stream()
                 .filter(WebSocketSession::isOpen)
                 .forEach(this::sendAsyncHeartRequest);
