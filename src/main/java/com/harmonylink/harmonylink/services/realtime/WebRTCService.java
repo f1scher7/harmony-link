@@ -34,8 +34,10 @@ public class WebRTCService {
     public void initiateConnection(UserProfile userProfile1) throws JSONException, IOException {
         WebSocketSession user1Session = this.userWebSocketSessionService.getWebSocketSession(userProfile1.getId());
 
-        synchronized (user1Session) {
-            user1Session.sendMessage(new TextMessage(WebRTCConstants.INITIATE_OFFER_JSON));
+        if (user1Session != null) {
+            synchronized (user1Session) {
+                user1Session.sendMessage(new TextMessage(WebRTCConstants.INITIATE_OFFER_JSON));
+            }
         }
     }
 
@@ -93,6 +95,20 @@ public class WebRTCService {
     }
 
 
+    @Async
+    public void getTalkerNickname(String userProfileId, WebSocketSession session) throws IOException {
+        String nickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
+        String talkerNickname = nickname != null ? nickname : "error";
+
+        WebSocketSession talkerSession = findPeerSession(session);
+        if (talkerSession != null) {
+            synchronized (talkerSession) {
+                talkerSession.sendMessage(new TextMessage(String.format(WebsocketConstants.TALKER_NICKNAME_JSON, talkerNickname)));
+            }
+        }
+    }
+
+
     public WebSocketSession findPeerSession(WebSocketSession session) {
         String currentUserProfileId = (String) session.getAttributes().get("userProfileId");
 
@@ -115,17 +131,6 @@ public class WebRTCService {
                 .orElse(null);
 
         return CompletableFuture.completedFuture(peerUserProfileId);
-    }
-
-    @Async
-    public void getTalkerNickname(String userProfileId, WebSocketSession session) throws IOException {
-        String nickname = this.userInCallPairService.getUserProfileByUserProfileId(userProfileId).getNickname();
-        String talkerNickname = nickname != null ? nickname : "error";
-
-        WebSocketSession talkerSession = findPeerSession(session);
-        if (talkerSession != null) {
-            talkerSession.sendMessage(new TextMessage(String.format(WebsocketConstants.TALKER_NICKNAME_JSON, talkerNickname)));
-        }
     }
 
 }
