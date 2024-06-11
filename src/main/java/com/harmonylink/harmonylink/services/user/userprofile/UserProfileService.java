@@ -68,12 +68,18 @@ public class UserProfileService {
     public void setOrUpdateUserProfileData(UserProfile userProfile, String userAccountId) throws UserNotFoundException, InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         UserAccount userAccount = this.userAccountRepository.findById(userAccountId).orElseThrow(UserNotFoundException::new);
 
-        Optional<UserProfile> userProfileOptional = this.userProfileRepository.findById(userProfile.getId());
+        UserProfile userProfileOptional = this.userProfileRepository.findByUserAccount(userAccount);
 
         validateUserProfileData(userProfile, userAccount);
 
-        if (userProfileOptional.isPresent()) {
-            this.userProfileRepository.save(userProfile);
+        if (userProfileOptional != null) {
+            userProfileOptional.setAge(userProfile.getAge());
+            userProfileOptional.setCity(userProfile.getCity());
+            userProfileOptional.setRelationshipStatus(userProfile.getRelationshipStatus());
+            userProfileOptional.setFieldOfStudy(userProfile.getFieldOfStudy());
+            userProfileOptional.setHobbyIds(userProfile.getHobbyIds());
+
+            this.userProfileRepository.save(userProfileOptional);
         } else {
             userProfile.setUserAccount(userAccount);
 
@@ -107,7 +113,11 @@ public class UserProfileService {
 
         if (userAccount.getGoogleId() == null) {
             userProfile.setNickname(userAccount.getLogin());
-            userProfile.setAge(getUserAge(userAccount.getBirthdate()));
+
+            if (this.userProfileRepository.findByUserAccount(userAccount) == null) {
+                userProfile.setAge(getUserAge(userAccount.getBirthdate()));
+            }
+
             userProfile.setSex(userAccount.getSex());
         } else {
             if (userProfile.getAge() < 16) {
@@ -119,7 +129,6 @@ public class UserProfileService {
     }
 
     public void processUserProfileFromForm(ModelAndView modelAndView, UserProfile userProfile, UserAccount userAccount, String redirectPage, String errorPage) {
-        modelAndView.addObject("userProfile", userProfile);
         modelAndView.addObject("sex", userProfile.getSex());
         modelAndView.addObject("relationshipStatus", userProfile.getRelationshipStatus());
         modelAndView.addObject("hobbies", getHobbies(userProfile.getHobbyIds()));
