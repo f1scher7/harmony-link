@@ -18,6 +18,4 @@ public interface UserAccountRepository extends MongoRepository<UserAccount, Stri
 
     List<UserAccount> findAllByRole(Role role);
 
-    void deleteUserAccountByLogin(String login);
-
 }
