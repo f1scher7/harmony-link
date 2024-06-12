@@ -1,7 +1,9 @@
 FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /HarmonyLink
+
 COPY pom.xml .
 COPY src ./src
+COPY src/main/resources/harmonykeystore.p12 harmonykeystore.p12
 
 ARG HARMONY_DB_LOGIN
 ARG HARMONY_DB_PASSWORD
@@ -28,5 +30,5 @@ COPY .env .env
 COPY --from=build /HarmonyLink/src/main/resources ./resources
 COPY --from=build /HarmonyLink/logs ./logs
 
-EXPOSE 8080
+EXPOSE 8443
 CMD ["java", "-jar", "harmonylink.jar"]
