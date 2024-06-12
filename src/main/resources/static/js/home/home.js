@@ -17,7 +17,7 @@ $(document).ready(function () {
         sessionStorage.removeItem('showWebRTCConnectionErrorModal');
     }
 
-    if (showHarmonyInfoModal === 'true') {
+    if (showHarmonyInfoModal !== null && showHarmonyInfoModal.toString() === 'true') {
         $('#harmonyInfoModal').modal('show');
 
     }
@@ -37,7 +37,7 @@ $(document).ready(function () {
     let chatDiv = $('.chat-div');
 
 
-    const wsUri = "wss://192.168.0.102:8443/harmony-websocket-handler";
+    const wsUri = "wss://harmonylink.site/harmony-websocket-handler";
     window.websocket = new WebSocket(wsUri);
 
     window.websocket.onopen = function (event) {
@@ -47,8 +47,6 @@ $(document).ready(function () {
     }
 
     window.websocket.onmessage = function (event) {
-        console.log("Received message: " + event.data);
-
         const message = JSON.parse(event.data);
 
         if (message.type === 'HEARTBEAT_RESPONSE') {
