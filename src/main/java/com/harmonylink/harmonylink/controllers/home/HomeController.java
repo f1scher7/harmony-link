@@ -6,6 +6,7 @@ import com.harmonylink.harmonylink.repositories.user.CustomMatchesRepository;
 import com.harmonylink.harmonylink.repositories.user.UserPreferencesFilterRepository;
 import com.harmonylink.harmonylink.services.user.useractivity.UserWebSocketSessionService;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
+import com.harmonylink.harmonylink.services.user.userprofile.exceptions.InvalidUserHobbiesExceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class HomeController {
 
 
     @GetMapping
-    public String showHomePage(Model model, Authentication authentication, HttpServletRequest request) {
+    public String showHomePage(Model model, Authentication authentication, HttpServletRequest request) throws InvalidUserHobbiesExceptions {
 
         UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
 
