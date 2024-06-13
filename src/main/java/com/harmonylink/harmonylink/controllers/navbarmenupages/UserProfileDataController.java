@@ -39,7 +39,7 @@ public class UserProfileDataController {
 
 
     @GetMapping("/user-profile-data")
-    public String getUserProfileDataPage(Model model, @ModelAttribute("displaySuccessModal") String displaySuccessModal, Authentication authentication) {
+    public String getUserProfileDataPage(Model model, @ModelAttribute("displaySuccessModal") String displaySuccessModal, Authentication authentication) throws InvalidUserHobbiesExceptions {
         UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
         List<String> hobbies = this.userProfileService.getHobbies(userProfile.getHobbyIds());
 

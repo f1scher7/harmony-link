@@ -110,7 +110,6 @@ public class SetUserProfileController {
             UserAccount userAccount = this.userAccountRepository.findByLogin(login);
 
             modelAndView.addObject("userProfile", userProfile);
-
             this.userProfileService.processUserProfileFromForm(modelAndView, userProfile, userAccount, "", "setUserProfileData");
         }
 

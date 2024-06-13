@@ -8,6 +8,7 @@ import com.harmonylink.harmonylink.models.user.userprofile.UserProfile;
 import com.harmonylink.harmonylink.repositories.user.UserTalkersHistoryRepository;
 import com.harmonylink.harmonylink.repositories.user.userprofile.UserProfileRepository;
 import com.harmonylink.harmonylink.services.user.userprofile.UserProfileService;
+import com.harmonylink.harmonylink.services.user.userprofile.exceptions.InvalidUserHobbiesExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class TalkersHistoryController {
 
 
     @GetMapping("/talkers-history")
-    public String getTalkersHistoryPage(Model model, Authentication authentication) throws JsonProcessingException {
+    public String getTalkersHistoryPage(Model model, Authentication authentication) throws JsonProcessingException, InvalidUserHobbiesExceptions {
         UserProfile userProfile = this.userProfileService.getUserProfileByAuthentication(authentication);
 
         UserTalkersHistory userTalkersHistory = this.userTalkersHistoryRepository.findByUserProfile(userProfile);

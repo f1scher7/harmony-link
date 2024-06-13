@@ -68,9 +68,9 @@ public class UserProfileService {
     public void setOrUpdateUserProfileData(UserProfile userProfile, String userAccountId) throws UserNotFoundException, InvalidUserCityException, InvalidUserHeightException, InvalidRelationshipStatusException, InvalidUserHobbiesExceptions, InvalidUserFieldOfStudyException, UserTooYoungException {
         UserAccount userAccount = this.userAccountRepository.findById(userAccountId).orElseThrow(UserNotFoundException::new);
 
-        UserProfile userProfileOptional = this.userProfileRepository.findByUserAccount(userAccount);
-
         validateUserProfileData(userProfile, userAccount);
+
+        UserProfile userProfileOptional = this.userProfileRepository.findByUserAccount(userAccount);
 
         if (userProfileOptional != null) {
             userProfileOptional.setAge(userProfile.getAge());
@@ -131,31 +131,31 @@ public class UserProfileService {
     public void processUserProfileFromForm(ModelAndView modelAndView, UserProfile userProfile, UserAccount userAccount, String redirectPage, String errorPage) {
         modelAndView.addObject("sex", userProfile.getSex());
         modelAndView.addObject("relationshipStatus", userProfile.getRelationshipStatus());
-        modelAndView.addObject("hobbies", getHobbies(userProfile.getHobbyIds()));
 
         try {
+            modelAndView.addObject("hobbies", getHobbies(userProfile.getHobbyIds()));
             setOrUpdateUserProfileData(userProfile, userAccount.getId());
             modelAndView.setViewName("redirect:/" + redirectPage);
         } catch (UserNotFoundException e) {
             throw new RuntimeException(e);
         } catch (InvalidRelationshipStatusException e) {
-            modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorRelationship", e.getMessage());
+            modelAndView.setViewName(errorPage);
         } catch (InvalidUserHeightException e) {
-            modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorHeight", e.getMessage());
+            modelAndView.setViewName(errorPage);
         } catch (InvalidUserCityException e) {
-            modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorCity", e.getMessage());
+            modelAndView.setViewName(errorPage);
         } catch (InvalidUserFieldOfStudyException e) {
-            modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorStudy", e.getMessage());
+            modelAndView.setViewName(errorPage);
         } catch (InvalidUserHobbiesExceptions e) {
-            modelAndView.setViewName(errorPage);
             modelAndView.addObject("errorHobbies", e.getMessage());
-        } catch (UserTooYoungException e) {
             modelAndView.setViewName(errorPage);
+        } catch (UserTooYoungException e) {
             modelAndView.addObject("errorAge", e.getMessage());
+            modelAndView.setViewName(errorPage);
         }
     }
 
@@ -171,15 +171,18 @@ public class UserProfileService {
         return hobbyIds;
     }
 
-    public List<String> getHobbies(List<String> hobbyIds) {
+    public List<String> getHobbies(List<String> hobbyIds) throws InvalidUserHobbiesExceptions {
         List<String> hobbies = new ArrayList<>();
+        if (hobbyIds == null) {
+            throw new InvalidUserHobbiesExceptions();
+        } else {
+            for (String string : hobbyIds) {
+                Optional<Hobby> hobbyOptional = this.hobbyRepository.findById(string);
+                hobbyOptional.ifPresent(hobby -> hobbies.add(hobby.getName()));
+            }
 
-        for (String string : hobbyIds) {
-            Optional<Hobby> hobbyOptional = this.hobbyRepository.findById(string);
-            hobbyOptional.ifPresent(hobby -> hobbies.add(hobby.getName()));
+            return hobbies;
         }
-
-        return hobbies;
     }
 
 }
