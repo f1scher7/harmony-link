@@ -120,7 +120,9 @@ $(document).ready(function () {
     navigator.mediaDevices.getUserMedia( {video: true, audio: true})
         .then(stream => {
             window.localVideoElement.srcObject = stream;
-            localAudioElement.srcObject = stream;
+
+            localAudioElement.muted = true;
+            stream.getAudioTracks().forEach(track => track.enabled = false);
 
             $('#camera-error').addClass('d-none');
         })
