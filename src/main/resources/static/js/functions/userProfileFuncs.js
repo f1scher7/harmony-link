@@ -70,12 +70,12 @@ export function searchHobbies(addedHobbies) {
             });
 
             removeBtn.on('click', function () {
-                let index = addedBadges.indexOf(badge);
+                let index = addedHobbies.indexOf(prefix);
 
                 if (index !== -1) {
-                    addedBadges.splice(index, 1);
+                    addedHobbies.splice(index, 1);
                 }
-                div.remove();
+                hobbiesDiv.remove();
             });
 
             hobbiesDiv.append(removeBtn);
