@@ -6,6 +6,11 @@ $(document).ready(function () {
 
     let indexForAnimation = 0;
 
+    if (talkersHistoryList.length === 0) {
+        talkersHistoryMainDiv.append($('<h5 class="text-center">Nie masz jeszcze ostatnich rozmówców</h5>'))
+        talkersHistoryMainDiv.append($('<img src="/img/home/zeroTalkers.gif" class="img-fluid w-50 mx-auto d-block" alt="">'))
+    }
+
     talkersHistoryList.forEach(function(userTalker) {
         let talkerDiv = $('<div class="d-flex w-75 p-3 mb-2 mx-auto border justify-content-between align-items-center"></div>');
         let rightPartDiv = $('<div class="d-flex"></div>')
