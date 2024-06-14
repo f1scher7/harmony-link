@@ -24,3 +24,7 @@ HarmonyLink is an interactive web application that uses advanced filters such as
 - Docker Image
 - AWS EC2
 - MongoDB Atlas
+
+## Author
+
+Maks Szyło maksymilian.fischer7@gmail.com
