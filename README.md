@@ -2,6 +2,8 @@
 
 HarmonyLink is an interactive web application that uses advanced filters such as interests, field of study, relationship status, city, age, and gender to connect users with their ideal conversation partners in video chats.
 
+![HarmonyLink](https://github.com/f1scher7/harmony-link/assets/115926717/7eb7dd9e-b318-4443-9e6a-15dadf702fbb)
+
 ## Technologies
 
 ### Front-End
