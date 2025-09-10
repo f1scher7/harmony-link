@@ -9,15 +9,6 @@ The AWS free trial period has ended, and as a result, the site is temporarily of
 
 ## Technologies
 
-### Front-End
-- JavaScript
-- jQuery
-- AJAX
-- HTML5
-- CSS3
-- Bootstrap5
-- WebSocket
-- WebRTC Video
 
 ### Back-End
 - Java
@@ -29,6 +20,14 @@ The AWS free trial period has ended, and as a result, the site is temporarily of
 - Docker Image
 - AWS EC2
 - MongoDB Atlas
+
+### Front-End
+- JavaScript
+- HTML5
+- CSS3
+- Bootstrap5
+- WebSocket
+- WebRTC Video
 
 ## Author
 
